@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="45dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/slide_login"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slide_menu_item_height"
+            android:background="@drawable/selector_slidemenu_item"
+            android:orientation="horizontal"
+            android:visibility="visible" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_margin_left"
+                android:src="@drawable/like_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
+                android:text="请登录"
+                android:textColor="@color/slide_menu_text_color"
+                android:textSize="@dimen/slide_menu_item_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/slide_menu_margin_left"
+            android:background="@color/slide_menu_line_color" />
+
+        <LinearLayout
+            android:id="@+id/slide_memory"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slide_menu_item_height"
+            android:background="@drawable/selector_slidemenu_item"
+            android:orientation="horizontal"
+            android:visibility="visible" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_margin_left"
+                android:src="@drawable/like_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
+                android:text="收藏"
+                android:textColor="@color/slide_menu_text_color"
+                android:textSize="@dimen/slide_menu_item_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/slide_menu_margin_left"
+            android:background="@color/slide_menu_line_color" />
+
+        <LinearLayout
+            android:id="@+id/slide_score"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slide_menu_item_height"
+            android:background="@drawable/selector_slidemenu_item"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_margin_left"
+                android:src="@drawable/like_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
+                android:text="给应用评分"
+                android:textColor="@color/slide_menu_text_color"
+                android:textSize="@dimen/slide_menu_item_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/slide_menu_margin_left"
+            android:background="@color/slide_menu_line_color" />
+
+        <LinearLayout
+            android:id="@+id/check_update"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slide_menu_item_height"
+            android:background="@drawable/selector_slidemenu_item"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_margin_left"
+                android:src="@drawable/like_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
+                android:text="检查更新"
+                android:textColor="@color/slide_menu_text_color"
+                android:textSize="@dimen/slide_menu_item_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/slide_menu_margin_left"
+            android:background="@color/slide_menu_line_color" />
+
+        <LinearLayout
+            android:id="@+id/about_us"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slide_menu_item_height"
+            android:background="@drawable/selector_slidemenu_item"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_margin_left"
+                android:src="@drawable/like_item" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
+                android:text="关于我们"
+                android:textColor="@color/slide_menu_text_color"
+                android:textSize="@dimen/slide_menu_item_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/slide_menu_margin_left"
+            android:background="@color/slide_menu_line_color" />
+    </LinearLayout>
+
+</LinearLayout><!-- From: file:/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/src/main/res/layout/slide_menu.xml -->

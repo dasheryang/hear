@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hear.app" >
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="17" />
+
+    <!-- 必须申明的权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:name="hear.app.MainApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="hear.app.SplashActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme_Start_Promote" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="hear.app.PlayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_Start_Promote" >
+        </activity>
+        <activity
+            android:name="hear.app.GuideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="hear.app.HistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme_Start_Promote" >
+        </activity>
+
+        <service
+            android:name="hear.app.CacheMediaService"
+            android:exported="false" />
+
+        <!-- 您从百度网站获取的 APP KEY -->
+        <meta-data
+            android:name="BaiduMobAd_CHANNEL"
+            android:value="default" />
+        <meta-data
+            android:name="BaiduMobAd_STAT_ID"
+            android:value="da210fdbf9" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="54b7c5a8fd98c59045000b0f" />
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name="hear.app.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

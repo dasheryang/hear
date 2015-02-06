@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="slide_menu_text_color">#b9b9b9</color>
+    <color name="slide_menu_line_color">#213640</color>
+    <color name="slide_menu_item_press_color">#66000000</color>
+</resources>

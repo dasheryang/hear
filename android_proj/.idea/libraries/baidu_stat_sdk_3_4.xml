@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="baidu_stat_sdk_3_4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/hearApp/libs/baidu_stat_sdk_3_4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
