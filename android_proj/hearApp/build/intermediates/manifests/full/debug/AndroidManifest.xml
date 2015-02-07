@@ -3,7 +3,7 @@
     package="hear.app" >
 
     <uses-sdk
-        android:minSdkVersion="17"
+        android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
     <!-- 必须申明的权限 -->
@@ -80,6 +80,10 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="hear.app.AboutUs"
+            android:label="@string/title_activity_about_us" >
+        </activity>
     </application>
 
 </manifest>

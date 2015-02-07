@@ -9,6 +9,34 @@
         <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/nineoldandroids-library-2.4.0-b94a23dc2cb5c6fcd58dd5908267b2c940c60824.jar" />
     </item>
     <item
+        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/exploded-aar/android_proj/resideMenu/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="a96e37e8042268ceb4d44857c3f4e150ffa2e86b">
+        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/classes-0cfcdf18d62519427a5e575114826e7ca63345f4.jar" />
+    </item>
+    <item
+        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_tencentWB_2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6f744074067eb201171c9c8ff1ca45ed821a76a8">
+        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/SocialSDK_tencentWB_2-ae0ca8448058de9d7d0d5c9d422710cbe3543d91.jar" />
+    </item>
+    <item
+        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_QQZone_2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4a69b33758dcba3ef519cbd4b6c8af5f41603c4f">
+        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/SocialSDK_QQZone_2-87429b665805baf7b04fefef4939de1d134a9fe5.jar" />
+    </item>
+    <item
+        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_WeiXin_1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="d7c2f29c05b35e8c8713be2b81c41cf18f98b64a">
+        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/SocialSDK_WeiXin_1-451223d1eb274581afed28c3e07e8a8c0c345891.jar" />
+    </item>
+    <item
         jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_tencentWB_1.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -44,39 +72,11 @@
         <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/httpmime-4.1.3-690ee6546cfa5254a03947a83e4eafce347705a3.jar" />
     </item>
     <item
-        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/exploded-aar/android_proj/resideMenu/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c20854cadb9d6f8d5e3ed8138f416f5f987099b9">
-        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/classes-0cfcdf18d62519427a5e575114826e7ca63345f4.jar" />
-    </item>
-    <item
-        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_tencentWB_2.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="6f744074067eb201171c9c8ff1ca45ed821a76a8">
-        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/SocialSDK_tencentWB_2-ae0ca8448058de9d7d0d5c9d422710cbe3543d91.jar" />
-    </item>
-    <item
-        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_QQZone_2.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4a69b33758dcba3ef519cbd4b6c8af5f41603c4f">
-        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/SocialSDK_QQZone_2-87429b665805baf7b04fefef4939de1d134a9fe5.jar" />
-    </item>
-    <item
         jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/umeng_social_sdk.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="32732b2ad43b95f53939cff3acf31ace5a6a7f72">
         <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/umeng_social_sdk-bb5d226525d1b4e37d157cb18871f07bd441c22d.jar" />
-    </item>
-    <item
-        jar="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/libs/SocialSDK_WeiXin_1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="d7c2f29c05b35e8c8713be2b81c41cf18f98b64a">
-        <dex dex="/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/build/intermediates/pre-dexed/debug/SocialSDK_WeiXin_1-451223d1eb274581afed28c3e07e8a8c0c345891.jar" />
     </item>
     <item
         jar="/Users/yang/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.2.4/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar"

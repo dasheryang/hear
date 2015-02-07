@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -73,26 +75,33 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
 		}
 		
         // attach to current activity;
+        this.initMenu();
+	}
+
+    private void initMenu(){
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(R.drawable.play_bg);
         resideMenu.attachToActivity(this);
         resideMenu.setMenuListener(menuListener);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
+        resideMenu.setSwipeDirectionDisable(resideMenu.DIRECTION_LEFT);
+        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.9f);
-        
-        
+
         View menuView = this.getLayoutInflater().inflate(R.layout.slide_menu, null);
-        
+
         menuView.findViewById(R.id.slide_login).setOnClickListener(this);
         menuView.findViewById(R.id.slide_memory).setOnClickListener(this);
         menuView.findViewById(R.id.slide_score).setOnClickListener(this);
         menuView.findViewById(R.id.check_update).setOnClickListener(this);
         menuView.findViewById(R.id.about_us).setOnClickListener(this);
-        
         resideMenu.setMenuLayout(menuView, ResideMenu.DIRECTION_LEFT);
-	}
+    }
+    public void showMenu(View view) {
+        LogUtil.d("show side menu view");
+        resideMenu.openMenu( ResideMenu.DIRECTION_LEFT );
 
+    }
 	/**
 	 * 展示为空，让重试
 	 */
@@ -201,7 +210,9 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
 			login(SHARE_MEDIA.QQ);
 			break;
 		case R.id.about_us:
-			
+			Intent i_show_about = new Intent( this, AboutUs.class );
+            this.startActivity( i_show_about );
+
 			break;
 
 		default:
@@ -278,4 +289,6 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         CustomShareBoard shareBoard = new CustomShareBoard(this);
         shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
     }
+
+
 }
