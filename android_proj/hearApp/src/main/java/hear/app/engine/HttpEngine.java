@@ -1,6 +1,6 @@
 package hear.app.engine;
 
-import hear.app.util.LogUtil;
+import hear.app.helper.LogUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,7 +11,6 @@ import org.apache.http.params.HttpParams;
 
 import android.text.TextUtils;
 
-import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -30,10 +29,6 @@ public class HttpEngine {
     public static final String APP_LOGIN_URL =HttpEngine.getURL("/m/login") ;
 
     public static Map<String,String> hostMap=new HashMap<String, String>();
-
-
-
-
 
 
     /**
