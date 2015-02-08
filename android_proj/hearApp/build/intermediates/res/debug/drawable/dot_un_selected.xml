@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="oval">
-    <size android:height="8dp" android:width="8dp" />
-    <solid android:color="#aaaaaa" />
-</shape><!-- From: file:/Users/yang/Documents/d_proj/hear_app/android_proj/hearApp/src/main/res/drawable/dot_un_selected.xml -->
