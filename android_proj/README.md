@@ -10,6 +10,7 @@
 ------------ | ------------- 
 SplashActivity | 欢迎页面
 GuideActivity | 引导页面
+HistoryActivity | 主页面
 ArticleFragment | 主页面的文章
 GuideFragment | 引导页的图片
 
