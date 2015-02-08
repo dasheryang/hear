@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/android_proj.iml" filepath="$PROJECT_DIR$/android_proj.iml" />
       <module fileurl="file://$PROJECT_DIR$/hearApp/hearApp.iml" filepath="$PROJECT_DIR$/hearApp/hearApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/resideMenu/resideMenu.iml" filepath="$PROJECT_DIR$/resideMenu/resideMenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/thirdplatform/thirdplatform.iml" filepath="$PROJECT_DIR$/thirdplatform/thirdplatform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/umeng/umeng.iml" filepath="$PROJECT_DIR$/umeng/umeng.iml" />
     </modules>
   </component>
 </project>

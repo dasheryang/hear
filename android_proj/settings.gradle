@@ -1,2 +1,1 @@
-include ':resideMenu'
-include ':hearApp'
+include ':resideMenu', ':umeng', ':thirdplatform', ':hearApp'

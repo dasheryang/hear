@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d3d3d3" >
+    android:background="#d3d3d3">
 
     <TextView
         android:id="@+id/share_text"
@@ -27,12 +27,12 @@
         android:layout_below="@id/divider_line"
         android:orientation="horizontal"
         android:layout_marginTop="12dp"
-        android:layoutAnimation="@anim/layout_animation" >
+        android:layoutAnimation="@anim/layout_animation">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/wechat"
@@ -45,7 +45,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/wechat_circle"
@@ -58,7 +58,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/qq"
@@ -71,7 +71,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" >
+            android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/qzone"

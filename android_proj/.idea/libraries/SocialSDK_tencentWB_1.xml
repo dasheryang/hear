@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="SocialSDK_tencentWB_1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/hearApp/libs/SocialSDK_tencentWB_1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/umeng/libs/SocialSDK_tencentWB_1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
