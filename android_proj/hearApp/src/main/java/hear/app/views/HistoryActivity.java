@@ -2,296 +2,300 @@ package hear.app.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.special.ResideMenu.ResideMenu;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners.UMAuthListener;
-import com.umeng.socialize.controller.listener.SocializeListeners.UMDataListener;
+import com.umeng.socialize.bean.SnsAccount;
+import com.umeng.socialize.bean.SocializeUser;
+import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
-import hear.app.models.JsonRespWrapper;
 import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
 import hear.app.helper.LogUtil;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
-import hear.app.widget.CustomShareBoard;
+import hear.app.models.JsonRespWrapper;
+import hear.app.models.SNSAccountStore;
+import hear.lib.share.SocialServiceWrapper;
 
 /**
  * Created by power on 14-8-11.
  */
 public class HistoryActivity extends BaseFragmentActivity implements OnClickListener {
-    private UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-    // Pager
-    ViewPager mPage;
-
-    List<Article> mArticles = null;
-
+    private ViewPager mViewPager;
     private TextView mEmptyButton;
-
-    ResideMenu resideMenu = null;
+    private ResideMenu mResideMenu;
+    private View mLoginButton;
+    private SocialServiceWrapper mLoginService;
+    private UILogic mUILogic = new UILogic();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.history);
-        mPage = (ViewPager) findViewById(R.id.vp_pages);
-        mEmptyButton = (TextView) findViewById(R.id.empty_btn);
-        init();
+        initContentView();
+        updateAccountView();
     }
-
-    private void init() {
-        Article[] articles = Article.getAllArticles();
-        if (ArrayUtils.isEmpty(articles)) {
-            showEmpty();
-        } else {
-
-            mArticles = ArrayUtils.from(articles);
-
-            ArticlePageAdapter firstCategoryAdapter = new ArticlePageAdapter(
-                    getResources(), this.getSupportFragmentManager(),
-                    mArticles, this);
-            mPage.setAdapter(firstCategoryAdapter);
-            mPage.setCurrentItem(0);
-            mPage.setVisibility(View.VISIBLE);
-            mEmptyButton.setVisibility(View.GONE);
-        }
-
-        // attach to current activity;
-        this.initMenu();
-    }
-
-    private void initMenu() {
-        resideMenu = new ResideMenu(this);
-        resideMenu.setBackground(R.drawable.play_bg);
-        resideMenu.attachToActivity(this);
-        resideMenu.setMenuListener(menuListener);
-        resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        resideMenu.setSwipeDirectionDisable(resideMenu.DIRECTION_LEFT);
-        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
-        resideMenu.setScaleValue(0.9f);
-
-        View menuView = this.getLayoutInflater().inflate(R.layout.slide_menu, null);
-
-        menuView.findViewById(R.id.slide_login).setOnClickListener(this);
-        menuView.findViewById(R.id.slide_memory).setOnClickListener(this);
-        menuView.findViewById(R.id.slide_score).setOnClickListener(this);
-        menuView.findViewById(R.id.check_update).setOnClickListener(this);
-        menuView.findViewById(R.id.about_us).setOnClickListener(this);
-        resideMenu.setMenuLayout(menuView, ResideMenu.DIRECTION_LEFT);
-    }
-
-    public void showMenu(View view) {
-        LogUtil.d("show side menu view");
-        resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-
-    }
-
-    /**
-     * 展示为空，让重试
-     */
-    protected void showEmpty() {
-        mPage.setVisibility(View.GONE);
-        mEmptyButton.setVisibility(View.VISIBLE);
-        mEmptyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshRemoteArticle();
-            }
-        });
-    }
-
-    private boolean after22Refreshed = false;
-
-    private InActivityHelper helper = new InActivityHelper(this);
 
     @Override
     protected void onResume() {
         super.onResume();
-        // 推出去再回来
-        Date d = new Date();
-        if (d.getHours() >= 22 && !after22Refreshed) {
-            LogUtil.d("get server result:");
-            helper.getRemoteActicles(1,
-                    new InActivityHelper.OnFinishListener() {
-                        @Override
-                        public void onFinish() {
-                            after22Refreshed = true;
-                        }
-                    });
-        }
-    }
-
-    /**
-     * 获取所有的文章
-     */
-    public void refreshRemoteArticle() {
-
-        String url = "http://www.hearheart.com/getlist";
-
-        // 978,812
-
-        BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
-
-            @Override
-            public Class getRespClass() {
-                return InActivityHelper.ArticleListWrapper.class;
-            }
-
-            @Override
-            protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
-                if (jsonRespWrapper.ret == 0) {
-                    InActivityHelper.ArticleListWrapper wrapper = (InActivityHelper.ArticleListWrapper) jsonRespWrapper;
-                    LogUtil.d("resp data:" + wrapper.data);
-                    Article.saveArtilcleList(AppContext.getGSON().toJson(
-                            wrapper.data));
-                    init();
-                } else {
-                    LogUtil.d("get response fail:" + jsonRespWrapper.ret);
-                    ToastUtil.Short(jsonRespWrapper.reason);
-                }
-            }
-        };
-
-        asyncTask.get(null).execute();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
-        @Override
-        public void openMenu() {
-        }
-
-        @Override
-        public void closeMenu() {
-        }
-    };
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return resideMenu.dispatchTouchEvent(ev);
+        mUILogic.refreshRemoteArticleIfNeeded();
     }
 
     @Override
     public void onClick(View v) {
-        // TODO Auto-generated method stub
         int id = v.getId();
+        if (id == R.id.btn_login) {
+            if (SNSAccountStore.getInstance().isLogin()) {
+                SNSAccountStore.getInstance().logout();
+                updateAccountView();
+            } else {
+                showLoginBoardIfNeeded();
+            }
+        } else if (id == R.id.btn_collect)
+            mUILogic.goToCollectListActivity();
+        else if (id == R.id.btn_score)
+            mUILogic.doScore();
+        else if (id == R.id.btn_update)
+            mUILogic.doCheckUpdate();
+        else if (id == R.id.btn_aboutUS)
+            mUILogic.goToAboutUsActivity();
+    }
 
-        switch (id) {
-            case R.id.slide_login:
+    @Override
+    public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+        return mResideMenu.dispatchTouchEvent(ev);
+    }
 
-                break;
-            case R.id.slide_memory:
-                postShare();
-                break;
-            case R.id.slide_score:
-                login(SHARE_MEDIA.SINA);
-                break;
-            case R.id.check_update:
-                login(SHARE_MEDIA.QQ);
-                break;
-            case R.id.about_us:
-                Intent i_show_about = new Intent(this, AboutUsActivity.class);
-                this.startActivity(i_show_about);
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
-                break;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mLoginService != null)
+            mLoginService.handleOnActivityResult(requestCode, resultCode, data);
+    }
 
-            default:
-                break;
+    protected void onLoginSuccess() {
+        Toast.makeText(HistoryActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
+        mLoginService = null;
+        updateAccountView();
+    }
+
+    protected void onLoginFail() {
+        Toast.makeText(HistoryActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
+        mLoginService = null;
+    }
+
+    protected void onNoArticles() {
+        mViewPager.setVisibility(View.GONE);
+        mEmptyButton.setVisibility(View.VISIBLE);
+        mEmptyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUILogic.refreshRemoteArticle();
+            }
+        });
+    }
+
+    public void onMenuButtonClick(View view) {
+        mResideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+    }
+
+    protected void updateAccountView() {
+        View loginButton = mLoginButton;
+        ImageView loginImage = (ImageView) loginButton.findViewById(R.id.img_login);
+        TextView loginLabel = (TextView) loginButton.findViewById(R.id.label_login);
+
+        if (SNSAccountStore.getInstance().isLogin()) {
+            SnsAccount account = SNSAccountStore.getInstance().getLoginAccount();
+            ImageLoader.getInstance().displayImage(account.getAccountIconUrl(), loginImage);
+            loginLabel.setText(account.getUserName());
+        } else {
+            loginImage.setImageResource(R.drawable.like_item);
+            loginLabel.setText("请登陆");
         }
     }
-    /**
-     * 下面这段是测试代码，用于测试使用
-     */
 
-
-    /**
-     * 授权。如果授权成功，则获取用户信息</br>
-     */
-    private void login(final SHARE_MEDIA platform) {
-        mController.doOauthVerify(HistoryActivity.this, platform, new UMAuthListener() {
-
-            @Override
-            public void onStart(SHARE_MEDIA platform) {
-            }
-
-            @Override
-            public void onError(SocializeException e, SHARE_MEDIA platform) {
-            }
-
-            @Override
-            public void onComplete(Bundle value, SHARE_MEDIA platform) {
-                String uid = value.getString("uid");
-                if (!TextUtils.isEmpty(uid)) {
-                    getUserInfo(platform);
-                } else {
-                    Toast.makeText(HistoryActivity.this, "授权失败...", Toast.LENGTH_SHORT).show();
+    protected void showLoginBoardIfNeeded() {
+        if (!SNSAccountStore.getInstance().isLogin()) {
+            mLoginService = new SocialServiceWrapper(this);
+            mLoginService.showLoginBoard(new SocializeListeners.UMAuthListener() {
+                @Override
+                public void onStart(SHARE_MEDIA media) {
                 }
-            }
 
-            @Override
-            public void onCancel(SHARE_MEDIA platform) {
-            }
-        });
-    }
+                @Override
+                public void onComplete(Bundle bundle, final SHARE_MEDIA media) {
+                    mLoginService.getUserInfo(new SocializeListeners.FetchUserListener() {
+                        @Override
+                        public void onStart() {
+                        }
 
-    /**
-     * 获取授权平台的用户信息</br>
-     */
-    private void getUserInfo(SHARE_MEDIA platform) {
-        mController.getPlatformInfo(this, platform, new UMDataListener() {
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onComplete(int status, Map<String, Object> info) {
-//                String showText = "";
-//                if (status == StatusCode.ST_CODE_SUCCESSED) {
-//                    showText = "用户名：" + info.get("screen_name").toString();
-//                    Log.d("#########", "##########" + info.toString());
-//                } else {
-//                    showText = "获取用户信息失败";
-//                }
-                if (info != null) {
-                    Toast.makeText(HistoryActivity.this, info.toString(), Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onComplete(int i, SocializeUser socializeUser) {
+                            if (socializeUser.mAccounts.isEmpty()) {
+                                onLoginFail();
+                            } else {
+                                mUILogic.updateAccount(socializeUser.mAccounts.get(0), media);
+                                onLoginSuccess();
+                            }
+                        }
+                    });
                 }
+
+                @Override
+                public void onError(SocializeException e, SHARE_MEDIA media) {
+                    onLoginFail();
+                }
+
+                @Override
+                public void onCancel(SHARE_MEDIA media) {
+                    onLoginFail();
+                }
+            });
+        }
+    }
+
+    private void initContentView() {
+        /** bind views **/
+        mViewPager = (ViewPager) findViewById(R.id.vp_pages);
+        mEmptyButton = (TextView) findViewById(R.id.btn_empty);
+
+        /** setup ViewPager **/
+        List<Article> mArticles = mUILogic.fetchCacheArticles();
+        if (ArrayUtils.isEmpty(mArticles)) {
+            onNoArticles();
+        } else {
+            ArticlePageAdapter firstCategoryAdapter = new ArticlePageAdapter(
+                    getResources(), this.getSupportFragmentManager(),
+                    mArticles, this);
+            mViewPager.setAdapter(firstCategoryAdapter);
+            mViewPager.setCurrentItem(0);
+            mViewPager.setVisibility(View.VISIBLE);
+            mEmptyButton.setVisibility(View.GONE);
+        }
+
+        /** setup menu **/
+        mResideMenu = new ResideMenu(this);
+        mResideMenu.setBackground(R.drawable.play_bg);
+        mResideMenu.attachToActivity(this);
+//        mResideMenu.setMenuListener(menuListener);
+        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
+        mResideMenu.setScaleValue(0.9f);
+
+        View menuView = View.inflate(this, R.layout.slide_menu, null);
+
+        mLoginButton = menuView.findViewById(R.id.btn_login);
+        mLoginButton.setOnClickListener(this);
+        menuView.findViewById(R.id.btn_collect).setOnClickListener(this);
+        menuView.findViewById(R.id.btn_score).setOnClickListener(this);
+        menuView.findViewById(R.id.btn_update).setOnClickListener(this);
+        menuView.findViewById(R.id.btn_aboutUS).setOnClickListener(this);
+        mResideMenu.setMenuLayout(menuView, ResideMenu.DIRECTION_LEFT);
+    }
+
+    private class UILogic {
+        private boolean after22Refreshed = false;
+        private InActivityHelper helper = new InActivityHelper(HistoryActivity.this);
+
+        public List<Article> fetchCacheArticles() {
+            Article[] articles = Article.getAllArticles();
+            if (ArrayUtils.isEmpty(articles)) {
+                return null;
+            } else {
+                return ArrayUtils.from(articles);
             }
-        });
+        }
+
+        /**
+         * 获取所有的文章
+         */
+        public void refreshRemoteArticle() {
+
+            String url = "http://www.hearheart.com/getlist";
+
+            BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
+
+                @Override
+                public Class getRespClass() {
+                    return InActivityHelper.ArticleListWrapper.class;
+                }
+
+                @Override
+                protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                    if (jsonRespWrapper.ret == 0) {
+                        InActivityHelper.ArticleListWrapper wrapper = (InActivityHelper.ArticleListWrapper) jsonRespWrapper;
+                        LogUtil.d("resp data:" + Arrays.toString(wrapper.data));
+                        Article.saveArtilcleList(AppContext.getGSON().toJson(
+                                wrapper.data));
+                        initContentView();
+                    } else {
+                        LogUtil.d("get response fail:" + jsonRespWrapper.ret);
+                        ToastUtil.Short(jsonRespWrapper.reason);
+                    }
+                }
+            };
+
+            asyncTask.get(null).execute();
+        }
+
+        public void refreshRemoteArticleIfNeeded() {
+            Date d = new Date();
+            if (d.getHours() >= 22 && !after22Refreshed) {
+                helper.getRemoteActicles(1,
+                        new InActivityHelper.OnFinishListener() {
+                            @Override
+                            public void onFinish() {
+                                after22Refreshed = true;
+                            }
+                        });
+            }
+        }
+
+        public void updateAccount(SnsAccount account, SHARE_MEDIA platform) {
+            SNSAccountStore.getInstance().setLoginAccount(account).setLoginType(platform).synchronize();
+        }
+
+        public void goToAboutUsActivity() {
+            Intent intent = new Intent(HistoryActivity.this, AboutUsActivity.class);
+            startActivity(intent);
+        }
+
+        public void goToCollectListActivity() {
+        }
+
+        public void doCheckUpdate() {
+        }
+
+        public void doScore() {
+        }
     }
-
-    /**
-     * 调用postShare分享。跳转至分享编辑页，然后再分享。</br> [注意]<li>
-     * 对于新浪，豆瓣，人人，腾讯微博跳转到分享编辑页，其他平台直接跳转到对应的客户端
-     */
-    private void postShare() {
-        CustomShareBoard shareBoard = new CustomShareBoard(this);
-        shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-    }
-
-
 }

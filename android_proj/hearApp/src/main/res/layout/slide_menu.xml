@@ -2,23 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="200dp"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginTop="45dp"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/slide_login"
+            android:id="@+id/btn_login"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slide_menu_item_height"
             android:background="@drawable/selector_slidemenu_item"
             android:orientation="horizontal"
-            android:visibility="visible" >
+            android:visibility="visible">
 
             <ImageView
+                android:id="@+id/img_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -26,6 +27,7 @@
                 android:src="@drawable/like_item" />
 
             <TextView
+                android:id="@+id/label_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -42,12 +44,12 @@
             android:background="@color/slide_menu_line_color" />
 
         <LinearLayout
-            android:id="@+id/slide_memory"
+            android:id="@+id/btn_collect"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slide_menu_item_height"
             android:background="@drawable/selector_slidemenu_item"
             android:orientation="horizontal"
-            android:visibility="visible" >
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -73,11 +75,11 @@
             android:background="@color/slide_menu_line_color" />
 
         <LinearLayout
-            android:id="@+id/slide_score"
+            android:id="@+id/btn_score"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slide_menu_item_height"
             android:background="@drawable/selector_slidemenu_item"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -103,11 +105,11 @@
             android:background="@color/slide_menu_line_color" />
 
         <LinearLayout
-            android:id="@+id/check_update"
+            android:id="@+id/btn_update"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slide_menu_item_height"
             android:background="@drawable/selector_slidemenu_item"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -133,11 +135,11 @@
             android:background="@color/slide_menu_line_color" />
 
         <LinearLayout
-            android:id="@+id/about_us"
+            android:id="@+id/btn_aboutUS"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/slide_menu_item_height"
             android:background="@drawable/selector_slidemenu_item"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"

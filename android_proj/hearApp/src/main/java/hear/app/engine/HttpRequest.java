@@ -101,12 +101,12 @@ public class HttpRequest {
   public static final String CHARSET_UTF8 = "UTF-8";
 
   /**
-   * 'application/x-www-form-urlencoded' content type header value
+   * 'application/x-www-form-urlencoded' text type header value
    */
   public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 
   /**
-   * 'application/json' content type header value
+   * 'application/json' text type header value
    */
   public static final String CONTENT_TYPE_JSON = "application/json";
 
@@ -3031,7 +3031,7 @@ public class HttpRequest {
    * Write the values in the map as form data to the request body
    * <p>
    * The pairs specified will be URL-encoded in UTF-8 and sent with the
-   * 'application/x-www-form-urlencoded' content-type
+   * 'application/x-www-form-urlencoded' text-type
    *
    * @param values
    * @return this request
@@ -3045,7 +3045,7 @@ public class HttpRequest {
    * Write the key and value in the entry as form data to the request body
    * <p>
    * The pair specified will be URL-encoded in UTF-8 and sent with the
-   * 'application/x-www-form-urlencoded' content-type
+   * 'application/x-www-form-urlencoded' text-type
    *
    * @param entry
    * @return this request
@@ -3059,7 +3059,7 @@ public class HttpRequest {
    * Write the key and value in the entry as form data to the request body
    * <p>
    * The pair specified will be URL-encoded and sent with the
-   * 'application/x-www-form-urlencoded' content-type
+   * 'application/x-www-form-urlencoded' text-type
    *
    * @param entry
    * @param charset
@@ -3075,7 +3075,7 @@ public class HttpRequest {
    * Write the name/value pair as form data to the request body
    * <p>
    * The pair specified will be URL-encoded in UTF-8 and sent with the
-   * 'application/x-www-form-urlencoded' content-type
+   * 'application/x-www-form-urlencoded' text-type
    *
    * @param name
    * @param value
@@ -3091,7 +3091,7 @@ public class HttpRequest {
    * Write the name/value pair as form data to the request body
    * <p>
    * The values specified will be URL-encoded and sent with the
-   * 'application/x-www-form-urlencoded' content-type
+   * 'application/x-www-form-urlencoded' text-type
    *
    * @param name
    * @param value

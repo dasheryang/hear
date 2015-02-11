@@ -1,4 +1,4 @@
-package hear.lib.umeng;
+package hear.lib.share;
 
 /**
  * Created by ZhengYi on 15/2/8.

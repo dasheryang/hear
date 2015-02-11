@@ -22,4 +22,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':umeng')
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:gridlayout-v7:21.0.3'
 }

@@ -48,7 +48,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/like_item"
-                android:onClick="showMenu" />
+                android:onClick="onMenuButtonClick" />
 
         </RelativeLayout>
 
@@ -64,7 +64,7 @@
                 android:layout_height="fill_parent" />
 
             <TextView
-                android:id="@+id/empty_btn"
+                android:id="@+id/btn_empty"
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:textColor="#ffffff"
