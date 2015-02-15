@@ -1,13 +1,14 @@
 package hear.app.views;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.baidu.mobstat.StatService;
 
 /**
  * Created by power on 14-9-10.
  */
-public class BaseFragmentActivity extends FragmentActivity {
+public class BaseFragmentActivity extends ActionBarActivity {
 
 
     public boolean needActivityStat(){

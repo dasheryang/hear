@@ -1,5 +1,7 @@
 package hear.app.views;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
@@ -9,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -23,6 +28,9 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.controller.listener.SocializeListeners;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -33,7 +41,6 @@ import java.util.HashMap;
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.DeviceUtil;
-import hear.app.helper.LogUtil;
 import hear.app.helper.SDCardUtils;
 import hear.app.helper.ToastUtil;
 import hear.app.media.PlayListener;
@@ -41,6 +48,8 @@ import hear.app.media.Player;
 import hear.app.models.Article;
 import hear.app.models.ArticleLike;
 import hear.app.models.JsonRespWrapper;
+import hear.lib.share.SocialServiceWrapper;
+import hear.lib.share.models.ShareContent;
 
 /**
  * Created by power on 14-8-11.
@@ -66,6 +75,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
     private Handler mHandler = new Handler();
     private SeekBarHandler mSeekBarHandler = new SeekBarHandler(this);
     private UILogic mUILogic = new UILogic();
+    private SocialServiceWrapper mShareService;
 
     public static final int UN_LIKE_LEVEL = 1;
     public static final int LIKE_LEVEL = 2;
@@ -119,14 +129,55 @@ public class ArticleFragment extends Fragment implements PlayListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         bindViews(view);
         initContentView();
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_frag_article, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemID = item.getItemId();
+        if (itemID == R.id.item_share) {
+            mShareService = new SocialServiceWrapper(getActivity());
+            Article article = mUILogic.getArticle();
+            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
+            mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onComplete(SHARE_MEDIA media, int i, SocializeEntity socializeEntity) {
+                    mShareService = null;
+                }
+            });
+            Activity parent = getActivity();
+            if (parent != null && parent instanceof ShareFragmentDelegate) {
+                ((ShareFragmentDelegate) parent).onFragmentPerformShare(this);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mShareService != null) {
+            mShareService.handleOnActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onOtherStart() {
         setPlayIconLevel(LEVEL_PLAY);
-
     }
 
     private void setPlayIconLevel(final int level) {

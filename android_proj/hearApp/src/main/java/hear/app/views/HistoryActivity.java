@@ -3,8 +3,10 @@ package hear.app.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +23,7 @@ import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,18 +42,19 @@ import hear.lib.share.SocialServiceWrapper;
 /**
  * Created by power on 14-8-11.
  */
-public class HistoryActivity extends BaseFragmentActivity implements OnClickListener {
+public class HistoryActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate {
     private ViewPager mViewPager;
     private TextView mEmptyButton;
     private ResideMenu mResideMenu;
     private View mLoginButton;
     private SocialServiceWrapper mLoginService;
     private UILogic mUILogic = new UILogic();
+    private WeakReference<Fragment> mSharingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.history);
         initContentView();
         updateAccountView();
@@ -60,6 +64,17 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
     protected void onResume() {
         super.onResume();
         mUILogic.refreshRemoteArticleIfNeeded();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemID = item.getItemId();
+        if (itemID == android.R.id.home) {
+            mResideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -99,6 +114,16 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         super.onActivityResult(requestCode, resultCode, data);
         if (mLoginService != null)
             mLoginService.handleOnActivityResult(requestCode, resultCode, data);
+
+        if (mSharingFragment.get() != null) {
+            mSharingFragment.get().onActivityResult(requestCode, resultCode, data);
+            mSharingFragment = null;
+        }
+    }
+
+    @Override
+    public void onFragmentPerformShare(Fragment fragment) {
+        mSharingFragment = new WeakReference<>(fragment);
     }
 
     protected void onLoginSuccess() {
@@ -121,10 +146,6 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
                 mUILogic.refreshRemoteArticle();
             }
         });
-    }
-
-    public void onMenuButtonClick(View view) {
-        mResideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
     }
 
     protected void updateAccountView() {
@@ -186,6 +207,8 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         /** bind views **/
         mViewPager = (ViewPager) findViewById(R.id.vp_pages);
         mEmptyButton = (TextView) findViewById(R.id.btn_empty);
+
+        /** setup actionbar **/
 
         /** setup ViewPager **/
         List<Article> mArticles = mUILogic.fetchCacheArticles();

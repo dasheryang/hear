@@ -1,0 +1,34 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="MyAppTheme" parent="Theme.AppCompat">
+        <item name="android:actionBarStyle">@style/MyAppActionBar</item>
+
+        <item name="actionBarStyle">@style/MyAppActionBar</item>
+    </style>
+
+    <style name="HistoryActivityTheme" parent="MyAppTheme">
+        <item name="android:actionBarStyle">@style/HistoryActivityActionBar</item>
+
+        <item name="actionBarStyle">@style/HistoryActivityActionBar</item>
+    </style>
+
+    <style name="Theme_Start_Promote" parent="MyAppTheme">
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="MyAppActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+
+        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+    </style>
+
+    <style name="HistoryActivityActionBar" parent="MyAppActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/like_item</item>
+
+        <item name="homeAsUpIndicator">@drawable/like_item</item>
+    </style>
+
+</resources>
