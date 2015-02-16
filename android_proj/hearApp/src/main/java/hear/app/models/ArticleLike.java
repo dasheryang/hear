@@ -11,7 +11,6 @@ public class ArticleLike {
 
     public static final String ARTICLE_LIKE_COUNT="article_like_count";
 
-
     public static int getLikeArticle(int pageno){
         return AppContext.getSharedPrefernce().get(LIKE_ARTICLE+pageno,-1);
     }

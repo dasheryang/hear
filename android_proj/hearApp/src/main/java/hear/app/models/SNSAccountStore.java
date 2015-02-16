@@ -1,11 +1,15 @@
 package hear.app.models;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SnsAccount;
 import com.umeng.socialize.utils.OauthHelper;
+
+import java.util.HashSet;
 
 import hear.app.helper.AppContext;
 import hear.app.helper.SharedPreferencesCache;
@@ -20,6 +24,7 @@ public class SNSAccountStore {
     private static SNSAccountStore sInstance;
     private SnsAccount mLoginAccount;
     private SHARE_MEDIA mLoginType;
+    private HashSet<LoginStateListener> mListenerSet = new HashSet<>();
 
     private SNSAccountStore() {
         unarchive();
@@ -36,18 +41,21 @@ public class SNSAccountStore {
         return sInstance;
     }
 
-    public SNSAccountStore setLoginAccount(SnsAccount loginAccount) {
+    public SNSAccountStore setLoginAccountAndType(SnsAccount loginAccount, SHARE_MEDIA type) {
+        SnsAccount historyAccount = mLoginAccount;
         mLoginAccount = loginAccount;
+        mLoginType = type;
+
+        if (loginAccount != null && type != null)
+            dispatchOnLoginEvent(loginAccount);
+        else
+            dispatchOnLogoutEvent(historyAccount);
+
         return this;
     }
 
     public SnsAccount getLoginAccount() {
         return mLoginAccount;
-    }
-
-    public SNSAccountStore setLoginType(SHARE_MEDIA loginType) {
-        mLoginType = loginType;
-        return this;
     }
 
     public SHARE_MEDIA getLoginType() {
@@ -59,7 +67,27 @@ public class SNSAccountStore {
     }
 
     public void logout() {
-        SNSAccountStore.getInstance().setLoginAccount(null).setLoginType(null).synchronize();
+        SNSAccountStore.getInstance().setLoginAccountAndType(null, null).synchronize();
+    }
+
+    public void addLoginStateListener(LoginStateListener listener) {
+        if (!mListenerSet.contains(listener))
+            mListenerSet.add(listener);
+    }
+
+    public void removeLoginStateListener(LoginStateListener listener) {
+        if (mListenerSet.contains(listener))
+            mListenerSet.remove(listener);
+    }
+
+    private void dispatchOnLoginEvent(@NonNull SnsAccount account) {
+        for (LoginStateListener listener : mListenerSet)
+            listener.onLogin(account);
+    }
+
+    private void dispatchOnLogoutEvent(@Nullable SnsAccount account) {
+        for (LoginStateListener listener : mListenerSet)
+            listener.onLogout(account);
     }
 
     private void archive() {
@@ -88,5 +116,11 @@ public class SNSAccountStore {
                 archive();
             }
         }
+    }
+
+    public static interface LoginStateListener {
+        void onLogin(@NonNull SnsAccount account);
+
+        void onLogout(@Nullable SnsAccount account);
     }
 }

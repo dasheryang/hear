@@ -47,6 +47,7 @@ import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
 import hear.app.models.ArticleLike;
+import hear.app.models.CollectedArticleStore;
 import hear.app.models.JsonRespWrapper;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
@@ -56,16 +57,16 @@ import hear.lib.share.models.ShareContent;
  */
 public class ArticleFragment extends Fragment implements PlayListener {
 
-    private LinearLayout likeContainer;
-    private ImageView playIcon = null;
+    private LinearLayout mLikeContainer;
+    private ImageView mPlayIconView = null;
     private ImageView playLoading = null;
     private ImageView likeIcon = null;
-    private TextView likeCount = null;
-    private TextView articleContent = null;
-    private TextView articleAuthor = null;
-    private ImageView coverPicture = null;
-    private TextView articleVol = null;
-    private TextView date = null;
+    private TextView mLikeCountLabel = null;
+    private TextView mArticleContentLabel = null;
+    private TextView mAuthorLabel = null;
+    private ImageView mCoverImageView = null;
+    private TextView mVolumeLabel = null;
+    private TextView mDateLabel = null;
     private SeekBar mSeekBar;
     private TextView mMusicCurrentTimeTextView = null;
     private TextView mMusicTotalTimeTextView = null;
@@ -144,23 +145,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
         if (itemID == R.id.item_share) {
-            mShareService = new SocialServiceWrapper(getActivity());
-            Article article = mUILogic.getArticle();
-            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
-            mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onComplete(SHARE_MEDIA media, int i, SocializeEntity socializeEntity) {
-                    mShareService = null;
-                }
-            });
-            Activity parent = getActivity();
-            if (parent != null && parent instanceof ShareFragmentDelegate) {
-                ((ShareFragmentDelegate) parent).onFragmentPerformShare(this);
-            }
+            mUILogic.performShare();
             return true;
         }
 
@@ -184,11 +169,11 @@ public class ArticleFragment extends Fragment implements PlayListener {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (playIcon != null) {
+                if (mPlayIconView != null) {
                     playLoading.setVisibility(View.GONE);
                     playLoading.clearAnimation();
-                    playIcon.setVisibility(View.VISIBLE);
-                    LevelListDrawable bg = (LevelListDrawable) playIcon
+                    mPlayIconView.setVisibility(View.VISIBLE);
+                    LevelListDrawable bg = (LevelListDrawable) mPlayIconView
                             .getBackground();
                     bg.setLevel(level);
                 }
@@ -200,7 +185,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                playIcon.setVisibility(View.GONE);
+                mPlayIconView.setVisibility(View.GONE);
                 playLoading.setVisibility(View.VISIBLE);
                 playLoading.startAnimation(getAnimation());
             }
@@ -208,7 +193,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
     }
 
     private int getPlayIconLeve() {
-        LevelListDrawable bg = (LevelListDrawable) playIcon.getBackground();
+        LevelListDrawable bg = (LevelListDrawable) mPlayIconView.getBackground();
         return bg.getLevel();
     }
 
@@ -244,15 +229,15 @@ public class ArticleFragment extends Fragment implements PlayListener {
     private void bindViews(View rootView) {
         mSeekBar = (SeekBar) rootView.findViewById(R.id.play_seekbar);
         pb = (ProgressBar) rootView.findViewById(R.id.image_loading);
-        date = (TextView) rootView.findViewById(R.id.date);
-        articleVol = (TextView) rootView.findViewById(R.id.vol_id);
-        coverPicture = (ImageView) rootView.findViewById(R.id.cover_picture);
-        articleContent = (TextView) rootView.findViewById(R.id.content);
-        articleAuthor = (TextView) rootView.findViewById(R.id.author);
-        likeCount = (TextView) rootView.findViewById(R.id.like_count);
+        mDateLabel = (TextView) rootView.findViewById(R.id.date);
+        mVolumeLabel = (TextView) rootView.findViewById(R.id.vol_id);
+        mCoverImageView = (ImageView) rootView.findViewById(R.id.cover_picture);
+        mArticleContentLabel = (TextView) rootView.findViewById(R.id.content);
+        mAuthorLabel = (TextView) rootView.findViewById(R.id.author);
+        mLikeCountLabel = (TextView) rootView.findViewById(R.id.like_count);
         likeIcon = (ImageView) rootView.findViewById(R.id.like_icon);
-        likeContainer = (LinearLayout) rootView.findViewById(R.id.id_like_contaner);
-        playIcon = (ImageView) rootView.findViewById(R.id.play);
+        mLikeContainer = (LinearLayout) rootView.findViewById(R.id.id_like_contaner);
+        mPlayIconView = (ImageView) rootView.findViewById(R.id.play);
         playLoading = (ImageView) rootView.findViewById(R.id.play_loading);
 
         mMusicCurrentTimeTextView = (TextView) rootView
@@ -263,18 +248,18 @@ public class ArticleFragment extends Fragment implements PlayListener {
 
     private void initContentView() {
         final Article article = mUILogic.getArticle();
-        date.setText(article.getShowTime());
-        articleVol.setText("VOL." + article.pageno);
+        mDateLabel.setText(article.getShowTime());
+        mVolumeLabel.setText("VOL." + article.pageno);
 
-        articleAuthor.setText(article.showauthor);
+        mAuthorLabel.setText(article.showauthor);
 
         ImageLoader.getInstance().displayImage(
-                article.getImageURL(getActivity()), coverPicture,
+                article.getImageURL(getActivity()), mCoverImageView,
                 new ImageShowerListener());
-        articleContent.setText(article.txt);
-        articleContent.setMovementMethod(new ScrollingMovementMethod());
+        mArticleContentLabel.setText(article.txt);
+        mArticleContentLabel.setMovementMethod(new ScrollingMovementMethod());
 
-        playIcon.setOnClickListener(new View.OnClickListener() {
+        mPlayIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -300,31 +285,27 @@ public class ArticleFragment extends Fragment implements PlayListener {
         final LevelListDrawable drawable = (LevelListDrawable) likeIcon
                 .getBackground();
 
-        int articleLike = ArticleLike.getLikeArticle(mUILogic.getArticle().pageno);
-        articleLike = (articleLike == -1) ? mUILogic.getArticle().haslike : articleLike;
+        int isLikeInt = ArticleLike.getLikeArticle(mUILogic.getArticle().pageno);
+        isLikeInt = (isLikeInt == -1) ? mUILogic.getArticle().haslike : isLikeInt;
 
-        if (articleLike == 0) {
+        if (isLikeInt == 0) {
             drawable.setLevel(UN_LIKE_LEVEL);
         } else {
             drawable.setLevel(LIKE_LEVEL);
         }
 
-        likeCount.setText("" + ArticleLike.getLikeCount(article.pageno));
-        likeContainer.setOnClickListener(new View.OnClickListener() {
+        mLikeCountLabel.setText("" + ArticleLike.getLikeCount(article.pageno));
+        mLikeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int level = drawable.getLevel();
                 if (level == UN_LIKE_LEVEL) {
                     drawable.setLevel(LIKE_LEVEL);
-                    ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 1);
-                    mUILogic.likeArticleRemote(mUILogic.getArticle().pageno);
-                    ArticleLike.incLikeCount(mUILogic.getArticle().pageno);
+                    mUILogic.likeArticle(mUILogic.getArticle().pageno);
                     incrLikeCount();
                 } else {
                     drawable.setLevel(UN_LIKE_LEVEL);
-                    ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 0);
-                    mUILogic.unLikeArticleRemote(mUILogic.getArticle().pageno);
-                    descLikeCount();
+                    mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
                     ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
                 }
             }
@@ -349,14 +330,14 @@ public class ArticleFragment extends Fragment implements PlayListener {
     }
 
     private void incrLikeCount() {
-        int val = Integer.parseInt(likeCount.getText().toString());
-        likeCount.setText(String.valueOf(val + 1));
+        int val = Integer.parseInt(mLikeCountLabel.getText().toString());
+        mLikeCountLabel.setText(String.valueOf(val + 1));
     }
 
     private void descLikeCount() {
-        int val = Integer.parseInt(likeCount.getText().toString());
+        int val = Integer.parseInt(mLikeCountLabel.getText().toString());
         if (val > 0) {
-            likeCount.setText(String.valueOf(val - 1));
+            mLikeCountLabel.setText(String.valueOf(val - 1));
         }
     }
 
@@ -366,34 +347,38 @@ public class ArticleFragment extends Fragment implements PlayListener {
             return Article.getArticleByPageNo(pageno);
         }
 
-        private void likeArticleRemote(int pageno) {
+        private void likeArticle(int pageno) {
+            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 1);
+            ArticleLike.incLikeCount(mUILogic.getArticle().pageno);
+
+            CollectedArticleStore.getInstance().add(getArticle());
 
             String url = "http://www.hearheart.com/clicklike";
-
             BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
 
                 @Override
                 protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
                 }
             };
-
             HashMap<String, String> params = new HashMap<>();
             params.put("PhoneId", DeviceUtil.getPhoneId());
             params.put("pageno", String.valueOf(pageno));
             asyncTask.get(params).execute();
         }
 
-        private void unLikeArticleRemote(int pageno) {
+        private void unlikeArticle(int pageno) {
+            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 0);
+            descLikeCount();
+
+            CollectedArticleStore.getInstance().remove(getArticle());
 
             String url = "http://www.hearheart.com/cancellike";
-
             BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
 
                 @Override
                 protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
                 }
             };
-
             HashMap<String, String> params = new HashMap<>();
             params.put("PhoneId", DeviceUtil.getPhoneId());
             params.put("pageno", String.valueOf(pageno));
@@ -412,6 +397,26 @@ public class ArticleFragment extends Fragment implements PlayListener {
 
             return soundUrl;
 
+        }
+
+        private void performShare() {
+            mShareService = new SocialServiceWrapper(getActivity());
+            Article article = mUILogic.getArticle();
+            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
+            mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onComplete(SHARE_MEDIA media, int i, SocializeEntity socializeEntity) {
+                    mShareService = null;
+                }
+            });
+            Activity parent = getActivity();
+            if (parent != null && parent instanceof ShareFragmentDelegate) {
+                ((ShareFragmentDelegate) parent).onFragmentPerformShare(ArticleFragment.this);
+            }
         }
     }
 }

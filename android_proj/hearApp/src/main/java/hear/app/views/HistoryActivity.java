@@ -304,7 +304,7 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         }
 
         public void updateAccount(SnsAccount account, SHARE_MEDIA platform) {
-            SNSAccountStore.getInstance().setLoginAccount(account).setLoginType(platform).synchronize();
+            SNSAccountStore.getInstance().setLoginAccountAndType(account, platform).synchronize();
         }
 
         public void goToAboutUsActivity() {
@@ -313,12 +313,20 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         }
 
         public void goToCollectListActivity() {
+            if (isLogin())
+                CollectionActivity.show(HistoryActivity.this);
+            else
+                showLoginBoardIfNeeded();
         }
 
         public void doCheckUpdate() {
         }
 
         public void doScore() {
+        }
+
+        public boolean isLogin() {
+            return SNSAccountStore.getInstance().isLogin();
         }
     }
 }
