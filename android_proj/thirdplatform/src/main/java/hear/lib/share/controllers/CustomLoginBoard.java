@@ -45,7 +45,6 @@ public class CustomLoginBoard extends Dialog {
         //setup items
         int count = sItemNameArray.length;
         TableLayout container = (TableLayout) findViewById(R.id.container_login);
-        int currentRow = 0;
         TableRow tableRow = createTableRow(container);
         container.addView(tableRow);
         for (int i = 0; i < count; i++) {
