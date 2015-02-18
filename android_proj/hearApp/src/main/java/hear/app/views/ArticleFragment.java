@@ -75,8 +75,9 @@ public class ArticleFragment extends Fragment implements PlayListener {
     private Animation animation;
     private Handler mHandler = new Handler();
     private SeekBarHandler mSeekBarHandler = new SeekBarHandler(this);
-    private UILogic mUILogic = new UILogic();
+    private LogicControl mLogicControl = new LogicControl();
     private SocialServiceWrapper mShareService;
+    private boolean mIsFirstResume = true;
 
     public static final int UN_LIKE_LEVEL = 1;
     public static final int LIKE_LEVEL = 2;
@@ -98,7 +99,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
             if (instance != null && instance.get() != null) {
                 instance.get().updateSeekBarProgress();
 
-                if (Player.instance().isPlaying()) {
+                if (Player.getInstance().isPlaying()) {
                     sendEmptyMessageDelayed(0, 1000);
                 }
             }
@@ -136,6 +137,20 @@ public class ArticleFragment extends Fragment implements PlayListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mIsFirstResume) {
+            mIsFirstResume = false;
+        } else {
+            if (Player.getInstance().isPlaying(mLogicControl.getPlayUrl(mLogicControl.getArticle().soundurl))) {
+                setPlayIconLevel(LEVEL_PAUSE);
+            } else {
+                setPlayIconLevel(LEVEL_PLAY);
+            }
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_frag_article, menu);
@@ -145,7 +160,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
         if (itemID == R.id.item_share) {
-            mUILogic.performShare();
+            mLogicControl.performShare();
             return true;
         }
 
@@ -247,7 +262,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
     }
 
     private void initContentView() {
-        final Article article = mUILogic.getArticle();
+        final Article article = mLogicControl.getArticle();
         mDateLabel.setText(article.getShowTime());
         mVolumeLabel.setText("VOL." + article.pageno);
 
@@ -256,6 +271,13 @@ public class ArticleFragment extends Fragment implements PlayListener {
         ImageLoader.getInstance().displayImage(
                 article.getImageURL(getActivity()), mCoverImageView,
                 new ImageShowerListener());
+        mCoverImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullScreenArticleActivity.show(getActivity(), mLogicControl.getArticle());
+            }
+        });
+
         mArticleContentLabel.setText(article.txt);
         mArticleContentLabel.setMovementMethod(new ScrollingMovementMethod());
 
@@ -265,18 +287,18 @@ public class ArticleFragment extends Fragment implements PlayListener {
 
                 if (getPlayIconLeve() == LEVEL_PLAY) {
 
-                    String playUrl = mUILogic.getPlayUrl(article.soundurl);
+                    String playUrl = mLogicControl.getPlayUrl(article.soundurl);
 
-                    if (Player.instance().isPause(playUrl)) {
-                        Player.instance().resume();
+                    if (Player.getInstance().isPause(playUrl)) {
+                        Player.getInstance().resume();
                         setPlayIconLevel(LEVEL_PAUSE);
                     } else {
-                        Player.instance().play(playUrl, ArticleFragment.this);
+                        Player.getInstance().play(playUrl, ArticleFragment.this);
                         setLoading();
                     }
 
                 } else {
-                    Player.instance().pause();
+                    Player.getInstance().pause();
                     setPlayIconLevel(LEVEL_PLAY);
                 }
             }
@@ -285,8 +307,8 @@ public class ArticleFragment extends Fragment implements PlayListener {
         final LevelListDrawable drawable = (LevelListDrawable) likeIcon
                 .getBackground();
 
-        int isLikeInt = ArticleLike.getLikeArticle(mUILogic.getArticle().pageno);
-        isLikeInt = (isLikeInt == -1) ? mUILogic.getArticle().haslike : isLikeInt;
+        int isLikeInt = ArticleLike.getLikeArticle(mLogicControl.getArticle().pageno);
+        isLikeInt = (isLikeInt == -1) ? mLogicControl.getArticle().haslike : isLikeInt;
 
         if (isLikeInt == 0) {
             drawable.setLevel(UN_LIKE_LEVEL);
@@ -301,17 +323,17 @@ public class ArticleFragment extends Fragment implements PlayListener {
                 int level = drawable.getLevel();
                 if (level == UN_LIKE_LEVEL) {
                     drawable.setLevel(LIKE_LEVEL);
-                    mUILogic.likeArticle(mUILogic.getArticle().pageno);
+                    mLogicControl.likeArticle(mLogicControl.getArticle().pageno);
                     incrLikeCount();
                 } else {
                     drawable.setLevel(UN_LIKE_LEVEL);
-                    mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
-                    ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
+                    mLogicControl.unlikeArticle(mLogicControl.getArticle().pageno);
+                    ArticleLike.descLikeCount(mLogicControl.getArticle().pageno);
                 }
             }
         });
 
-        if (Player.instance().isPlaying(mUILogic.getPlayUrl(article.soundurl))) {
+        if (Player.getInstance().isPlaying(mLogicControl.getPlayUrl(article.soundurl))) {
             setPlayIconLevel(LEVEL_PAUSE);
         } else {
             setPlayIconLevel(LEVEL_PLAY);
@@ -320,11 +342,11 @@ public class ArticleFragment extends Fragment implements PlayListener {
     }
 
     private void updateSeekBarProgress() {
-        mSeekBar.setMax(Player.instance().getMax());
-        mSeekBar.setProgress(Player.instance().getCurrentPos());
+        mSeekBar.setMax(Player.getInstance().getMax());
+        mSeekBar.setProgress(Player.getInstance().getCurrentPos());
         SimpleDateFormat df = new SimpleDateFormat("mm:ss");
-        Date currentDate = new Date(Player.instance().getCurrentPos());
-        Date totalDate = new Date(Player.instance().getMax());
+        Date currentDate = new Date(Player.getInstance().getCurrentPos());
+        Date totalDate = new Date(Player.getInstance().getMax());
         mMusicCurrentTimeTextView.setText(df.format(currentDate));
         mMusicTotalTimeTextView.setText(df.format(totalDate));
     }
@@ -341,15 +363,21 @@ public class ArticleFragment extends Fragment implements PlayListener {
         }
     }
 
-    private class UILogic {
+    private class LogicControl {
+        private Article mArticle;
+
         private Article getArticle() {
-            int pageno = getArguments().getInt(KEY_ARTICLE);
-            return Article.getArticleByPageNo(pageno);
+            if (mArticle == null) {
+                int pageno = getArguments().getInt(KEY_ARTICLE);
+                mArticle = Article.getArticleByPageNo(pageno);
+            }
+
+            return mArticle;
         }
 
         private void likeArticle(int pageno) {
-            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 1);
-            ArticleLike.incLikeCount(mUILogic.getArticle().pageno);
+            ArticleLike.setLikeArticle(mLogicControl.getArticle().pageno, 1);
+            ArticleLike.incLikeCount(mLogicControl.getArticle().pageno);
 
             CollectedArticleStore.getInstance().add(getArticle());
 
@@ -367,7 +395,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
         }
 
         private void unlikeArticle(int pageno) {
-            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 0);
+            ArticleLike.setLikeArticle(mLogicControl.getArticle().pageno, 0);
             descLikeCount();
 
             CollectedArticleStore.getInstance().remove(getArticle());
@@ -401,7 +429,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
 
         private void performShare() {
             mShareService = new SocialServiceWrapper(getActivity());
-            Article article = mUILogic.getArticle();
+            Article article = mLogicControl.getArticle();
             mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -208,9 +209,18 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         mViewPager = (ViewPager) findViewById(R.id.vp_pages);
         mEmptyButton = (TextView) findViewById(R.id.btn_empty);
 
-        /** setup actionbar **/
-
         /** setup ViewPager **/
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                Log.e("Hear", "position:" + position);
+                if (position == 0)
+                    mResideMenu.removeIgnoredView(mViewPager);
+                else
+                    mResideMenu.addIgnoredView(mViewPager);
+            }
+        });
         List<Article> mArticles = mUILogic.fetchCacheArticles();
         if (ArrayUtils.isEmpty(mArticles)) {
             onNoArticles();
@@ -230,7 +240,7 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         mResideMenu.attachToActivity(this);
 //        mResideMenu.setMenuListener(menuListener);
         mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
+//        mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         mResideMenu.setScaleValue(0.9f);
 

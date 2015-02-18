@@ -53,6 +53,10 @@
             android:name=".views.CollectionActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".views.FullScreenArticleActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".service.CacheMediaService"
             android:exported="false" />

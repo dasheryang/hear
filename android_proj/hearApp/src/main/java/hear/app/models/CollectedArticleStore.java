@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.umeng.socialize.bean.SnsAccount;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,8 +21,8 @@ import hear.app.helper.FileUtils;
  */
 public class CollectedArticleStore {
     private static CollectedArticleStore sInstance;
-    private LinkedList<Article> mCollectedDataSet;
-    private LinkedList<Article> mCacheDataSet;
+    private LinkedList<Article> mCollectedDataSet = new LinkedList<>();
+    private LinkedList<Article> mCacheDataSet = new LinkedList<>();
     @SuppressWarnings("FieldCanBeLocal")
     private SNSAccountStore.LoginStateListener mListener = new SNSAccountStore.LoginStateListener() {
         @Override
