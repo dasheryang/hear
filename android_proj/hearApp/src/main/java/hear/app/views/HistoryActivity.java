@@ -23,9 +23,9 @@ import com.umeng.socialize.bean.SnsAccount;
 import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +33,6 @@ import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
-import hear.app.helper.LogUtil;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.models.JsonRespWrapper;
@@ -286,12 +285,10 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
                 protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
                     if (jsonRespWrapper.ret == 0) {
                         InActivityHelper.ArticleListWrapper wrapper = (InActivityHelper.ArticleListWrapper) jsonRespWrapper;
-                        LogUtil.d("resp data:" + Arrays.toString(wrapper.data));
                         Article.saveArtilcleList(AppContext.getGSON().toJson(
                                 wrapper.data));
                         initContentView();
                     } else {
-                        LogUtil.d("get response fail:" + jsonRespWrapper.ret);
                         ToastUtil.Short(jsonRespWrapper.reason);
                     }
                 }
@@ -330,6 +327,7 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         }
 
         public void doCheckUpdate() {
+            UmengUpdateAgent.forceUpdate(HistoryActivity.this);
         }
 
         public void doScore() {
