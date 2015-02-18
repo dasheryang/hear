@@ -2,9 +2,10 @@
 <resources>
 
     <string name="app_name">听见</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_about_us">AboutUs</string>
-    <string name="about_us">This is about us page</string>
 
+    <string name="title_about_us">关于我们</string>
+
+    <string name="content_about_us">时间会带来惊喜\n只要我们\n肯认真的 有希望的\n走过每一天\n而每一天\n都有我们陪着你</string>
+
+    <string name="item_back">返回</string>
 </resources>
