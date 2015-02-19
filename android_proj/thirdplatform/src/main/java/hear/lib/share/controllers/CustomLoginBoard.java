@@ -42,6 +42,14 @@ public class CustomLoginBoard extends Dialog {
     }
 
     private void initContentView() {
+        //setup cancelButton
+        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         //setup items
         int count = sItemNameArray.length;
         TableLayout container = (TableLayout) findViewById(R.id.container_login);

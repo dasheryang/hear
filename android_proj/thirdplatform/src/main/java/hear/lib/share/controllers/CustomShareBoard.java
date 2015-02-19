@@ -2,7 +2,6 @@ package hear.lib.share.controllers;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +40,14 @@ public class CustomShareBoard extends Dialog {
     }
 
     private void initContentView() {
+        //setup cancelButton
+        findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         //setup items
         int count = sItemNameArray.length;
         TableLayout container = (TableLayout) findViewById(R.id.container_share);
@@ -52,7 +59,6 @@ public class CustomShareBoard extends Dialog {
                 currentRow++;
                 tableRow = createTableRow(container);
                 container.addView(tableRow);
-                Log.e("AAA", "new tableRow");
             }
             tableRow.addView(createItemWithInfo(sMediaArray[i], sItemNameArray[i], sItemImageResArray[i], tableRow));
         }
