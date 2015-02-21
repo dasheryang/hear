@@ -7,7 +7,10 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,9 +48,9 @@ import hear.lib.share.models.ShareContent;
 public class ArticleFragment extends Fragment {
 
     private LinearLayout mLikeContainer;
-    private ImageView likeIcon = null;
+    private ImageView mLikeImage = null;
     private TextView mLikeCountLabel = null;
-    private TextView mArticleContentLabel = null;
+    private TextView mContentLabel = null;
     private TextView mAuthorLabel = null;
     private ImageView mCoverImageView = null;
     private TextView mVolumeLabel = null;
@@ -80,7 +83,7 @@ public class ArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.article_fragment, container, false);
+        return inflater.inflate(R.layout.frag_article, container, false);
     }
 
     @Override
@@ -117,15 +120,15 @@ public class ArticleFragment extends Fragment {
     }
 
     private void bindViews(View rootView) {
-        pb = (ProgressBar) rootView.findViewById(R.id.image_loading);
-        mDateLabel = (TextView) rootView.findViewById(R.id.date);
-        mVolumeLabel = (TextView) rootView.findViewById(R.id.vol_id);
-        mCoverImageView = (ImageView) rootView.findViewById(R.id.cover_picture);
-        mArticleContentLabel = (TextView) rootView.findViewById(R.id.content);
-        mAuthorLabel = (TextView) rootView.findViewById(R.id.author);
-        mLikeCountLabel = (TextView) rootView.findViewById(R.id.like_count);
-        likeIcon = (ImageView) rootView.findViewById(R.id.like_icon);
-        mLikeContainer = (LinearLayout) rootView.findViewById(R.id.id_like_contaner);
+        pb = (ProgressBar) rootView.findViewById(R.id.img_loading);
+        mDateLabel = (TextView) rootView.findViewById(R.id.label_date);
+        mVolumeLabel = (TextView) rootView.findViewById(R.id.label_volume);
+        mCoverImageView = (ImageView) rootView.findViewById(R.id.img_cover);
+        mContentLabel = (TextView) rootView.findViewById(R.id.label_content);
+        mAuthorLabel = (TextView) rootView.findViewById(R.id.label_author);
+        mLikeCountLabel = (TextView) rootView.findViewById(R.id.label_like_count);
+        mLikeImage = (ImageView) rootView.findViewById(R.id.img_like);
+        mLikeContainer = (LinearLayout) rootView.findViewById(R.id.container_like);
     }
 
     private void initContentView() {
@@ -148,10 +151,10 @@ public class ArticleFragment extends Fragment {
             }
         });
 
-        mArticleContentLabel.setText(article.txt);
-        mArticleContentLabel.setMovementMethod(new ScrollingMovementMethod());
+        mContentLabel.setText(article.txt);
+        mContentLabel.setMovementMethod(new ScrollingMovementMethod());
 
-        final LevelListDrawable drawable = (LevelListDrawable) likeIcon
+        final LevelListDrawable drawable = (LevelListDrawable) mLikeImage
                 .getBackground();
 
         int isLikeInt = ArticleLike.getLikeArticle(mUILogic.getArticle().pageno);

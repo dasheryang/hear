@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent">
+
+        <RelativeLayout
+            android:id="@+id/container_main"
+            android:layout_width="330dp"
+            android:layout_height="330dp"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/img_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_centerInParent="true" />
+
+            <ProgressBar
+                android:id="@+id/img_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:id="@+id/label_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_alignParentBottom="true"
+                tools:text="6.15/2014" />
+
+            <TextView
+                android:id="@+id/label_volume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/label_date"
+                android:layout_marginBottom="4dp"
+                android:layout_alignLeft="@id/label_date"
+                tools:text="vol 1" />
+
+            <LinearLayout
+                android:id="@+id/container_like"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="3dp">
+
+                <ImageView
+                    android:id="@+id/img_like"
+                    android:layout_width="21dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/like_icon" />
+
+                <TextView
+                    android:id="@+id/label_like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:paddingLeft="3dp"
+                    tools:text="2013"
+                    android:textSize="9sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:background="#053049"
+            android:layout_below="@id/container_main"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/label_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="3"
+                android:ellipsize="end"
+                tools:text="满足是什么，狗舔冰激凌，鱼在陆地奔跑，大象在炎炎夏日开心地跳橡皮筋，而我也终于牵到了你的手"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/label_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginTop="8dp"
+                tools:text="by 银古Fary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</FrameLayout>

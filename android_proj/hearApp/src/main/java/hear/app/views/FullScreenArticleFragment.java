@@ -47,7 +47,7 @@ public class FullScreenArticleFragment extends Fragment {
     ImageView mBGImage;
     @InjectView(R.id.image_play)
     ImageView mPlayImage;
-    @InjectView(R.id.image_loading)
+    @InjectView(R.id.img_loading)
     ImageView mLoadingImage;
 
     private LogicControl mLogicControl = new LogicControl();
