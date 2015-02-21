@@ -9,6 +9,7 @@ import java.io.File;
 
 import hear.app.helper.LogUtil;
 import hear.app.helper.ToastUtil;
+import hear.app.models.Article;
 
 /**
  * Created by power on 14-8-23.
@@ -18,10 +19,12 @@ public class Player {
     public final static int STATE_PAUSE = 2;
 
     private static Player sInstance;
-    private MediaPlayer mediaPlayer;
-    private String mCurrentUrl = null;
+    private MediaPlayer mMediaPlayer;
+    private String mLastPlayURL = null;
+    private Article mLastPlayArticle = null;
     private PlayListener mPlayerListener;
     private Handler mHandler = new Handler();
+    private boolean mIsLoading = false;
 
     private Player() {
     }
@@ -43,53 +46,45 @@ public class Player {
         }
     }
 
+    public boolean isLoading() {
+        return !TextUtils.isEmpty(mLastPlayURL) && mMediaPlayer != null
+                && mIsLoading;
+    }
+
+    public boolean isLoading(String url) {
+        return isLoading() && mLastPlayURL.equals(url);
+    }
+
     public boolean isPlaying() {
-        return !TextUtils.isEmpty(mCurrentUrl) && mediaPlayer != null
-                && mediaPlayer.isPlaying();
+        return !TextUtils.isEmpty(mLastPlayURL) && isMediaPlaying();
     }
 
     public boolean isPlaying(String url) {
-        return isPlaying() && mCurrentUrl.equalsIgnoreCase(url);
+        return isPlaying() && mLastPlayURL.equalsIgnoreCase(url);
     }
 
     public boolean isPause(String url) {
-        return !TextUtils.isEmpty(mCurrentUrl) && mCurrentUrl.equals(url);
+        return !TextUtils.isEmpty(mLastPlayURL) && mLastPlayURL.equals(url);
     }
 
-    public void resume() {
-        try {
-            if (mediaPlayer != null) {
-                mediaPlayer.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean play(String url, PlayListener listener) {
-        if (!TextUtils.isEmpty(url)) {
-            if (url.equals(mCurrentUrl)) {
+    public boolean play(Article article, String playURL, PlayListener listener) {
+        if (!TextUtils.isEmpty(playURL)) {
+            if (playURL.equals(mLastPlayURL)) {
                 return true;
             }
-            mCurrentUrl = url;
-            playUsingURL(url, listener);
+            mLastPlayURL = playURL;
+            mLastPlayArticle = article;
+            playCode(playURL, listener);
             return true;
         }
         return false;
     }
 
-    public void pause() {
-        LogUtil.d("pause");
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-        }
-    }
+    private void playCode(String playURL, PlayListener listener) {
 
-    public void playUsingURL(final String url, PlayListener listener) {
-
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
         }
 
         if (mPlayerListener != null) {
@@ -98,19 +93,21 @@ public class Player {
 
         mPlayerListener = listener;
         // url ="http://static.dbmeizi.com/1973.mp3";
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
+        final String url = playURL;
         try {
+            mMediaPlayer.setDataSource(url);
+            mMediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
 
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
-
-            mediaPlayer
+            mIsLoading = true;
+            mMediaPlayer
                     .setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
-                            mediaPlayer.start();
+                            mIsLoading = false;
+                            mMediaPlayer.start();
                             mPlayerListener.onLoadingEnd();
                             Runnable r = getProgressRunnable();
                             if (r != null) {
@@ -119,16 +116,15 @@ public class Player {
                         }
                     });
 
-            mediaPlayer
+            mMediaPlayer
                     .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
-                            LogUtil.d("on complete");
                             onMediaPlayComplete();
                         }
                     });
 
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
                     LogUtil.d("what:" + what);
@@ -154,33 +150,62 @@ public class Player {
         }
     }
 
+    public void resume() {
+        try {
+            if (mMediaPlayer != null) {
+                mMediaPlayer.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pause() {
+        LogUtil.d("pause");
+        if (mMediaPlayer != null) {
+            mMediaPlayer.pause();
+        }
+    }
+
     public int getState() {
-        if (mediaPlayer != null
-                && (mediaPlayer.isPlaying() || mediaPlayer.isLooping())) {
+        if (mMediaPlayer != null
+                && (mMediaPlayer.isPlaying() || mMediaPlayer.isLooping())) {
             return STATE_PLAYING;
         }
         return STATE_PAUSE;
     }
 
     public void onToggle() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
         } else {
-            mediaPlayer.start();
+            mMediaPlayer.start();
         }
     }
 
     public int getMax() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getDuration();
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getDuration();
         }
         return 0;
     }
 
     public int getCurrentPos() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getCurrentPosition();
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getCurrentPosition();
         }
         return 0;
+    }
+
+    public Article getLastPlayArticle() {
+        return mLastPlayArticle;
+    }
+
+    private boolean isMediaPlaying() {
+        try {
+            return mMediaPlayer != null && mMediaPlayer.isPlaying();
+        } catch (IllegalStateException igonred) {
+            return false;
+        }
     }
 }

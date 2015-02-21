@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -42,13 +41,14 @@ import hear.lib.share.SocialServiceWrapper;
 /**
  * Created by power on 14-8-11.
  */
-public class HistoryActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate {
+public class HistoryActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate,ArticleFragmentDelegate {
     private ViewPager mViewPager;
     private TextView mEmptyButton;
     private ResideMenu mResideMenu;
     private View mLoginButton;
     private SocialServiceWrapper mLoginService;
     private UILogic mUILogic = new UILogic();
+    private PlaybarControl mPlaybarControl;
     private WeakReference<Fragment> mSharingFragment;
 
     @Override
@@ -58,12 +58,15 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         setContentView(R.layout.history);
         initContentView();
         updateAccountView();
+        mPlaybarControl = new PlaybarControl(this);
+        mPlaybarControl.prepare(findViewById(R.id.playbar));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mUILogic.refreshRemoteArticleIfNeeded();
+        mPlaybarControl.update();
     }
 
     @Override
@@ -103,13 +106,6 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (mLoginService != null)
@@ -126,14 +122,19 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         mSharingFragment = new WeakReference<>(fragment);
     }
 
+    @Override
+    public void onRequestPlayArticle(Article article) {
+        mPlaybarControl.playArticle(article);
+    }
+
     protected void onLoginSuccess() {
-        Toast.makeText(HistoryActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(HistoryActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
         mLoginService = null;
         updateAccountView();
     }
 
     protected void onLoginFail() {
-        Toast.makeText(HistoryActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(HistoryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
         mLoginService = null;
     }
 
@@ -213,14 +214,17 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                Log.e("Hear", "position:" + position);
                 if (position == 0)
                     mResideMenu.removeIgnoredView(mViewPager);
                 else
                     mResideMenu.addIgnoredView(mViewPager);
+                List<Article> articles = mUILogic.getCacheArticles();
+                if (articles != null) {
+                    mPlaybarControl.setDefaultArticle(articles.get(position));
+                }
             }
         });
-        List<Article> mArticles = mUILogic.fetchCacheArticles();
+        List<Article> mArticles = mUILogic.getCacheArticles();
         if (ArrayUtils.isEmpty(mArticles)) {
             onNoArticles();
         } else {
@@ -257,14 +261,19 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
     private class UILogic {
         private boolean after22Refreshed = false;
         private InActivityHelper helper = new InActivityHelper(HistoryActivity.this);
+        private List<Article> mArticle;
 
-        public List<Article> fetchCacheArticles() {
-            Article[] articles = Article.getAllArticles();
-            if (ArrayUtils.isEmpty(articles)) {
-                return null;
-            } else {
-                return ArrayUtils.from(articles);
+        public List<Article> getCacheArticles() {
+            if (mArticle == null) {
+                Article[] articles = Article.getAllArticles();
+                if (ArrayUtils.isEmpty(articles)) {
+                    return null;
+                } else {
+                    mArticle = ArrayUtils.from(articles);
+                }
             }
+
+            return mArticle;
         }
 
         /**

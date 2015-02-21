@@ -77,7 +77,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.My
         }
 
         public void onItemClick(View cell, Article item) {
-            Toast.makeText(cell.getContext(), "OnClick!!", Toast.LENGTH_SHORT).show();
+            FullScreenArticleActivity.show(cell.getContext(), item);
         }
     }
 }

@@ -5,24 +5,18 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -32,19 +26,12 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.DeviceUtil;
-import hear.app.helper.SDCardUtils;
 import hear.app.helper.ToastUtil;
-import hear.app.media.PlayListener;
-import hear.app.media.Player;
 import hear.app.models.Article;
 import hear.app.models.ArticleLike;
 import hear.app.models.CollectedArticleStore;
@@ -55,11 +42,9 @@ import hear.lib.share.models.ShareContent;
 /**
  * Created by power on 14-8-11.
  */
-public class ArticleFragment extends Fragment implements PlayListener {
+public class ArticleFragment extends Fragment {
 
     private LinearLayout mLikeContainer;
-    private ImageView mPlayIconView = null;
-    private ImageView playLoading = null;
     private ImageView likeIcon = null;
     private TextView mLikeCountLabel = null;
     private TextView mArticleContentLabel = null;
@@ -67,44 +52,14 @@ public class ArticleFragment extends Fragment implements PlayListener {
     private ImageView mCoverImageView = null;
     private TextView mVolumeLabel = null;
     private TextView mDateLabel = null;
-    private SeekBar mSeekBar;
-    private TextView mMusicCurrentTimeTextView = null;
-    private TextView mMusicTotalTimeTextView = null;
     private ProgressBar pb;
 
-    private Animation animation;
-    private Handler mHandler = new Handler();
-    private SeekBarHandler mSeekBarHandler = new SeekBarHandler(this);
-    private LogicControl mLogicControl = new LogicControl();
+    private UILogic mUILogic = new UILogic();
     private SocialServiceWrapper mShareService;
-    private boolean mIsFirstResume = true;
 
     public static final int UN_LIKE_LEVEL = 1;
     public static final int LIKE_LEVEL = 2;
     public static final String KEY_ARTICLE = "article";
-    private static final String TAG = "ArticleFragment";
-    public static int LEVEL_PLAY = 1;
-    public static int LEVEL_PAUSE = 2;
-
-    private static class SeekBarHandler extends Handler {
-
-        private WeakReference<ArticleFragment> instance;
-
-        public SeekBarHandler(ArticleFragment fragment) {
-            instance = new WeakReference<>(fragment);
-        }
-
-        public void handleMessage(android.os.Message msg) {
-
-            if (instance != null && instance.get() != null) {
-                instance.get().updateSeekBarProgress();
-
-                if (Player.getInstance().isPlaying()) {
-                    sendEmptyMessageDelayed(0, 1000);
-                }
-            }
-        }
-    }
 
     public class ImageShowerListener extends SimpleImageLoadingListener {
 
@@ -137,20 +92,6 @@ public class ArticleFragment extends Fragment implements PlayListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mIsFirstResume) {
-            mIsFirstResume = false;
-        } else {
-            if (Player.getInstance().isPlaying(mLogicControl.getPlayUrl(mLogicControl.getArticle().soundurl))) {
-                setPlayIconLevel(LEVEL_PAUSE);
-            } else {
-                setPlayIconLevel(LEVEL_PLAY);
-            }
-        }
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_frag_article, menu);
@@ -160,7 +101,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
         if (itemID == R.id.item_share) {
-            mLogicControl.performShare();
+            mUILogic.performShare();
             return true;
         }
 
@@ -175,74 +116,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
         }
     }
 
-    @Override
-    public void onOtherStart() {
-        setPlayIconLevel(LEVEL_PLAY);
-    }
-
-    private void setPlayIconLevel(final int level) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mPlayIconView != null) {
-                    playLoading.setVisibility(View.GONE);
-                    playLoading.clearAnimation();
-                    mPlayIconView.setVisibility(View.VISIBLE);
-                    LevelListDrawable bg = (LevelListDrawable) mPlayIconView
-                            .getBackground();
-                    bg.setLevel(level);
-                }
-            }
-        });
-    }
-
-    private void setLoading() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mPlayIconView.setVisibility(View.GONE);
-                playLoading.setVisibility(View.VISIBLE);
-                playLoading.startAnimation(getAnimation());
-            }
-        });
-    }
-
-    private int getPlayIconLeve() {
-        LevelListDrawable bg = (LevelListDrawable) mPlayIconView.getBackground();
-        return bg.getLevel();
-    }
-
-    @Override
-    public void onComplete() {
-        setPlayIconLevel(LEVEL_PLAY);
-    }
-
-    @Override
-    public void onLoadingEnd() {
-        mSeekBarHandler.sendEmptyMessage(0);
-        mHandler.post(new Runnable() {
-
-            @Override
-            public void run() {
-                mMusicCurrentTimeTextView.setVisibility(View.VISIBLE);
-                mMusicTotalTimeTextView.setVisibility(View.VISIBLE);
-            }
-        });
-        setPlayIconLevel(LEVEL_PAUSE);
-    }
-
-    public Animation getAnimation() {
-        if (animation == null) {
-            animation = AnimationUtils.loadAnimation(this.getActivity(),
-                    R.anim.tip);
-            LinearInterpolator lin = new LinearInterpolator();
-            animation.setInterpolator(lin);
-        }
-        return animation;
-    }
-
     private void bindViews(View rootView) {
-        mSeekBar = (SeekBar) rootView.findViewById(R.id.play_seekbar);
         pb = (ProgressBar) rootView.findViewById(R.id.image_loading);
         mDateLabel = (TextView) rootView.findViewById(R.id.date);
         mVolumeLabel = (TextView) rootView.findViewById(R.id.vol_id);
@@ -252,17 +126,10 @@ public class ArticleFragment extends Fragment implements PlayListener {
         mLikeCountLabel = (TextView) rootView.findViewById(R.id.like_count);
         likeIcon = (ImageView) rootView.findViewById(R.id.like_icon);
         mLikeContainer = (LinearLayout) rootView.findViewById(R.id.id_like_contaner);
-        mPlayIconView = (ImageView) rootView.findViewById(R.id.play);
-        playLoading = (ImageView) rootView.findViewById(R.id.play_loading);
-
-        mMusicCurrentTimeTextView = (TextView) rootView
-                .findViewById(R.id.play_current_time);
-        mMusicTotalTimeTextView = (TextView) rootView
-                .findViewById(R.id.play_total_time);
     }
 
     private void initContentView() {
-        final Article article = mLogicControl.getArticle();
+        final Article article = mUILogic.getArticle();
         mDateLabel.setText(article.getShowTime());
         mVolumeLabel.setText("VOL." + article.pageno);
 
@@ -274,41 +141,21 @@ public class ArticleFragment extends Fragment implements PlayListener {
         mCoverImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FullScreenArticleActivity.show(getActivity(), mLogicControl.getArticle());
+                if (getActivity() instanceof ArticleFragmentDelegate) {
+                    ArticleFragmentDelegate delegate = (ArticleFragmentDelegate) getActivity();
+                    delegate.onRequestPlayArticle(mUILogic.getArticle());
+                }
             }
         });
 
         mArticleContentLabel.setText(article.txt);
         mArticleContentLabel.setMovementMethod(new ScrollingMovementMethod());
 
-        mPlayIconView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (getPlayIconLeve() == LEVEL_PLAY) {
-
-                    String playUrl = mLogicControl.getPlayUrl(article.soundurl);
-
-                    if (Player.getInstance().isPause(playUrl)) {
-                        Player.getInstance().resume();
-                        setPlayIconLevel(LEVEL_PAUSE);
-                    } else {
-                        Player.getInstance().play(playUrl, ArticleFragment.this);
-                        setLoading();
-                    }
-
-                } else {
-                    Player.getInstance().pause();
-                    setPlayIconLevel(LEVEL_PLAY);
-                }
-            }
-        });
-
         final LevelListDrawable drawable = (LevelListDrawable) likeIcon
                 .getBackground();
 
-        int isLikeInt = ArticleLike.getLikeArticle(mLogicControl.getArticle().pageno);
-        isLikeInt = (isLikeInt == -1) ? mLogicControl.getArticle().haslike : isLikeInt;
+        int isLikeInt = ArticleLike.getLikeArticle(mUILogic.getArticle().pageno);
+        isLikeInt = (isLikeInt == -1) ? mUILogic.getArticle().haslike : isLikeInt;
 
         if (isLikeInt == 0) {
             drawable.setLevel(UN_LIKE_LEVEL);
@@ -323,32 +170,15 @@ public class ArticleFragment extends Fragment implements PlayListener {
                 int level = drawable.getLevel();
                 if (level == UN_LIKE_LEVEL) {
                     drawable.setLevel(LIKE_LEVEL);
-                    mLogicControl.likeArticle(mLogicControl.getArticle().pageno);
+                    mUILogic.likeArticle(mUILogic.getArticle().pageno);
                     incrLikeCount();
                 } else {
                     drawable.setLevel(UN_LIKE_LEVEL);
-                    mLogicControl.unlikeArticle(mLogicControl.getArticle().pageno);
-                    ArticleLike.descLikeCount(mLogicControl.getArticle().pageno);
+                    mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
+                    ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
                 }
             }
         });
-
-        if (Player.getInstance().isPlaying(mLogicControl.getPlayUrl(article.soundurl))) {
-            setPlayIconLevel(LEVEL_PAUSE);
-        } else {
-            setPlayIconLevel(LEVEL_PLAY);
-        }
-
-    }
-
-    private void updateSeekBarProgress() {
-        mSeekBar.setMax(Player.getInstance().getMax());
-        mSeekBar.setProgress(Player.getInstance().getCurrentPos());
-        SimpleDateFormat df = new SimpleDateFormat("mm:ss");
-        Date currentDate = new Date(Player.getInstance().getCurrentPos());
-        Date totalDate = new Date(Player.getInstance().getMax());
-        mMusicCurrentTimeTextView.setText(df.format(currentDate));
-        mMusicTotalTimeTextView.setText(df.format(totalDate));
     }
 
     private void incrLikeCount() {
@@ -363,7 +193,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
         }
     }
 
-    private class LogicControl {
+    private class UILogic {
         private Article mArticle;
 
         private Article getArticle() {
@@ -376,8 +206,8 @@ public class ArticleFragment extends Fragment implements PlayListener {
         }
 
         private void likeArticle(int pageno) {
-            ArticleLike.setLikeArticle(mLogicControl.getArticle().pageno, 1);
-            ArticleLike.incLikeCount(mLogicControl.getArticle().pageno);
+            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 1);
+            ArticleLike.incLikeCount(mUILogic.getArticle().pageno);
 
             CollectedArticleStore.getInstance().add(getArticle());
 
@@ -395,7 +225,7 @@ public class ArticleFragment extends Fragment implements PlayListener {
         }
 
         private void unlikeArticle(int pageno) {
-            ArticleLike.setLikeArticle(mLogicControl.getArticle().pageno, 0);
+            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 0);
             descLikeCount();
 
             CollectedArticleStore.getInstance().remove(getArticle());
@@ -413,23 +243,9 @@ public class ArticleFragment extends Fragment implements PlayListener {
             asyncTask.get(params).execute();
         }
 
-        private String getPlayUrl(String soundUrl) {
-            String mediaName = soundUrl.substring(soundUrl.lastIndexOf("/") + 1);
-
-            File file = new File(SDCardUtils.getMediaCachePath(), mediaName);
-
-            if (file.exists()) {
-                Log.d(TAG, mediaName + " 在本地已经有缓存");
-                return file.getPath();
-            }
-
-            return soundUrl;
-
-        }
-
         private void performShare() {
             mShareService = new SocialServiceWrapper(getActivity());
-            Article article = mLogicControl.getArticle();
+            Article article = mUILogic.getArticle();
             mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override

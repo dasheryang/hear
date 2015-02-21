@@ -63,6 +63,7 @@ public class Article {
 
     public final static String KEY_ALL_ARTICLE = "all_article";
 
+
     /**
      *
      */

@@ -10,5 +10,4 @@ public interface PlayListener {
     public void onComplete();
 
     public void onLoadingEnd();
-
 }

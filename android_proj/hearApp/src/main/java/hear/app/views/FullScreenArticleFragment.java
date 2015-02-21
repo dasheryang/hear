@@ -107,7 +107,7 @@ public class FullScreenArticleFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
-        if(itemID == R.id.item_share) {
+        if (itemID == R.id.item_share) {
             mLogicControl.performShare();
             return true;
         }
@@ -183,7 +183,7 @@ public class FullScreenArticleFragment extends Fragment {
         }
 
         public void play() {
-            Player.getInstance().play(getPlayUrl(), mPlayListener);
+            Player.getInstance().play(getArticle(), getPlayUrl(), mPlayListener);
         }
 
         public void pause() {
