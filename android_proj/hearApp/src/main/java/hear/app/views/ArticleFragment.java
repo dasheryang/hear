@@ -7,10 +7,7 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,11 +31,13 @@ import java.util.HashMap;
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.DeviceUtil;
+import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.models.ArticleLike;
 import hear.app.models.CollectedArticleStore;
 import hear.app.models.JsonRespWrapper;
+import hear.app.models.SNSAccountStore;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
 
@@ -119,6 +118,35 @@ public class ArticleFragment extends Fragment {
         }
     }
 
+    void onLikeButtonClick() {
+        final LevelListDrawable drawable = (LevelListDrawable) mLikeImage
+                .getBackground();
+        int level = drawable.getLevel();
+        if (level == UN_LIKE_LEVEL) {
+            drawable.setLevel(LIKE_LEVEL);
+            if (SNSAccountStore.getInstance().isLogin())
+                ToastHelper.showCollected(getActivity());
+
+            mUILogic.likeArticle(mUILogic.getArticle().pageno);
+            incrLikeCount();
+        } else {
+            if (SNSAccountStore.getInstance().isLogin()) {
+                new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
+                    @Override
+                    public void onConfirmButtonClick() {
+                        drawable.setLevel(UN_LIKE_LEVEL);
+                        mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
+                        ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
+                    }
+                }).show();
+            } else {
+                drawable.setLevel(UN_LIKE_LEVEL);
+                mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
+                ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
+            }
+        }
+    }
+
     private void bindViews(View rootView) {
         pb = (ProgressBar) rootView.findViewById(R.id.img_loading);
         mDateLabel = (TextView) rootView.findViewById(R.id.label_date);
@@ -170,16 +198,7 @@ public class ArticleFragment extends Fragment {
         mLikeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int level = drawable.getLevel();
-                if (level == UN_LIKE_LEVEL) {
-                    drawable.setLevel(LIKE_LEVEL);
-                    mUILogic.likeArticle(mUILogic.getArticle().pageno);
-                    incrLikeCount();
-                } else {
-                    drawable.setLevel(UN_LIKE_LEVEL);
-                    mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
-                    ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
-                }
+                onLikeButtonClick();
             }
         });
     }
@@ -227,7 +246,7 @@ public class ArticleFragment extends Fragment {
             asyncTask.get(params).execute();
         }
 
-        private void unlikeArticle(int pageno) {
+        private void unlikeArticle(final int pageno) {
             ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 0);
             descLikeCount();
 

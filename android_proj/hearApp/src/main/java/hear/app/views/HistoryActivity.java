@@ -32,6 +32,7 @@ import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
+import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.models.JsonRespWrapper;
@@ -340,6 +341,7 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         }
 
         public void doScore() {
+            ToastHelper.showCollected(HistoryActivity.this);
         }
 
         public boolean isLogin() {
