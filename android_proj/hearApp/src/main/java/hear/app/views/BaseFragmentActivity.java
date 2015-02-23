@@ -3,7 +3,7 @@ package hear.app.views;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
-import com.baidu.mobstat.StatService;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by power on 14-9-10.
@@ -23,7 +23,7 @@ public class BaseFragmentActivity extends ActionBarActivity {
             onFirstResume();
         }
         if (needActivityStat()) {
-            StatService.onResume(this);
+            MobclickAgent.onResume(this);
         }
         super.onResume();
     }
@@ -31,7 +31,7 @@ public class BaseFragmentActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         if (needActivityStat()) {
-            StatService.onPause(this);
+            MobclickAgent.onPause(this);
         }
         super.onPause();
     }

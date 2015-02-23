@@ -29,6 +29,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import hear.app.R;
 import hear.app.helper.SDCardUtils;
+import hear.app.helper.StatHelper;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
@@ -195,7 +196,7 @@ public class FullScreenArticleFragment extends Fragment {
         }
 
         public void performShare() {
-            Article article = getArticle();
+            final Article article = getArticle();
             mShareService = new SocialServiceWrapper(getActivity());
             mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
@@ -208,6 +209,9 @@ public class FullScreenArticleFragment extends Fragment {
 
                 @Override
                 public void onComplete(SHARE_MEDIA media, int i, SocializeEntity socializeEntity) {
+                    if (i == 200) {
+                        StatHelper.onArticleShare(getActivity(), article, media);
+                    }
                     mShareService = null;
                 }
             });

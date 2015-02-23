@@ -2,43 +2,39 @@ package hear.app.views;
 
 import android.app.Activity;
 
-import com.baidu.mobstat.StatService;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by power on 14-9-10.
  */
-public class BaseActivity extends Activity{
-    public boolean needActivityStat(){
+public class BaseActivity extends Activity {
+    private boolean isFirstResumed = false;
+
+    public boolean needActivityStat() {
         return true;
     }
 
     @Override
-    protected void onPause() {
-        if(needActivityStat()){
-            StatService.onPause(this);
-        }
-        super.onPause();
-    }
-
-    private boolean isFirstResumed=false;
-
-    /**
-     * 用来被覆盖
-     */
-    protected void onFirstResume(){
-        //pass
-    }
-    
-    @Override
     protected void onResume() {
-        if(!isFirstResumed){
-            isFirstResumed=true;
+        if (!isFirstResumed) {
+            isFirstResumed = true;
             onFirstResume();
         }
-        if(needActivityStat()){
-            StatService.onResume(this);
+        if (needActivityStat()) {
+            MobclickAgent.onResume(this);
         }
         super.onResume();
     }
 
+
+    @Override
+    protected void onPause() {
+        if (needActivityStat()) {
+            MobclickAgent.onPause(this);
+        }
+        super.onPause();
+    }
+
+    protected void onFirstResume() {
+    }
 }

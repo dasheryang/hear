@@ -31,6 +31,7 @@ import java.util.HashMap;
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.DeviceUtil;
+import hear.app.helper.StatHelper;
 import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
@@ -127,7 +128,7 @@ public class ArticleFragment extends Fragment {
             if (SNSAccountStore.getInstance().isLogin())
                 ToastHelper.showCollected(getActivity());
 
-            mUILogic.likeArticle(mUILogic.getArticle().pageno);
+            mUILogic.likeArticle();
             incrLikeCount();
         } else {
             if (SNSAccountStore.getInstance().isLogin()) {
@@ -135,13 +136,13 @@ public class ArticleFragment extends Fragment {
                     @Override
                     public void onConfirmButtonClick() {
                         drawable.setLevel(UN_LIKE_LEVEL);
-                        mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
+                        mUILogic.unlikeArticle();
                         ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
                     }
                 }).show();
             } else {
                 drawable.setLevel(UN_LIKE_LEVEL);
-                mUILogic.unlikeArticle(mUILogic.getArticle().pageno);
+                mUILogic.unlikeArticle();
                 ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
             }
         }
@@ -227,9 +228,9 @@ public class ArticleFragment extends Fragment {
             return mArticle;
         }
 
-        private void likeArticle(int pageno) {
-            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 1);
-            ArticleLike.incLikeCount(mUILogic.getArticle().pageno);
+        private void likeArticle() {
+            ArticleLike.setLikeArticle(getArticle().pageno, 1);
+            ArticleLike.incLikeCount(getArticle().pageno);
 
             CollectedArticleStore.getInstance().add(getArticle());
 
@@ -242,12 +243,12 @@ public class ArticleFragment extends Fragment {
             };
             HashMap<String, String> params = new HashMap<>();
             params.put("PhoneId", DeviceUtil.getPhoneId());
-            params.put("pageno", String.valueOf(pageno));
+            params.put("pageno", String.valueOf(getArticle().pageno));
             asyncTask.get(params).execute();
         }
 
-        private void unlikeArticle(final int pageno) {
-            ArticleLike.setLikeArticle(mUILogic.getArticle().pageno, 0);
+        private void unlikeArticle() {
+            ArticleLike.setLikeArticle(getArticle().pageno, 0);
             descLikeCount();
 
             CollectedArticleStore.getInstance().remove(getArticle());
@@ -261,13 +262,13 @@ public class ArticleFragment extends Fragment {
             };
             HashMap<String, String> params = new HashMap<>();
             params.put("PhoneId", DeviceUtil.getPhoneId());
-            params.put("pageno", String.valueOf(pageno));
+            params.put("pageno", String.valueOf(getArticle()));
             asyncTask.get(params).execute();
         }
 
         private void performShare() {
             mShareService = new SocialServiceWrapper(getActivity());
-            Article article = mUILogic.getArticle();
+            final Article article = mUILogic.getArticle();
             mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
@@ -276,6 +277,8 @@ public class ArticleFragment extends Fragment {
 
                 @Override
                 public void onComplete(SHARE_MEDIA media, int i, SocializeEntity socializeEntity) {
+                    if (i == 200)
+                        StatHelper.onArticleShare(getActivity(), article, media);
                     mShareService = null;
                 }
             });

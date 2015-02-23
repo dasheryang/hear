@@ -52,6 +52,9 @@
         <activity
             android:name=".views.FullScreenArticleActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.AboutUsActivity"
+            android:label="@string/title_about_us" />
 
         <service
             android:name=".service.CacheMediaService"
@@ -75,9 +78,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name=".views.AboutUsActivity"
-            android:label="@string/title_about_us" />
     </application>
 
 </manifest>
