@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,7 +41,7 @@ import hear.lib.share.SocialServiceWrapper;
 /**
  * Created by power on 14-8-11.
  */
-public class HistoryActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate,ArticleFragmentDelegate {
+public class MainActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate,ArticleFragmentDelegate {
     private ViewPager mViewPager;
     private TextView mEmptyButton;
     private ResideMenu mResideMenu;
@@ -56,10 +55,10 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        mPlaybarControl = new PlaybarControl(this);
         setContentView(R.layout.history);
         initContentView();
         updateAccountView();
-        mPlaybarControl = new PlaybarControl(this);
         mPlaybarControl.prepare(findViewById(R.id.playbar));
     }
 
@@ -129,13 +128,13 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
     }
 
     protected void onLoginSuccess() {
-        Toast.makeText(HistoryActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
         mLoginService = null;
         updateAccountView();
     }
 
     protected void onLoginFail() {
-        Toast.makeText(HistoryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
         mLoginService = null;
     }
 
@@ -261,7 +260,7 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
 
     private class UILogic {
         private boolean after22Refreshed = false;
-        private InActivityHelper helper = new InActivityHelper(HistoryActivity.this);
+        private InActivityHelper helper = new InActivityHelper(MainActivity.this);
         private List<Article> mArticle;
 
         public List<Article> getCacheArticles() {
@@ -325,23 +324,23 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         }
 
         public void goToAboutUsActivity() {
-            Intent intent = new Intent(HistoryActivity.this, AboutUsActivity.class);
+            Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
             startActivity(intent);
         }
 
         public void goToCollectListActivity() {
             if (isLogin())
-                CollectionActivity.show(HistoryActivity.this);
+                CollectionActivity.show(MainActivity.this);
             else
                 showLoginBoardIfNeeded();
         }
 
         public void doCheckUpdate() {
-            UmengUpdateAgent.forceUpdate(HistoryActivity.this);
+            UmengUpdateAgent.forceUpdate(MainActivity.this);
         }
 
         public void doScore() {
-            ToastHelper.showCollected(HistoryActivity.this);
+            ToastHelper.showCollected(MainActivity.this);
         }
 
         public boolean isLogin() {

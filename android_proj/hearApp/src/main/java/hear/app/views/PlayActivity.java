@@ -152,7 +152,7 @@ public class PlayActivity extends BaseActivity {
     }
 
     private void gotoHistory(){
-        Intent i=new Intent(this,HistoryActivity.class);
+        Intent i=new Intent(this,MainActivity.class);
         startActivity(i);
         finish();
     }

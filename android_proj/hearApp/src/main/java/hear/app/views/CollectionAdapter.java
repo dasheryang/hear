@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -77,7 +76,8 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.My
         }
 
         public void onItemClick(View cell, Article item) {
-            FullScreenArticleActivity.show(cell.getContext(), item);
+//            FullScreenArticleActivity.show(cell.getContext(), item);
+            CollectionGalleryActivity.show(cell.getContext(), item);
         }
     }
 }

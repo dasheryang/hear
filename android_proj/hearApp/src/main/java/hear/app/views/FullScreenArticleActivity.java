@@ -1,5 +1,6 @@
 package hear.app.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ public class FullScreenArticleActivity extends BaseFragmentActivity implements S
         Intent intent = new Intent(context, FullScreenArticleActivity.class);
         intent.putExtra(KEY_PAGE_NO, article.pageno);
         context.startActivity(intent);
+        if (context instanceof Activity) {
+            ((Activity)context).overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.remain);
+        }
     }
 
     @Override
@@ -33,6 +37,12 @@ public class FullScreenArticleActivity extends BaseFragmentActivity implements S
         super.onActivityResult(requestCode, resultCode, data);
         if (mShareFragment != null)
             mShareFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.remain, R.anim.slide_out_to_bottom);
     }
 
     @Override

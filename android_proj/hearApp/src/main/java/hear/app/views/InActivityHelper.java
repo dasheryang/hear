@@ -28,7 +28,7 @@ public class InActivityHelper {
     }
 
     private void gotoHistory() {
-        Intent i = new Intent(mActivity, HistoryActivity.class);
+        Intent i = new Intent(mActivity, MainActivity.class);
         mActivity.startActivity(i);
         mActivity.finish();
     }

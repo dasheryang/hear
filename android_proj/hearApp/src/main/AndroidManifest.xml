@@ -41,12 +41,16 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".views.HistoryActivity"
+            android:name=".views.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HistoryActivityTheme" />
 
         <activity
             android:name=".views.CollectionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".views.CollectionGalleryActivity"
             android:screenOrientation="portrait" />
 
         <activity
