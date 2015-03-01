@@ -112,7 +112,7 @@ public class HistoryActivity extends BaseFragmentActivity implements OnClickList
         if (mLoginService != null)
             mLoginService.handleOnActivityResult(requestCode, resultCode, data);
 
-        if (mSharingFragment.get() != null) {
+        if (mSharingFragment != null && mSharingFragment.get() != null) {
             mSharingFragment.get().onActivityResult(requestCode, resultCode, data);
             mSharingFragment = null;
         }
