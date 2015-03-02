@@ -62,9 +62,10 @@ public class CustomLoginBoard extends Dialog {
 
     private TableRow createTableRow(ViewGroup container) {
         TableRow ret = new TableRow(mContext);
-        ViewGroup.LayoutParams params = container.generateLayoutParams(null);
+        TableLayout.LayoutParams params = (TableLayout.LayoutParams) container.generateLayoutParams(null);
         params.width = -1;
         params.height = -2;
+        ret.setLayoutParams(params);
         return ret;
     }
 

@@ -2,6 +2,7 @@ package hear.lib.share.controllers;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,23 +53,26 @@ public class CustomShareBoard extends Dialog {
         int count = sItemNameArray.length;
         TableLayout container = (TableLayout) findViewById(R.id.container_share);
         int currentRow = 0;
-        TableRow tableRow = createTableRow(container);
+        TableRow tableRow = createTableRow(container, true);
         container.addView(tableRow);
         for (int i = 0; i < count; i++) {
             if (currentRow < i / 3) {
                 currentRow++;
-                tableRow = createTableRow(container);
+                tableRow = createTableRow(container, false);
                 container.addView(tableRow);
             }
             tableRow.addView(createItemWithInfo(sMediaArray[i], sItemNameArray[i], sItemImageResArray[i], tableRow));
         }
     }
 
-    private TableRow createTableRow(ViewGroup container) {
+    private TableRow createTableRow(ViewGroup container, boolean firstRow) {
         TableRow ret = new TableRow(mContext);
-        ViewGroup.LayoutParams params = container.generateLayoutParams(null);
+        TableLayout.LayoutParams params = (TableLayout.LayoutParams) container.generateLayoutParams(null);
         params.width = -1;
         params.height = -2;
+        if (!firstRow)
+            params.topMargin = dip2px(container.getContext(), 12);
+        ret.setLayoutParams(params);
         return ret;
     }
 
@@ -90,5 +94,10 @@ public class CustomShareBoard extends Dialog {
         });
 
         return cell;
+    }
+
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 }
