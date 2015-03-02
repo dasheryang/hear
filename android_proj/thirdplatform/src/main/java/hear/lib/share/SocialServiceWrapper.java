@@ -185,7 +185,7 @@ public class SocialServiceWrapper {
         WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text);
         weiXinShareContent.setTitle(shareContent.title + " - 微信");
         weiXinShareContent.setTargetUrl(shareContent.targetURL);
-        weiXinShareContent.setShareImage(shareImage);
+//        weiXinShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(weiXinShareContent);
     }
 }
