@@ -2,5 +2,6 @@
     package="hear.lib.share">
 
     <application android:allowBackup="true" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
 </manifest>

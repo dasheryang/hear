@@ -17,7 +17,8 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="40dp" >
+            android:layout_height="40dp"
+            android:visibility="gone">
             <ImageView
                 android:id="@+id/umeng_update_wifi_indicator"
                 android:layout_width="30dp"
@@ -87,7 +88,8 @@
 	        android:layout_height="32dp"
 	        android:text="@string/UMIgnore"
 	        android:button="@drawable/umeng_update_button_check_selector"
-	        android:textColor="#000" />
+	        android:textColor="#000"
+            android:visibility="gone"/>
 
         <!-- OK&Cancel Button -->
 

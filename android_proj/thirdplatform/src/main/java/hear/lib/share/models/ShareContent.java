@@ -1,5 +1,7 @@
 package hear.lib.share.models;
 
+import com.umeng.update.UmengUpdateAgent;
+
 /**
  * Created by ZhengYi on 15/2/9.
  */

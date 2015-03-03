@@ -37,6 +37,7 @@ import hear.app.models.Article;
 import hear.app.models.JsonRespWrapper;
 import hear.app.models.SNSAccountStore;
 import hear.lib.share.SocialServiceWrapper;
+import hear.lib.share.UpdateUrgent;
 
 /**
  * Created by power on 14-8-11.
@@ -336,7 +337,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
 
         public void doCheckUpdate() {
-            UmengUpdateAgent.forceUpdate(MainActivity.this);
+            UpdateUrgent.checkUpdate(MainActivity.this);
         }
 
         public void doScore() {
