@@ -22,8 +22,8 @@ import hear.app.models.CollectedArticleStore;
  * Created by ZhengYi on 15/2/16.
  */
 public class CollectionFragment extends Fragment {
-    @InjectView(R.id.label_noData)
-    View mNoDataLabel;
+    @InjectView(R.id.container_noData)
+    View mNoDataContainer;
     @InjectView(R.id.recyclerView_collection)
     RecyclerView mRecyclerView;
 
@@ -53,10 +53,10 @@ public class CollectionFragment extends Fragment {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         if (mUIControl.getArticles().isEmpty()) {
-            mNoDataLabel.setVisibility(View.VISIBLE);
+            mNoDataContainer.setVisibility(View.VISIBLE);
         } else {
-            mNoDataLabel.setVisibility(View.GONE);
-            mRecyclerView.setAdapter(new CollectionAdapter(mUIControl.getArticles()));
+            mNoDataContainer.setVisibility(View.GONE);
+            mRecyclerView.setAdapter(new CollectionAdapter(getActivity(), mUIControl.getArticles()));
         }
     }
 

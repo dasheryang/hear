@@ -11,4 +11,6 @@
     <string name="content_contact_us">联系我们</string>
     <string name="content_qq">官方QQ: 9827849438</string>
     <string name="content_email">官方邮箱: tingjian@qq.com</string>
+    <string name="content_collect_hint">再听听看\n有没有打动您的声音</string>
+    <string name="content_collect_hint2">收藏夹空空如也</string>
 </resources>
