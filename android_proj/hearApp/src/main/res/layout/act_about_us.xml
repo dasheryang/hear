@@ -10,12 +10,54 @@
         android:scaleType="centerCrop"
         android:src="@drawable/play_bg" />
 
-    <TextView
-        android:text="@string/content_about_us"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:lineSpacingExtra="8dp"
-        android:textSize="24sp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="@string/content_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="16dp"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="64dp"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:id="@+id/label_contact_us"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/content_contact_us"
+                android:textSize="22sp"
+                android:textColor="#adaaa7" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="@string/content_qq"
+                android:textSize="18sp"
+                android:textColor="#adaaa7" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:text="@string/content_email"
+                android:textSize="18sp"
+                android:textColor="#adaaa7" />
+
+        </LinearLayout>
+    </LinearLayout>
 </FrameLayout>
