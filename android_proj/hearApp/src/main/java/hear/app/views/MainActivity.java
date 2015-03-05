@@ -21,7 +21,6 @@ import com.umeng.socialize.bean.SnsAccount;
 import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
-import com.umeng.update.UmengUpdateAgent;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -230,8 +229,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             onNoArticles();
         } else {
             ArticlePageAdapter firstCategoryAdapter = new ArticlePageAdapter(
-                    getResources(), this.getSupportFragmentManager(),
-                    mArticles, this);
+                    this.getSupportFragmentManager(),
+                    mArticles);
             mViewPager.setAdapter(firstCategoryAdapter);
             mViewPager.setCurrentItem(0);
             mViewPager.setVisibility(View.VISIBLE);

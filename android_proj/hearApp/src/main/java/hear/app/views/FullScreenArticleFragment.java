@@ -2,10 +2,12 @@ package hear.app.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -23,16 +27,21 @@ import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 
 import java.io.File;
+import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import hear.app.R;
+import hear.app.engine.BaseHttpAsyncTask;
+import hear.app.helper.DeviceUtil;
 import hear.app.helper.SDCardUtils;
 import hear.app.helper.StatHelper;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
+import hear.app.models.ArticleLike;
+import hear.app.models.JsonRespWrapper;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
 
@@ -43,6 +52,7 @@ public class FullScreenArticleFragment extends Fragment {
     private static final int STATE_PLAYING = 1;
     private static final int STATE_LOADING = 2;
     private static final int STATE_PAUSE = 3;
+    private static final long UPDATE_PROGRESSBAR_INTERVAL = 1000L;
 
     @InjectView(R.id.image_bg)
     ImageView mBGImage;
@@ -50,10 +60,17 @@ public class FullScreenArticleFragment extends Fragment {
     ImageView mPlayImage;
     @InjectView(R.id.img_loading)
     ImageView mLoadingImage;
+    @InjectView(R.id.pb_play)
+    ProgressBar mProgressBar;
+    @InjectView(R.id.label_like)
+    TextView mLikeLabel;
+    @InjectView(R.id.img_like)
+    View mLikeImage;
 
     private LogicControl mLogicControl = new LogicControl();
     private Animation mRotateAnimation;
     private SocialServiceWrapper mShareService;
+    private Handler mHandler;
 
     private PlayListener mPlayListener = new PlayListener() {
         @Override
@@ -69,6 +86,18 @@ public class FullScreenArticleFragment extends Fragment {
         @Override
         public void onLoadingEnd() {
             updatePlayImage(STATE_PLAYING);
+        }
+    };
+
+    private Runnable mUpdateProgressBarTask = new Runnable() {
+        @Override
+        public void run() {
+            Log.e("Hear", "updating progress bar");
+            if (mLogicControl.isPlaying() || mLogicControl.isPause())
+                mProgressBar.setProgress(mLogicControl.getCurrentPosition());
+
+            if (mLogicControl.isPlaying())
+                mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
         }
     };
 
@@ -88,8 +117,22 @@ public class FullScreenArticleFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+        mHandler = new Handler();
         ButterKnife.inject(this, view);
         initContentView();
+        updateLikeContainer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        performUpdateProgressBarTask();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(mUpdateProgressBarTask);
     }
 
     @Override
@@ -122,13 +165,38 @@ public class FullScreenArticleFragment extends Fragment {
         if (mLogicControl.isPlaying()) {
             updatePlayImage(STATE_PAUSE);
             mLogicControl.pause();
+            mHandler.removeCallbacks(mUpdateProgressBarTask);
         } else if (mLogicControl.isPause()) {
             updatePlayImage(STATE_PLAYING);
             mLogicControl.resume();
+            performUpdateProgressBarTask();
         } else {
             updatePlayImage(STATE_LOADING);
             mLogicControl.play();
+            performUpdateProgressBarTask();
         }
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    @OnClick(R.id.container_like)
+    protected void onLikeContainerClick() {
+        mLogicControl.toggleLikeState();
+        updateLikeContainer();
+    }
+
+    private void performUpdateProgressBarTask() {
+        if (mLogicControl.isPlaying() || mLogicControl.isPause()) {
+            mProgressBar.setMax(mLogicControl.getDuration());
+            mProgressBar.setProgress(mLogicControl.getCurrentPosition());
+        }
+        mHandler.removeCallbacks(mUpdateProgressBarTask);
+        mUpdateProgressBarTask.run();
+    }
+
+    private void updateLikeContainer() {
+        Article article = mLogicControl.getArticle();
+        mLikeLabel.setText("" + article.likenum);
+        mLikeImage.setBackgroundResource(article.haslike == 1 ? R.drawable.like_item_full : R.drawable.like_item);
     }
 
     private void initContentView() {
@@ -183,6 +251,14 @@ public class FullScreenArticleFragment extends Fragment {
             return Player.getInstance().isPause(getPlayUrl());
         }
 
+        public int getCurrentPosition() {
+            return Player.getInstance().getCurrentPos();
+        }
+
+        public int getDuration() {
+            return Player.getInstance().getMax();
+        }
+
         public void play() {
             Player.getInstance().play(getArticle(), getPlayUrl(), mPlayListener);
         }
@@ -193,6 +269,41 @@ public class FullScreenArticleFragment extends Fragment {
 
         public void resume() {
             Player.getInstance().resume();
+        }
+
+        public void toggleLikeState() {
+            Article article = mLogicControl.getArticle();
+            if (article.haslike == 1) {
+                article.haslike = 0;
+                article.likenum = article.likenum - 1;
+                ArticleLike.descLikeCount(article.pageno);
+                String url = "http://www.hearheart.com/cancellike";
+                BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
+
+                    @Override
+                    protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                    }
+                };
+                HashMap<String, String> params = new HashMap<>();
+                params.put("PhoneId", DeviceUtil.getPhoneId());
+                params.put("pageno", String.valueOf(getArticle()));
+                asyncTask.get(params).execute();
+            } else {
+                article.haslike = 1;
+                article.likenum = article.likenum + 1;
+                ArticleLike.incLikeCount(article.pageno);
+                String url = "http://www.hearheart.com/clicklike";
+                BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
+
+                    @Override
+                    protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                    }
+                };
+                HashMap<String, String> params = new HashMap<>();
+                params.put("PhoneId", DeviceUtil.getPhoneId());
+                params.put("pageno", String.valueOf(getArticle().pageno));
+                asyncTask.get(params).execute();
+            }
         }
 
         public void performShare() {

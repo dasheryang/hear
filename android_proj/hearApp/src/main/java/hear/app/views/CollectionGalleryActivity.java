@@ -84,8 +84,8 @@ public class CollectionGalleryActivity extends BaseFragmentActivity implements S
         });
         List<Article> mArticles = mUILogic.getCacheArticles();
         ArticlePageAdapter firstCategoryAdapter = new ArticlePageAdapter(
-                getResources(), getSupportFragmentManager(),
-                mArticles, this);
+                getSupportFragmentManager(),
+                mArticles);
         mViewPager.setAdapter(firstCategoryAdapter);
         Log.e("Hear", "default_item_position:" + Math.max(0, mUILogic.getArticlePosition(getIntent().getIntExtra(KEY_DEFAULT_PAGE_NO, -1))));
         mViewPager.setCurrentItem(Math.max(0, mUILogic.getArticlePosition(getIntent().getIntExtra(KEY_DEFAULT_PAGE_NO, -1))));
