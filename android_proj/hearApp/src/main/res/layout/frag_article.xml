@@ -37,6 +37,8 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_alignParentBottom="true"
+                android:textSize="16sp"
+                android:textColor="#aca692"
                 tools:text="6.15/2014" />
 
             <TextView
@@ -44,35 +46,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/label_date"
-                android:layout_marginBottom="4dp"
                 android:layout_alignLeft="@id/label_date"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
                 tools:text="vol 1" />
 
             <LinearLayout
                 android:id="@+id/container_like"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="3dp">
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/shape_like_container">
 
-                <ImageView
+                <View
                     android:id="@+id/img_like"
-                    android:layout_width="21dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/like_icon" />
+                    android:layout_width="15.5dp"
+                    android:layout_height="13dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/like_item" />
 
                 <TextView
                     android:id="@+id/label_like_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:paddingLeft="3dp"
-                    tools:text="2013"
-                    android:textSize="9sp" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    tools:text="23" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -81,7 +89,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_centerHorizontal="true"
-            android:background="#053049"
+            android:background="#aa1a1a1a"
             android:layout_below="@id/container_main"
             android:padding="16dp">
 
@@ -92,7 +100,7 @@
                 android:lines="3"
                 android:ellipsize="end"
                 tools:text="满足是什么，狗舔冰激凌，鱼在陆地奔跑，大象在炎炎夏日开心地跳橡皮筋，而我也终于牵到了你的手"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/label_author"
@@ -101,7 +109,7 @@
                 android:gravity="right"
                 android:layout_marginTop="8dp"
                 tools:text="by 银古Fary"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -3,7 +3,6 @@ package hear.app.views;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,7 +31,6 @@ import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.DeviceUtil;
 import hear.app.helper.StatHelper;
-import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.models.ArticleLike;
@@ -48,8 +46,8 @@ import hear.lib.share.models.ShareContent;
 public class ArticleFragment extends Fragment {
 
     private LinearLayout mLikeContainer;
-    private ImageView mLikeImage = null;
-    private TextView mLikeCountLabel = null;
+    private View mLikeImage = null;
+    private TextView mLikeLabel = null;
     private TextView mContentLabel = null;
     private TextView mAuthorLabel = null;
     private ImageView mCoverImageView = null;
@@ -119,33 +117,31 @@ public class ArticleFragment extends Fragment {
         }
     }
 
-    void onLikeButtonClick() {
-        final LevelListDrawable drawable = (LevelListDrawable) mLikeImage
-                .getBackground();
-        int level = drawable.getLevel();
-        if (level == UN_LIKE_LEVEL) {
-            drawable.setLevel(LIKE_LEVEL);
-            if (SNSAccountStore.getInstance().isLogin())
-                ToastHelper.showCollected(getActivity());
-
-            mUILogic.likeArticle();
-            incrLikeCount();
-        } else {
-            if (SNSAccountStore.getInstance().isLogin()) {
+    void onLikeContainerClick() {
+        Article article = mUILogic.getArticle();
+        if (SNSAccountStore.getInstance().isLogin()) {
+            if (article.haslike == 0) {
+                mUILogic.toggleLikeState();
+                updateLikeContainer();
+            } else {
                 new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
                     @Override
                     public void onConfirmButtonClick() {
-                        drawable.setLevel(UN_LIKE_LEVEL);
-                        mUILogic.unlikeArticle();
-                        ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
+                        mUILogic.toggleLikeState();
+                        updateLikeContainer();
                     }
                 }).show();
-            } else {
-                drawable.setLevel(UN_LIKE_LEVEL);
-                mUILogic.unlikeArticle();
-                ArticleLike.descLikeCount(mUILogic.getArticle().pageno);
             }
+        } else {
+            mUILogic.toggleLikeState();
+            updateLikeContainer();
         }
+    }
+
+    private void updateLikeContainer() {
+        Article article = mUILogic.getArticle();
+        mLikeLabel.setText("" + article.likenum);
+        mLikeImage.setBackgroundResource(article.haslike == 1 ? R.drawable.like_item_full : R.drawable.like_item);
     }
 
     private void bindViews(View rootView) {
@@ -155,9 +151,15 @@ public class ArticleFragment extends Fragment {
         mCoverImageView = (ImageView) rootView.findViewById(R.id.img_cover);
         mContentLabel = (TextView) rootView.findViewById(R.id.label_content);
         mAuthorLabel = (TextView) rootView.findViewById(R.id.label_author);
-        mLikeCountLabel = (TextView) rootView.findViewById(R.id.label_like_count);
-        mLikeImage = (ImageView) rootView.findViewById(R.id.img_like);
+        mLikeLabel = (TextView) rootView.findViewById(R.id.label_like_count);
+        mLikeImage = rootView.findViewById(R.id.img_like);
         mLikeContainer = (LinearLayout) rootView.findViewById(R.id.container_like);
+        mLikeContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLikeContainerClick();
+            }
+        });
     }
 
     private void initContentView() {
@@ -182,38 +184,7 @@ public class ArticleFragment extends Fragment {
 
         mContentLabel.setText(article.txt);
         mContentLabel.setMovementMethod(new ScrollingMovementMethod());
-
-        final LevelListDrawable drawable = (LevelListDrawable) mLikeImage
-                .getBackground();
-
-        int isLikeInt = ArticleLike.getLikeArticle(mUILogic.getArticle().pageno);
-        isLikeInt = (isLikeInt == -1) ? mUILogic.getArticle().haslike : isLikeInt;
-
-        if (isLikeInt == 0) {
-            drawable.setLevel(UN_LIKE_LEVEL);
-        } else {
-            drawable.setLevel(LIKE_LEVEL);
-        }
-
-        mLikeCountLabel.setText("" + ArticleLike.getLikeCount(article.pageno));
-        mLikeContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onLikeButtonClick();
-            }
-        });
-    }
-
-    private void incrLikeCount() {
-        int val = Integer.parseInt(mLikeCountLabel.getText().toString());
-        mLikeCountLabel.setText(String.valueOf(val + 1));
-    }
-
-    private void descLikeCount() {
-        int val = Integer.parseInt(mLikeCountLabel.getText().toString());
-        if (val > 0) {
-            mLikeCountLabel.setText(String.valueOf(val - 1));
-        }
+        updateLikeContainer();
     }
 
     private class UILogic {
@@ -228,42 +199,43 @@ public class ArticleFragment extends Fragment {
             return mArticle;
         }
 
-        private void likeArticle() {
-            ArticleLike.setLikeArticle(getArticle().pageno, 1);
-            ArticleLike.incLikeCount(getArticle().pageno);
+        public void toggleLikeState() {
+            Article article = getArticle();
+            if (article.haslike == 1) {
+                article.haslike = 0;
+                article.likenum = article.likenum - 1;
+                ArticleLike.setLikeArticle(article.pageno, 0);
+                ArticleLike.descLikeCount(article.pageno);
+                CollectedArticleStore.getInstance().remove(article);
+                String url = "http://www.hearheart.com/cancellike";
+                BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
 
-            CollectedArticleStore.getInstance().add(getArticle());
+                    @Override
+                    protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                    }
+                };
+                HashMap<String, String> params = new HashMap<>();
+                params.put("PhoneId", DeviceUtil.getPhoneId());
+                params.put("pageno", String.valueOf(getArticle()));
+                asyncTask.get(params).execute();
+            } else {
+                article.haslike = 1;
+                article.likenum = article.likenum + 1;
+                ArticleLike.setLikeArticle(article.pageno, 1);
+                ArticleLike.incLikeCount(article.pageno);
+                CollectedArticleStore.getInstance().add(article);
+                String url = "http://www.hearheart.com/clicklike";
+                BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
 
-            String url = "http://www.hearheart.com/clicklike";
-            BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
-
-                @Override
-                protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
-                }
-            };
-            HashMap<String, String> params = new HashMap<>();
-            params.put("PhoneId", DeviceUtil.getPhoneId());
-            params.put("pageno", String.valueOf(getArticle().pageno));
-            asyncTask.get(params).execute();
-        }
-
-        private void unlikeArticle() {
-            ArticleLike.setLikeArticle(getArticle().pageno, 0);
-            descLikeCount();
-
-            CollectedArticleStore.getInstance().remove(getArticle());
-
-            String url = "http://www.hearheart.com/cancellike";
-            BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
-
-                @Override
-                protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
-                }
-            };
-            HashMap<String, String> params = new HashMap<>();
-            params.put("PhoneId", DeviceUtil.getPhoneId());
-            params.put("pageno", String.valueOf(getArticle()));
-            asyncTask.get(params).execute();
+                    @Override
+                    protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                    }
+                };
+                HashMap<String, String> params = new HashMap<>();
+                params.put("PhoneId", DeviceUtil.getPhoneId());
+                params.put("pageno", String.valueOf(getArticle().pageno));
+                asyncTask.get(params).execute();
+            }
         }
 
         private void performShare() {

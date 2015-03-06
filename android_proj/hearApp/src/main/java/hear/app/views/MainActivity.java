@@ -56,7 +56,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         mPlaybarControl = new PlaybarControl(this);
-        setContentView(R.layout.history);
+        setContentView(R.layout.act_main);
         initContentView();
         updateAccountView();
         mPlaybarControl.prepare(findViewById(R.id.playbar));

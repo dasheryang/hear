@@ -14,21 +14,27 @@
     </style>
 
     <style name="Theme_Start_Promote" parent="MyAppTheme">
-
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarStyle">@style/HistoryActivityActionBar</item>
+
+        <item name="actionBarStyle">@style/MyAppActionBar</item>
     </style>
 
     <style name="MyAppActionBar" parent="Widget.AppCompat.ActionBar.Solid">
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:background">@drawable/color_actionbar_bg</item>
 
         <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="background">@drawable/color_actionbar_bg</item>
     </style>
 
     <style name="HistoryActivityActionBar" parent="MyAppActionBar">
         <item name="android:homeAsUpIndicator">@drawable/like_item</item>
+        <item name="android:background">@drawable/color_actionbar_bg</item>
 
         <item name="homeAsUpIndicator">@drawable/like_item</item>
+        <item name="background">@drawable/color_actionbar_bg</item>
     </style>
 
 </resources>

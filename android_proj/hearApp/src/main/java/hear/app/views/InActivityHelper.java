@@ -128,7 +128,7 @@ public class InActivityHelper {
                                 listener.onFinish();
                             }
                         } else {
-                            LogUtil.d("can't find today's article and go history");
+                            LogUtil.d("can't find today's article and go act_main");
                             if (!isHistory) {
                                 gotoHistory();
                             }

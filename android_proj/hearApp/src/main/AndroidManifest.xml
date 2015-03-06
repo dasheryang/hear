@@ -47,6 +47,7 @@
 
         <activity
             android:name=".views.CollectionActivity"
+            android:theme="@style/MyAppTheme"
             android:screenOrientation="portrait" />
 
         <activity

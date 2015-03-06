@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,6 +40,7 @@ import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
 import hear.app.models.ArticleLike;
+import hear.app.models.CollectedArticleStore;
 import hear.app.models.JsonRespWrapper;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
@@ -92,7 +92,6 @@ public class FullScreenArticleFragment extends Fragment {
     private Runnable mUpdateProgressBarTask = new Runnable() {
         @Override
         public void run() {
-            Log.e("Hear", "updating progress bar");
             if (mLogicControl.isPlaying() || mLogicControl.isPause())
                 mProgressBar.setProgress(mLogicControl.getCurrentPosition());
 
@@ -276,7 +275,9 @@ public class FullScreenArticleFragment extends Fragment {
             if (article.haslike == 1) {
                 article.haslike = 0;
                 article.likenum = article.likenum - 1;
+                ArticleLike.setLikeArticle(article.pageno, 0);
                 ArticleLike.descLikeCount(article.pageno);
+                CollectedArticleStore.getInstance().remove(article);
                 String url = "http://www.hearheart.com/cancellike";
                 BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
 
@@ -291,7 +292,9 @@ public class FullScreenArticleFragment extends Fragment {
             } else {
                 article.haslike = 1;
                 article.likenum = article.likenum + 1;
+                ArticleLike.setLikeArticle(article.pageno, 1);
                 ArticleLike.incLikeCount(article.pageno);
+                CollectedArticleStore.getInstance().add(article);
                 String url = "http://www.hearheart.com/clicklike";
                 BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
 
