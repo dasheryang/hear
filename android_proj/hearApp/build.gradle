@@ -46,4 +46,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     //    compile 'com.specyci:residemenu:1.6'
     compile 'com.android.support:recyclerview-v7:21.0.3'
+    compile 'de.hdodenhof:circleimageview:1.2.2'
 }
