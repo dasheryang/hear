@@ -6,15 +6,15 @@ import android.content.Intent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import hear.app.engine.BaseHttpAsyncTask;
-import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
 import hear.app.helper.DeviceUtil;
 import hear.app.helper.LogUtil;
 import hear.app.models.Article;
-import hear.app.models.ArticleLike;
 import hear.app.models.JsonRespWrapper;
+import hear.app.store.ArticleStore;
 
 /**
  * Created by power on 14-8-28.
@@ -34,7 +34,7 @@ public class InActivityHelper {
     }
 
     public boolean isTodayPlayed() {
-        Article[] allArticle = Article.getAllArticles();
+        List<Article> allArticle = ArticleStore.getInstance().getArticleSet();
         if (ArrayUtils.isEmpty(allArticle)) {
             return false;
         }
@@ -96,17 +96,7 @@ public class InActivityHelper {
                 if (jsonRespWrapper.ret == 0) {
                     ArticleListWrapper wrapper = (ArticleListWrapper) jsonRespWrapper;
                     LogUtil.d("resp data:" + wrapper.data);
-                    Article.saveArtilcleList(AppContext.getGSON().toJson(wrapper.data));
-                    ArrayUtils.each(ArrayUtils.from(wrapper.data), new ArrayUtils.Processor<Article, Void>() {
-                        @Override
-                        public Void process(Article src) {
-                            //和服务器保持一致
-                            ArticleLike.setLikeCount(src.pageno, src.likenum);
-                            ArticleLike.setLikeArticle(src.pageno, src.haslike);
-
-                            return null;
-                        }
-                    });
+                    ArticleStore.getInstance().setArticleSet(wrapper.data);
                     final Date now = new Date(System.currentTimeMillis());
                     if (isTodayPlayed()) {
                         if (!isHistory) {
@@ -147,7 +137,7 @@ public class InActivityHelper {
             }
         };
 
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("PhoneId", DeviceUtil.getPhoneId());
         asyncTask.get(params).execute();
     }

@@ -1,17 +1,18 @@
 package hear.app.models;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Point;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
+import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
+import hear.app.helper.DeviceUtil;
 import hear.app.helper.LogUtil;
 import hear.app.helper.UIHelper;
-import hear.app.service.CacheMediaService;
 
 /**
  * Created by power on 14-8-11.
@@ -25,6 +26,8 @@ import hear.app.service.CacheMediaService;
  * 0
  */
 public class Article {
+    public final static String KEY_ALL_ARTICLE = "all_article";
+    public static final String KEY_PLAYED_PREFIX = "played_";
 
     /**
      * 南泉 10:21:24 管理地址http://118.192.73.182:3000/ 南泉 10:21:58
@@ -37,9 +40,9 @@ public class Article {
     public String imgurl;
     public String soundurl;
     public long showtime;
-    public int likenum;
     public String showauthor;
-    public int haslike;
+    private int likenum;
+    private int haslike;
 
     public String getShowTime() {
         Date d = new Date(showtime);
@@ -61,47 +64,46 @@ public class Article {
         return pageno;
     }
 
-    public final static String KEY_ALL_ARTICLE = "all_article";
-
-
-    /**
-     *
-     */
-    public static void saveArtilcleList(String json) {
-        AppContext.getSharedPrefernce().put(KEY_ALL_ARTICLE, json);
-        Intent service = new Intent(AppContext.getContext(),
-                CacheMediaService.class);
-        service.putExtra(KEY_ALL_ARTICLE, json);
-        AppContext.getContext().startService(service);
+    public boolean hasLiked() {
+        return haslike == 1;
     }
 
-    /**
-     * 返回所有的article
-     */
-    public static Article[] getAllArticles() {
-        String json = AppContext.getSharedPrefernce().get(KEY_ALL_ARTICLE);
-        Article[] result = AppContext.getGSON().fromJson(json, Article[].class);
-        return result;
+    public int likeNum() {
+        return likenum;
     }
 
-    public static Article getArticleByPageNo(final int pageno) {
-        Article[] articles = getAllArticles();
-        return ArrayUtils.findFirst(ArrayUtils.from(articles),
-                new ArrayUtils.EqualeOP<Article>() {
-                    @Override
-                    public boolean test(Article src) {
-                        return src.pageno == pageno;
-                    }
-                });
+    public void toggleLikeState() {
+        if (hasLiked()) {
+            haslike = 0;
+            likenum = Math.max(--likenum, 0);
+            String url = "http://www.hearheart.com/cancellike";
+            BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
+
+                @Override
+                protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                }
+            };
+            HashMap<String, String> params = new HashMap<>();
+            params.put("PhoneId", DeviceUtil.getPhoneId());
+            params.put("pageno", String.valueOf(pageno));
+            asyncTask.get(params).execute();
+        } else {
+            haslike = 1;
+            likenum++;
+            String url = "http://www.hearheart.com/clicklike";
+            BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
+
+                @Override
+                protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
+                }
+            };
+            HashMap<String, String> params = new HashMap<>();
+            params.put("PhoneId", DeviceUtil.getPhoneId());
+            params.put("pageno", String.valueOf(pageno));
+            asyncTask.get(params).execute();
+        }
     }
 
-    public static final String KEY_PLAYED_PREFIX = "played_";
-
-    /**
-     * 第x页是播放过的
-     *
-     * @return
-     */
     public static boolean isPlayed(String date) {
         return AppContext.getSharedPrefernce().get(KEY_PLAYED_PREFIX + date,
                 false);

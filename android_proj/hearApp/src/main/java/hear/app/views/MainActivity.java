@@ -28,20 +28,19 @@ import java.util.List;
 
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
-import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
-import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.models.JsonRespWrapper;
-import hear.app.models.SNSAccountStore;
+import hear.app.store.ArticleStore;
+import hear.app.store.SNSAccountStore;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.UpdateUrgent;
 
 /**
  * Created by power on 14-8-11.
  */
-public class MainActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate,ArticleFragmentDelegate {
+public class MainActivity extends BaseFragmentActivity implements OnClickListener, ShareFragmentDelegate, ArticleFragmentDelegate {
     private ViewPager mViewPager;
     private TextView mEmptyButton;
     private ResideMenu mResideMenu;
@@ -265,12 +264,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         public List<Article> getCacheArticles() {
             if (mArticle == null) {
-                Article[] articles = Article.getAllArticles();
-                if (ArrayUtils.isEmpty(articles)) {
-                    return null;
-                } else {
-                    mArticle = ArrayUtils.from(articles);
-                }
+                mArticle = ArticleStore.getInstance().getArticleSet();
             }
 
             return mArticle;
@@ -294,8 +288,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
                     if (jsonRespWrapper.ret == 0) {
                         InActivityHelper.ArticleListWrapper wrapper = (InActivityHelper.ArticleListWrapper) jsonRespWrapper;
-                        Article.saveArtilcleList(AppContext.getGSON().toJson(
-                                wrapper.data));
+                        ArticleStore.getInstance().setArticleSet(wrapper.data);
                         initContentView();
                     } else {
                         ToastUtil.Short(jsonRespWrapper.reason);
@@ -340,7 +333,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
 
         public void doScore() {
-            ToastHelper.showCollected(MainActivity.this);
+            Toast.makeText(MainActivity.this, "开发中...", Toast.LENGTH_SHORT).show();
         }
 
         public boolean isLogin() {

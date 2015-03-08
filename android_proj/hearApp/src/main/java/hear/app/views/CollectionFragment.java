@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import hear.app.R;
 import hear.app.models.Article;
-import hear.app.models.CollectedArticleStore;
+import hear.app.store.CollectedArticleStore;
 
 /**
  * Created by ZhengYi on 15/2/16.

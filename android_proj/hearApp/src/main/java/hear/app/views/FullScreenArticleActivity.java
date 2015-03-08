@@ -9,6 +9,7 @@ import android.view.Window;
 
 import hear.app.R;
 import hear.app.models.Article;
+import hear.app.store.ArticleStore;
 
 /**
  * Created by ZhengYi on 15/2/16.
@@ -22,7 +23,7 @@ public class FullScreenArticleActivity extends BaseFragmentActivity implements S
         intent.putExtra(KEY_PAGE_NO, article.pageno);
         context.startActivity(intent);
         if (context instanceof Activity) {
-            ((Activity)context).overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.remain);
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.remain);
         }
     }
 
@@ -53,6 +54,6 @@ public class FullScreenArticleActivity extends BaseFragmentActivity implements S
     }
 
     private Article getArticle() {
-        return Article.getArticleByPageNo(getIntent().getIntExtra(KEY_PAGE_NO, -1));
+        return ArticleStore.getInstance().getArticleWithPageNo(getIntent().getIntExtra(KEY_PAGE_NO, -1));
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 import hear.app.R;
 import hear.app.models.Article;
-import hear.app.models.CollectedArticleStore;
+import hear.app.store.CollectedArticleStore;
 
 /**
  * Created by power on 14-8-11.

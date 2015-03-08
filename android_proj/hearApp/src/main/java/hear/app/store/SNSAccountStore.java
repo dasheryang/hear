@@ -1,4 +1,4 @@
-package hear.app.models;
+package hear.app.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

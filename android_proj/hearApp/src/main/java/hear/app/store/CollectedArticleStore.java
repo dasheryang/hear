@@ -1,4 +1,4 @@
-package hear.app.models;
+package hear.app.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,13 +8,12 @@ import com.google.gson.Gson;
 import com.umeng.socialize.bean.SnsAccount;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import hear.app.helper.AppContext;
 import hear.app.helper.FileUtils;
+import hear.app.models.Article;
 
 /**
  * Created by ZhengYi on 15/2/15.
@@ -102,9 +101,14 @@ public class CollectedArticleStore {
 
 
     private void archiveByAccountID() {
-        Article[] articles = new Article[mCollectedDataSet.size()];
-        mCollectedDataSet.toArray(articles);
-        String data = new Gson().toJson(articles, Article[].class);
+        int[] articleIdArray = new int[mCollectedDataSet.size()];
+        int index = 0;
+        for (Article aMCollectedDataSet : mCollectedDataSet) {
+            articleIdArray[index] = aMCollectedDataSet.pageno;
+            index++;
+        }
+
+        String data = new Gson().toJson(articleIdArray, int[].class);
         FileUtils.writeStringToFile(new File(getArchiveFilePath()), data, true);
     }
 
@@ -113,10 +117,16 @@ public class CollectedArticleStore {
         if (TextUtils.isEmpty(data)) {
             mCollectedDataSet = new LinkedList<>();
         } else {
-            Article[] articles = new Gson().fromJson(data, Article[].class);
-            if (articles != null && articles.length > 0) {
+            int[] pageNoArray = new Gson().fromJson(data, int[].class);
+
+            if (pageNoArray != null && pageNoArray.length > 0) {
                 mCollectedDataSet = new LinkedList<>();
-                mCollectedDataSet.addAll(Arrays.asList(articles));
+                Article tmp;
+                for (int pageNo : pageNoArray) {
+                    tmp = ArticleStore.getInstance().getArticleWithPageNo(pageNo);
+                    if (tmp != null)
+                        mCollectedDataSet.add(tmp);
+                }
             } else {
                 mCollectedDataSet = new LinkedList<>();
             }
@@ -124,7 +134,7 @@ public class CollectedArticleStore {
     }
 
     private String getArchiveFilePath() {
-        return AppContext.getContext().getCacheDir().getAbsolutePath() + File.separator + "collection" + File.separator + getAccountID() + "articles.dat";
+        return AppContext.getContext().getCacheDir().getAbsolutePath() + File.separator + "collection" + File.separator + getAccountID() + "collected_article_ids.dat";
     }
 
     private String getAccountID() {

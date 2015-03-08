@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="230dp"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@android:color/white">
+    android:background="@drawable/share__shape_update_dialog_bg">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,30 +12,43 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
+        android:textSize="18sp"
         android:textColor="@android:color/black"
-        android:text="确定将此文章从我的收藏删除?" />
+        android:text="@string/content_delete" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#b2b3b3" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp">
 
         <Button
             android:id="@+id/btn_confirm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@android:color/black"
+            android:textColor="#1ca6de"
             android:background="@android:color/transparent"
-            android:text="确定删除" />
+            android:textSize="18sp"
+            android:text="@string/btn_delete" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#b2b3b3" />
 
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@android:color/black"
+            android:textColor="#1ca6de"
             android:background="@android:color/transparent"
-            android:text="取消" />
+            android:textSize="18sp"
+            android:text="@string/btn_cancel" />
     </LinearLayout>
 </LinearLayout>

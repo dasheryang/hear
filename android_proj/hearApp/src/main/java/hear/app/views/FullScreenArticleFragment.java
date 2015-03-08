@@ -26,22 +26,20 @@ import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 
 import java.io.File;
-import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import hear.app.R;
-import hear.app.engine.BaseHttpAsyncTask;
-import hear.app.helper.DeviceUtil;
+import hear.app.helper.NotificationCenter;
 import hear.app.helper.SDCardUtils;
 import hear.app.helper.StatHelper;
+import hear.app.helper.ToastHelper;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
-import hear.app.models.ArticleLike;
-import hear.app.models.CollectedArticleStore;
-import hear.app.models.JsonRespWrapper;
+import hear.app.store.CollectedArticleStore;
+import hear.app.store.SNSAccountStore;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
 
@@ -179,8 +177,24 @@ public class FullScreenArticleFragment extends Fragment {
     @SuppressWarnings("UnusedDeclaration")
     @OnClick(R.id.container_like)
     protected void onLikeContainerClick() {
-        mLogicControl.toggleLikeState();
-        updateLikeContainer();
+        Article article = mLogicControl.getArticle();
+        boolean isLogin = SNSAccountStore.getInstance().isLogin();
+        if (isLogin && article.hasLiked()) {
+            new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
+                @Override
+                public void onConfirmButtonClick() {
+                    mLogicControl.toggleLikeState();
+                    updateLikeContainer();
+                }
+            }).show();
+        } else if (isLogin && !article.hasLiked()) {
+            ToastHelper.showCollected(getActivity());
+            mLogicControl.toggleLikeState();
+            updateLikeContainer();
+        } else {
+            mLogicControl.toggleLikeState();
+            updateLikeContainer();
+        }
     }
 
     private void performUpdateProgressBarTask() {
@@ -194,8 +208,8 @@ public class FullScreenArticleFragment extends Fragment {
 
     private void updateLikeContainer() {
         Article article = mLogicControl.getArticle();
-        mLikeLabel.setText("" + article.likenum);
-        mLikeImage.setBackgroundResource(article.haslike == 1 ? R.drawable.like_item_full : R.drawable.like_item);
+        mLikeLabel.setText("" + article.likeNum());
+        mLikeImage.setBackgroundResource(article.hasLiked() ? R.drawable.like_item_full : R.drawable.like_item);
     }
 
     private void initContentView() {
@@ -272,41 +286,14 @@ public class FullScreenArticleFragment extends Fragment {
 
         public void toggleLikeState() {
             Article article = mLogicControl.getArticle();
-            if (article.haslike == 1) {
-                article.haslike = 0;
-                article.likenum = article.likenum - 1;
-                ArticleLike.setLikeArticle(article.pageno, 0);
-                ArticleLike.descLikeCount(article.pageno);
+            if (article.hasLiked()) {
+                article.toggleLikeState();
                 CollectedArticleStore.getInstance().remove(article);
-                String url = "http://www.hearheart.com/cancellike";
-                BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
-
-                    @Override
-                    protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
-                    }
-                };
-                HashMap<String, String> params = new HashMap<>();
-                params.put("PhoneId", DeviceUtil.getPhoneId());
-                params.put("pageno", String.valueOf(getArticle()));
-                asyncTask.get(params).execute();
             } else {
-                article.haslike = 1;
-                article.likenum = article.likenum + 1;
-                ArticleLike.setLikeArticle(article.pageno, 1);
-                ArticleLike.incLikeCount(article.pageno);
+                article.toggleLikeState();
                 CollectedArticleStore.getInstance().add(article);
-                String url = "http://www.hearheart.com/clicklike";
-                BaseHttpAsyncTask asyncTask = new BaseHttpAsyncTask(url) {
-
-                    @Override
-                    protected void onPostExecute(JsonRespWrapper jsonRespWrapper) {
-                    }
-                };
-                HashMap<String, String> params = new HashMap<>();
-                params.put("PhoneId", DeviceUtil.getPhoneId());
-                params.put("pageno", String.valueOf(getArticle().pageno));
-                asyncTask.get(params).execute();
             }
+            NotificationCenter.getInstance().getDispatcher().onArticleDataChanged(article);
         }
 
         public void performShare() {

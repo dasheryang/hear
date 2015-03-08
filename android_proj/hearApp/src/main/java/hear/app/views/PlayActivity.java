@@ -1,12 +1,5 @@
 package hear.app.views;
 
-import hear.app.R;
-import hear.app.models.Article;
-import hear.app.helper.LogUtil;
-import hear.app.widget.MasterLayout;
-
-import java.text.SimpleDateFormat;
-
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -17,6 +10,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.text.SimpleDateFormat;
+
+import hear.app.R;
+import hear.app.helper.LogUtil;
+import hear.app.models.Article;
+import hear.app.store.ArticleStore;
+import hear.app.widget.MasterLayout;
+
 
 /**
  * Activity For First Play
@@ -25,61 +26,60 @@ public class PlayActivity extends BaseActivity {
 
     public static final String KEY_PAGE_NO = "pageno";
 
-    public static final String KEY_FROM="from";
+    public static final String KEY_FROM = "from";
 
     private MasterLayout masterLayout;
 
-    private MediaPlayer mediaPlayer=new MediaPlayer();
+    private MediaPlayer mediaPlayer = new MediaPlayer();
 
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
 
-    SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
 
-    private Runnable mRunnable=new Runnable() {
+    private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             int positon = mediaPlayer.getCurrentPosition();
             int duration = mediaPlayer.getDuration();
-            int progress= (int)((positon/(float)duration)*100);
-            if(progress>10){
-                if(!TextUtils.isEmpty(mSoundDate)){
+            int progress = (int) ((positon / (float) duration) * 100);
+            if (progress > 10) {
+                if (!TextUtils.isEmpty(mSoundDate)) {
                     Article.setPlayed(mSoundDate);
                 }
             }
-            if(progress>=100){
-                progress=100;
+            if (progress >= 100) {
+                progress = 100;
             }
             masterLayout.cusview.setupprogress(progress);
-            if(duration>positon) {
+            if (duration > positon) {
                 mHandler.postDelayed(this, 1000);
             }
         }
     };
 
 
-
     /**
      * 获取传入的pageno
+     *
      * @return
      */
-    private int getInPageNo(){
-        return getIntent().getIntExtra(KEY_PAGE_NO,-1);
+    private int getInPageNo() {
+        return getIntent().getIntExtra(KEY_PAGE_NO, -1);
     }
 
-    private String getFrom(){
+    private String getFrom() {
         return getIntent().getStringExtra(KEY_FROM);
     }
 
 
-
     /**
-     *  跳转去文章
+     * 跳转去文章
      */
-    private void startArticleActivity(){
+    private void startArticleActivity() {
 
     }
 
-    private void playUsingURL(String url){
+    private void playUsingURL(String url) {
         //url ="http://static.dbmeizi.com/1973.mp3";
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -93,7 +93,7 @@ public class PlayActivity extends BaseActivity {
                 public void onPrepared(MediaPlayer mp) {
                     LogUtil.d("on prepared listener");
                     mediaPlayer.start();
-                    mHandler.postDelayed(mRunnable,1000);
+                    mHandler.postDelayed(mRunnable, 1000);
                     masterLayout.startPlay();
 
                 }
@@ -111,7 +111,7 @@ public class PlayActivity extends BaseActivity {
             mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
-                    LogUtil.d("what:"+what);
+                    LogUtil.d("what:" + what);
                     return false;
                 }
             });
@@ -124,14 +124,14 @@ public class PlayActivity extends BaseActivity {
             });
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     protected void onDestroy() {
-        if(mediaPlayer!=null){
+        if (mediaPlayer != null) {
             mHandler.removeCallbacks(mRunnable);
             mediaPlayer.stop();
             mediaPlayer.release();
@@ -142,22 +142,19 @@ public class PlayActivity extends BaseActivity {
     /**
      *
      */
-    private void onMediaPlayComplete(){
-        if(isFromSplash()){
+    private void onMediaPlayComplete() {
+        if (isFromSplash()) {
             gotoHistory();
-        }
-        else{
+        } else {
             finish();
         }
     }
 
-    private void gotoHistory(){
-        Intent i=new Intent(this,MainActivity.class);
+    private void gotoHistory() {
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }
-
-
 
 
     private String mSoundUrl;
@@ -171,7 +168,7 @@ public class PlayActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.play);
-        masterLayout= (MasterLayout) findViewById(R.id.MasterLayout01);
+        masterLayout = (MasterLayout) findViewById(R.id.MasterLayout01);
 
         //Onclick listener of the progress button
         masterLayout.setOnClickListener(new View.OnClickListener() {
@@ -184,18 +181,17 @@ public class PlayActivity extends BaseActivity {
                 switch (masterLayout.flg_frmwrk_mode) {
                     case 1:
                         //Start state. Call your method
-                        if(!TextUtils.isEmpty(mSoundUrl)){
+                        if (!TextUtils.isEmpty(mSoundUrl)) {
                             playUsingURL(mSoundUrl);
 
                             masterLayout.startLoading();
                         }
                         break;
                     case 2:
-                        if(mediaPlayer.isPlaying()){
+                        if (mediaPlayer.isPlaying()) {
                             mediaPlayer.pause();
                             masterLayout.setPlayIcon();
-                        }
-                        else{
+                        } else {
                             masterLayout.setPauseIcon();
                             mediaPlayer.start();
                         }
@@ -210,15 +206,15 @@ public class PlayActivity extends BaseActivity {
             }
         });
 
-        int pageNo=getInPageNo();
+        int pageNo = getInPageNo();
 
         //设置URL
-        Article a=Article.getArticleByPageNo(pageNo);
-        mSoundUrl=a.soundurl;
-        mSoundDate=a.getSimpleDate();
+        Article a = ArticleStore.getInstance().getArticleWithPageNo(pageNo);
+        mSoundUrl = a.soundurl;
+        mSoundDate = a.getSimpleDate();
     }
 
-    private boolean isFromSplash(){
+    private boolean isFromSplash() {
         return "splash".equals(getFrom());
     }
 

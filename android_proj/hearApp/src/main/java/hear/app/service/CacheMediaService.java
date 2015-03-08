@@ -22,11 +22,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import hear.app.helper.ArrayUtils;
 import hear.app.helper.HttpActionUtil;
 import hear.app.helper.NetUtil;
 import hear.app.helper.SDCardUtils;
 import hear.app.models.Article;
+import hear.app.store.ArticleStore;
 
 /**
  * @author will.yao 缓存音频文件
@@ -58,7 +58,7 @@ public class CacheMediaService extends Service {
                 lastArticleJson = json;
 
             }
-            cacheMediaAction(ArrayUtils.from(Article.getAllArticles()));
+            cacheMediaAction(ArticleStore.getInstance().getArticleSet());
         }
         ES.submit(new Runnable() {
 
