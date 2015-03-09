@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp"
         android:stretchColumns="0, 1, 2" />
 
     <Button
@@ -23,6 +23,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/share__shape_round_button"
-        android:textColor="@android:color/black"
+        android:textColor="#808080"
+        android:textSize="20sp"
         android:text="取消" />
 </LinearLayout>

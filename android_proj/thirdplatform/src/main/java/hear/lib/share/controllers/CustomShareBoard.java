@@ -22,7 +22,14 @@ import hear.lib.share.R;
  */
 public class CustomShareBoard extends Dialog {
     private static final String[] sItemNameArray = new String[]{"微信好友", "朋友圈", "QQ好友", "QQ空间", "新浪微博", "复制链接"};
-    private static final int[] sItemImageResArray = new int[]{R.drawable.umeng_socialize_wechat, R.drawable.umeng_socialize_wxcircle, R.drawable.umeng_socialize_qq_on, R.drawable.umeng_socialize_qzone_on, R.drawable.umeng_socialize_sina_on, R.drawable.umeng_socialize_google};
+    private static final int[] sItemImageResArray = new int[]{
+            R.drawable.share_wx,
+            R.drawable.share_wx_circle,
+            R.drawable.share_qq,
+            R.drawable.share_qq_zone,
+            R.drawable.share_sina,
+            R.drawable.share_copy
+    };
     private static final SHARE_MEDIA[] sMediaArray = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SINA, SHARE_MEDIA.EMAIL};
 
     private Activity mContext;
@@ -71,7 +78,7 @@ public class CustomShareBoard extends Dialog {
         params.width = -1;
         params.height = -2;
         if (!firstRow)
-            params.topMargin = dip2px(container.getContext(), 12);
+            params.topMargin = dip2px(container.getContext(), 28);
         ret.setLayoutParams(params);
         return ret;
     }
