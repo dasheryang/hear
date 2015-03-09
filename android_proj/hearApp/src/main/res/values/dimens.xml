@@ -5,7 +5,8 @@
 
     <dimen name="slide_menu_margin_left">24dp</dimen>
     <dimen name="slide_menu_item_height">58dp</dimen>
-    <dimen name="slide_menu_item_text_marginleft">16dp</dimen>
+    <dimen name="slide_menu_item_text_marginleft">20dp</dimen>
     <dimen name="slide_menu_item_text_size">18sp</dimen>
+    <dimen name="slide_menu_item_image_size">28dp</dimen>
 
 </resources>

@@ -158,8 +158,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             ImageLoader.getInstance().displayImage(account.getAccountIconUrl(), loginImage);
             loginLabel.setText(account.getUserName());
         } else {
-            loginImage.setImageResource(R.drawable.like_item);
-            loginLabel.setText("请登陆");
+            loginImage.setImageResource(R.drawable.ic_center_avatar);
+            loginLabel.setText(getString(R.string.label_login));
         }
     }
 
@@ -246,7 +246,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         mResideMenu.setScaleValue(0.9f);
 
-        View menuView = View.inflate(this, R.layout.slide_menu, null);
+        View menuView = View.inflate(this, R.layout.layer_user_center, null);
 
         mLoginButton = menuView.findViewById(R.id.btn_login);
         mLoginButton.setOnClickListener(this);

@@ -16,4 +16,5 @@
     <string name="btn_delete">确定删除</string>
     <string name="btn_cancel">取消</string>
     <string name="content_delete">确定将此文章从我的收藏删除?</string>
+    <string name="label_login">请登录</string>
 </resources>

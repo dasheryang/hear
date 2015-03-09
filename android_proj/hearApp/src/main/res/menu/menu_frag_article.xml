@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item_share"
-        android:title="分享"
-        app:showAsAction="always|withText" />
+        android:title=""
+        android:icon="@drawable/ic_actionbar_share"
+        app:showAsAction="always" />
 </menu>

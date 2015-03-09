@@ -30,10 +30,10 @@
     </style>
 
     <style name="HistoryActivityActionBar" parent="MyAppActionBar">
-        <item name="android:homeAsUpIndicator">@drawable/like_item</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_actionbar_menu</item>
         <item name="android:background">@drawable/color_actionbar_bg</item>
 
-        <item name="homeAsUpIndicator">@drawable/like_item</item>
+        <item name="homeAsUpIndicator">@drawable/ic_actionbar_menu</item>
         <item name="background">@drawable/color_actionbar_bg</item>
     </style>
 
