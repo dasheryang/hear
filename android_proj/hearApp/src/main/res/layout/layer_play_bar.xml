@@ -4,14 +4,14 @@
     android:id="@+id/playbar"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="@android:color/black">
+    android:background="#88000000">
 
     <ImageView
         android:id="@+id/img_thumb"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_marginLeft="16dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:layout_centerVertical="true" />
 
     <ImageView
@@ -19,7 +19,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/play_icon"
+        android:src="@drawable/ic_play"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="16dp" />
@@ -29,7 +29,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/noarrow"
+        android:src="@drawable/ic_loading"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="16dp"
@@ -43,8 +43,10 @@
         android:layout_alignTop="@id/img_thumb"
         android:layout_toRightOf="@id/img_thumb"
         android:layout_toLeftOf="@id/img_play"
-        android:textColor="@android:color/white"
+        android:textColor="#928b87"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="1dp"
+        android:textSize="18sp"
         tools:text="VOL.56" />
 
     <TextView
@@ -54,6 +56,8 @@
         android:layout_alignBottom="@id/img_thumb"
         android:layout_alignLeft="@id/label_volume"
         android:layout_toLeftOf="@id/img_play"
-        android:textColor="@android:color/white"
+        android:textColor="#4f4540"
+        android:layout_marginBottom="1dp"
+        android:textSize="14sp"
         tools:text="FROM 小四" />
 </RelativeLayout>

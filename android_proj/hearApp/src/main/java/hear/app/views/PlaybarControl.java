@@ -94,12 +94,12 @@ public class PlaybarControl {
             mVolumeLabel.setText("");
             mAuthorLabel.setText("");
             mThumbImage.setImageBitmap(null);
-            mPlayImage.setImageResource(R.drawable.play_icon);
+            mPlayImage.setImageResource(R.drawable.ic_play);
             mPlayImage.setVisibility(View.VISIBLE);
             mLoadingImage.setVisibility(View.GONE);
         } else {
-            mVolumeLabel.setText("VOL." + article.pageno);
-            mAuthorLabel.setText("FROM " + article.showauthor);
+            mVolumeLabel.setText("VOL. " + article.pageno);
+            mAuthorLabel.setText(article.showauthor);
             ImageLoader.getInstance().displayImage(article.imgurl, mThumbImage);
 
             String url = getPlayUrl(article.soundurl);
@@ -112,13 +112,13 @@ public class PlaybarControl {
                     mLoadingImage.startAnimation(getAnimation(mContext));
             } else if (player.isPlaying(url)) {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.pause_icon);
+                mPlayImage.setImageResource(R.drawable.ic_pause);
             } else if (player.isPause(url)) {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.play_icon);
+                mPlayImage.setImageResource(R.drawable.ic_play);
             } else {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.pause_icon);
+                mPlayImage.setImageResource(R.drawable.ic_pause);
             }
         }
     }

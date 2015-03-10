@@ -40,7 +40,6 @@ import hear.lib.share.models.ShareContent;
  */
 public class ArticleFragment extends Fragment {
 
-    private LinearLayout mLikeContainer;
     private View mLikeImage = null;
     private TextView mLikeLabel = null;
     private TextView mContentLabel = null;
@@ -53,8 +52,6 @@ public class ArticleFragment extends Fragment {
     private UILogic mUILogic = new UILogic();
     private SocialServiceWrapper mShareService;
 
-    public static final int UN_LIKE_LEVEL = 1;
-    public static final int LIKE_LEVEL = 2;
     public static final String KEY_ARTICLE = "article";
 
     private class ImageShowerListener extends SimpleImageLoadingListener {
@@ -141,7 +138,7 @@ public class ArticleFragment extends Fragment {
     private void updateLikeContainer() {
         Article article = mUILogic.getArticle();
         mLikeLabel.setText("" + article.likeNum());
-        mLikeImage.setBackgroundResource(article.hasLiked() ? R.drawable.like_item_full : R.drawable.like_item);
+        mLikeImage.setSelected(article.hasLiked());
     }
 
     private void bindViews(View rootView) {
@@ -153,7 +150,7 @@ public class ArticleFragment extends Fragment {
         mAuthorLabel = (TextView) rootView.findViewById(R.id.label_author);
         mLikeLabel = (TextView) rootView.findViewById(R.id.label_like_count);
         mLikeImage = rootView.findViewById(R.id.img_like);
-        mLikeContainer = (LinearLayout) rootView.findViewById(R.id.container_like);
+        LinearLayout mLikeContainer = (LinearLayout) rootView.findViewById(R.id.container_like);
         mLikeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

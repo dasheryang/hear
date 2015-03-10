@@ -46,7 +46,7 @@ public class Article {
 
     public String getShowTime() {
         Date d = new Date(showtime);
-        return new SimpleDateFormat("MM/dd/yyyy").format(d);
+        return new SimpleDateFormat("yyyy-MM-dd").format(d);
     }
 
     public String getSimpleDate() {

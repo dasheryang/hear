@@ -37,6 +37,6 @@
                 android:text="找不到文章，请点击重试" />
         </FrameLayout>
 
-        <include layout="@layout/play_bar" />
+        <include layout="@layout/layer_play_bar" />
     </LinearLayout>
 </FrameLayout>
