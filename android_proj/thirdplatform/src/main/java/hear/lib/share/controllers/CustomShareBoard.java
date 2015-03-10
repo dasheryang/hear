@@ -23,12 +23,12 @@ import hear.lib.share.R;
 public class CustomShareBoard extends Dialog {
     private static final String[] sItemNameArray = new String[]{"微信好友", "朋友圈", "QQ好友", "QQ空间", "新浪微博", "复制链接"};
     private static final int[] sItemImageResArray = new int[]{
-            R.drawable.share_wx,
-            R.drawable.share_wx_circle,
-            R.drawable.share_qq,
-            R.drawable.share_qq_zone,
-            R.drawable.share_sina,
-            R.drawable.share_copy
+            R.drawable.ic_share_wx,
+            R.drawable.ic_share_wx_circle,
+            R.drawable.ic_share_qq,
+            R.drawable.ic_share_qq_zone,
+            R.drawable.ic_share_sina,
+            R.drawable.ic_share_copy
     };
     private static final SHARE_MEDIA[] sMediaArray = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SINA, SHARE_MEDIA.EMAIL};
 

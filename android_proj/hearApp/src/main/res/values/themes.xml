@@ -2,39 +2,64 @@
 
     <!-- Base application theme. -->
     <style name="MyAppTheme" parent="Theme.AppCompat">
-        <item name="android:actionBarStyle">@style/MyAppActionBar</item>
+        <item name="android:actionBarStyle">@style/DefaultAppActionBar</item>
 
-        <item name="actionBarStyle">@style/MyAppActionBar</item>
+        <item name="actionBarStyle">@style/DefaultAppActionBar</item>
     </style>
 
-    <style name="HistoryActivityTheme" parent="MyAppTheme">
-        <item name="android:actionBarStyle">@style/HistoryActivityActionBar</item>
+    <style name="MainActivityTheme" parent="MyAppTheme">
+        <item name="android:actionBarStyle">@style/MainActivityActionBar</item>
+        <item name="android:windowBackground">@drawable/bg_main</item>
 
-        <item name="actionBarStyle">@style/HistoryActivityActionBar</item>
+        <item name="actionBarStyle">@style/MainActivityActionBar</item>
+    </style>
+
+    <style name="FullScreenArticleActivityTheme" parent="MyAppTheme">
+        <item name="android:actionBarStyle">@style/FullScreenArticleActivityActionBar</item>
+        <item name="android:windowBackground">@drawable/bg_main</item>
+
+        <item name="actionBarStyle">@style/FullScreenArticleActivityActionBar</item>
+    </style>
+
+    <style name="CollectionActivityTheme" parent="MyAppTheme">
+        <item name="android:actionBarStyle">@style/DefaultAppActionBar</item>
+        <item name="android:windowBackground">@drawable/bg_main</item>
+
+        <item name="actionBarStyle">@style/DefaultAppActionBar</item>
     </style>
 
     <style name="Theme_Start_Promote" parent="MyAppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionBarStyle">@style/HistoryActivityActionBar</item>
+        <item name="android:actionBarStyle">@style/MainActivityActionBar</item>
 
-        <item name="actionBarStyle">@style/MyAppActionBar</item>
+        <item name="actionBarStyle">@style/DefaultAppActionBar</item>
     </style>
 
-    <style name="MyAppActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+    <style name="DefaultAppActionBar" parent="Widget.AppCompat.ActionBar.Solid">
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
         <item name="android:background">@drawable/color_actionbar_bg</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_left</item>
 
         <item name="displayOptions">showHome|homeAsUp|showTitle</item>
         <item name="background">@drawable/color_actionbar_bg</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left</item>
     </style>
 
-    <style name="HistoryActivityActionBar" parent="MyAppActionBar">
+    <style name="MainActivityActionBar" parent="DefaultAppActionBar">
         <item name="android:homeAsUpIndicator">@drawable/ic_actionbar_menu</item>
         <item name="android:background">@drawable/color_actionbar_bg</item>
 
         <item name="homeAsUpIndicator">@drawable/ic_actionbar_menu</item>
         <item name="background">@drawable/color_actionbar_bg</item>
+    </style>
+
+    <style name="FullScreenArticleActivityActionBar" parent="DefaultAppActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_down</item>
+        <item name="android:background">@drawable/color_actionbar_bg_transparent</item>
+
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_down</item>
+        <item name="background">@drawable/color_actionbar_bg_transparent</item>
     </style>
 
 </resources>

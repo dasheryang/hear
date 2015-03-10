@@ -22,9 +22,9 @@ import hear.lib.share.R;
 public class CustomLoginBoard extends Dialog {
     private static final String[] sItemNameArray = new String[]{"微信", "QQ", "新浪"};
     private static final int[] sItemImageResArray = new int[]{
-            R.drawable.share_wx,
-            R.drawable.share_qq,
-            R.drawable.share_sina
+            R.drawable.ic_share_wx,
+            R.drawable.ic_share_qq,
+            R.drawable.ic_share_sina
     };
     private static final SHARE_MEDIA[] sMediaArray = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ, SHARE_MEDIA.SINA};
 

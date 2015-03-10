@@ -27,6 +27,7 @@ import com.umeng.socialize.controller.listener.SocializeListeners;
 
 import hear.app.R;
 import hear.app.helper.StatHelper;
+import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.store.ArticleStore;
@@ -118,6 +119,7 @@ public class ArticleFragment extends Fragment {
         Article article = mUILogic.getArticle();
         if (SNSAccountStore.getInstance().isLogin()) {
             if (!article.hasLiked()) {
+                ToastHelper.showCollected(getActivity());
                 mUILogic.toggleLikeState();
                 updateLikeContainer();
             } else {

@@ -18,7 +18,7 @@ public class ToastHelper {
     }
 
     public static void showCollected(Context context) {
-        createToast(context, "已收藏", R.drawable.play_icon, Toast.LENGTH_SHORT).show();
+        createToast(context, "已收藏", R.drawable.ic_hint_collect, Toast.LENGTH_SHORT).show();
     }
 
     private static Toast createToast(Context context, int textID, int iconID, int duration) {

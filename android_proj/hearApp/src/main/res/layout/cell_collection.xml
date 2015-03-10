@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="20dp">
+    android:paddingTop="16dp">
 
     <ImageView
         android:id="@+id/img_cover"
@@ -23,7 +23,7 @@
         android:layout_toRightOf="@id/img_cover"
         android:layout_below="@id/img_cover"
         tools:text="VOL.47"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="@android:color/white" />
 
     <TextView
@@ -36,7 +36,7 @@
         android:layout_below="@id/label_volume"
         tools:text="我努力寻找幸福..."
         android:textColor="#afaeb1"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:singleLine="true"
         android:ellipsize="end" />
 </RelativeLayout>

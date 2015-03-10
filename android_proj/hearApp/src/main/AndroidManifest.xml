@@ -43,22 +43,26 @@
         <activity
             android:name=".views.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/HistoryActivityTheme" />
+            android:theme="@style/MainActivityTheme" />
 
         <activity
             android:name=".views.CollectionActivity"
-            android:theme="@style/MyAppTheme"
+            android:label="@string/title_collection"
+            android:theme="@style/CollectionActivityTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".views.CollectionGalleryActivity"
+            android:theme="@style/MainActivityTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".views.FullScreenArticleActivity"
+            android:theme="@style/FullScreenArticleActivityTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.AboutUsActivity"
+            android:theme="@style/MainActivityTheme"
             android:label="@string/title_about_us" />
 
         <service

@@ -208,6 +208,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mViewPager = (ViewPager) findViewById(R.id.vp_pages);
         mEmptyButton = (TextView) findViewById(R.id.btn_empty);
 
+        /** setup background drawable **/
+        ((ImageView) findViewById(R.id.img_bg)).setImageResource(R.drawable.bg_main);
+
         /** setup ViewPager **/
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -238,7 +241,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         /** setup menu **/
         mResideMenu = new ResideMenu(this);
-        mResideMenu.setBackground(R.drawable.play_bg);
+        mResideMenu.setBackground(R.drawable.bg_menu);
         mResideMenu.attachToActivity(this);
 //        mResideMenu.setMenuListener(menuListener);
         mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);

@@ -1,6 +1,8 @@
 package hear.app.views;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,6 +23,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.listener.SocializeListeners;
@@ -52,15 +56,13 @@ public class FullScreenArticleFragment extends Fragment {
     private static final int STATE_PAUSE = 3;
     private static final long UPDATE_PROGRESSBAR_INTERVAL = 1000L;
 
-    @InjectView(R.id.image_bg)
-    ImageView mBGImage;
     @InjectView(R.id.image_play)
     ImageView mPlayImage;
     @InjectView(R.id.img_loading)
     ImageView mLoadingImage;
     @InjectView(R.id.pb_play)
     ProgressBar mProgressBar;
-    @InjectView(R.id.label_like)
+    @InjectView(R.id.label_like_count)
     TextView mLikeLabel;
     @InjectView(R.id.img_like)
     View mLikeImage;
@@ -214,7 +216,35 @@ public class FullScreenArticleFragment extends Fragment {
 
     private void initContentView() {
         Article article = mLogicControl.getArticle();
-        ImageLoader.getInstance().displayImage(article.imgurl, mBGImage);
+        ImageLoader.getInstance().loadImage(article.imgurl, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Activity act = getActivity();
+                if (act != null) {
+                    act.getWindow().setBackgroundDrawable(null);
+                    ViewGroup container = (ViewGroup) act.getWindow().getDecorView();
+                    ImageView imageView = new ImageView(act);
+                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    imageView.setImageBitmap(loadedImage);
+                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(-1, -1);
+                    params.width = -1;
+                    params.height = -1;
+                    container.addView(imageView, 0, params);
+                }
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+            }
+        });
 
         //update actionbar
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
@@ -229,10 +259,10 @@ public class FullScreenArticleFragment extends Fragment {
 
         if (state == STATE_PLAYING) {
             mLoadingImage.clearAnimation();
-            mPlayImage.setImageResource(R.drawable.pause_icon);
+            mPlayImage.setImageResource(R.drawable.ic_pause);
         } else if (state == STATE_PAUSE) {
             mLoadingImage.clearAnimation();
-            mPlayImage.setImageResource(R.drawable.play_icon);
+            mPlayImage.setImageResource(R.drawable.ic_play);
         } else if (state == STATE_LOADING) {
             if (mLoadingImage.getAnimation() == null)
                 mLoadingImage.startAnimation(getRoateAnimation());

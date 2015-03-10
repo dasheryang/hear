@@ -16,10 +16,10 @@
 
         <ImageView
             android:id="@+id/img_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:scaleType="fitCenter"
-            tools:src="@drawable/play_icon"
+            tools:src="@drawable/ic_hint_collect"
             android:layout_gravity="center_horizontal" />
 
         <TextView
