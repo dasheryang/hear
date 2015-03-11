@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -87,8 +86,9 @@ public class CollectionGalleryActivity extends BaseFragmentActivity implements S
                 getSupportFragmentManager(),
                 mArticles);
         mViewPager.setAdapter(firstCategoryAdapter);
-        Log.e("Hear", "default_item_position:" + Math.max(0, mUILogic.getArticlePosition(getIntent().getIntExtra(KEY_DEFAULT_PAGE_NO, -1))));
-        mViewPager.setCurrentItem(Math.max(0, mUILogic.getArticlePosition(getIntent().getIntExtra(KEY_DEFAULT_PAGE_NO, -1))));
+        int defaultPosition = Math.max(0, mUILogic.getArticlePosition(getIntent().getIntExtra(KEY_DEFAULT_PAGE_NO, -1)));
+        mViewPager.setCurrentItem(defaultPosition);
+        mPlaybarControl.setDefaultArticle(mUILogic.getCacheArticles().get(defaultPosition));
         mViewPager.setVisibility(View.VISIBLE);
     }
 

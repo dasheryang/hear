@@ -80,7 +80,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.My
             Article item = mItems.get(position);
 
             itemView.setTag(position);
-            ImageLoader.getInstance().displayImage(item.imgurl, mCoverImage);
+            ImageLoader.getInstance().displayImage(item.getImageURL(itemView.getContext()), mCoverImage);
             mVolumeLabel.setText("VOL." + item.pageno);
             mTitleLabel.setText(item.txt);
         }

@@ -18,4 +18,6 @@
     <string name="btn_cancel">取消</string>
     <string name="content_delete">确定将此文章从我的收藏删除?</string>
     <string name="label_login">请登录</string>
+    <string name="hint_collected">已收藏</string>
+    <string name="hint_network_error">当前网络信号差\n请稍后尝试</string>
 </resources>

@@ -226,6 +226,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 }
             }
         });
+        mViewPager.setCurrentItem(0);
         List<Article> mArticles = mUILogic.getCacheArticles();
         if (ArrayUtils.isEmpty(mArticles)) {
             onNoArticles();
@@ -235,6 +236,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     mArticles);
             mViewPager.setAdapter(firstCategoryAdapter);
             mViewPager.setCurrentItem(0);
+            mPlaybarControl.setDefaultArticle(mUILogic.getCacheArticles().get(0));
             mViewPager.setVisibility(View.VISIBLE);
             mEmptyButton.setVisibility(View.GONE);
         }
@@ -332,7 +334,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
 
         public void doCheckUpdate() {
-            UpdateUrgent.checkUpdate(MainActivity.this);
+            UpdateUrgent.checkUpdate(MainActivity.this, true, false, null);
         }
 
         public void doScore() {

@@ -18,7 +18,11 @@ public class ToastHelper {
     }
 
     public static void showCollected(Context context) {
-        createToast(context, "已收藏", R.drawable.ic_hint_collect, Toast.LENGTH_SHORT).show();
+        createToast(context, R.string.hint_collected, R.drawable.ic_hint_collect, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showNetworkError(Context context) {
+        createToast(context, R.string.hint_network_error, R.drawable.ic_hint_message, Toast.LENGTH_SHORT).show();
     }
 
     private static Toast createToast(Context context, int textID, int iconID, int duration) {

@@ -216,7 +216,7 @@ public class FullScreenArticleFragment extends Fragment {
 
     private void initContentView() {
         Article article = mLogicControl.getArticle();
-        ImageLoader.getInstance().loadImage(article.imgurl, new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(article.getImageURL(getActivity()), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
             }
@@ -329,7 +329,7 @@ public class FullScreenArticleFragment extends Fragment {
         public void performShare() {
             final Article article = getArticle();
             mShareService = new SocialServiceWrapper(getActivity());
-            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.imgurl, "http://www.baidu.com"));
+            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.getImageURL(getActivity()), "http://www.baidu.com"));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
                 public void onStart() {

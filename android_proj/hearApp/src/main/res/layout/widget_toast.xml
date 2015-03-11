@@ -19,7 +19,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:scaleType="fitCenter"
-            tools:src="@drawable/ic_hint_collect"
+            tools:src="@drawable/ic_hint_message"
             android:layout_gravity="center_horizontal" />
 
         <TextView
@@ -29,6 +29,7 @@
             android:layout_gravity="center_horizontal"
             android:textColor="@android:color/white"
             android:layout_marginTop="8dp"
-            tools:text="已收藏" />
+            android:gravity="center"
+            tools:text="当前网络信号差\n请稍后尝试" />
     </LinearLayout>
 </FrameLayout>

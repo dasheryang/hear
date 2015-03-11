@@ -8,9 +8,7 @@ import android.view.WindowManager;
 
 import hear.app.R;
 import hear.app.helper.AppContext;
-import hear.app.views.BaseActivity;
-import hear.app.views.GuideActivity;
-import hear.app.views.InActivityHelper;
+import hear.lib.share.UpdateUrgent;
 
 
 /**
@@ -27,47 +25,53 @@ public class SplashActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash);
-        mHandlers=new Handler();
+        mHandlers = new Handler();
         init();
     }
 
-    public static int REQ_GUIDE=0;
+    public static int REQ_GUIDE = 0;
 
-    private void showGuideActivity(){
-        Intent i=new Intent(this,GuideActivity.class);
+    private void showGuideActivity() {
+        Intent i = new Intent(this, GuideActivity.class);
         startActivity(i);
         finish();
     }
 
 
-    private InActivityHelper helper=new InActivityHelper(this);
+    private InActivityHelper helper = new InActivityHelper(this);
 
 
-    private void init(){
-        mHandlers.postDelayed(new Runnable() {
+    private void init() {
+        final Runnable mLaunchTask = new Runnable() {
             @Override
             public void run() {
-                if(!isGuidActivityShowed()){
+                if (!isGuidActivityShowed()) {
                     showGuideActivity();
                     setGuideActivityShowed();
-                }
-                else {
+                } else {
                     helper.initEntranceActivity();
                 }
             }
-        },700);
+        };
+
+        UpdateUrgent.checkUpdate(this, false, true, new UpdateUrgent.Callback() {
+            @Override
+            public void onFinishCheckUpdate() {
+                mLaunchTask.run();
+            }
+        });
     }
 
 
-    private boolean isGuidActivityShowed(){
+    private boolean isGuidActivityShowed() {
         //return false;
-        boolean showed= AppContext.getSharedPrefernce().get("show_guide",false);
+        boolean showed = AppContext.getSharedPrefernce().get("show_guide", false);
         return showed;
 
     }
 
-    private void setGuideActivityShowed(){
-        AppContext.getSharedPrefernce().put("show_guide",true);
+    private void setGuideActivityShowed() {
+        AppContext.getSharedPrefernce().put("show_guide", true);
     }
 
 

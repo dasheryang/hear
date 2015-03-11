@@ -1,6 +1,6 @@
 package hear.app.models;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
 
 import java.text.SimpleDateFormat;
@@ -37,10 +37,10 @@ public class Article {
     public String name;
     public int pageno;
     public String txt;
-    public String imgurl;
     public String soundurl;
     public long showtime;
     public String showauthor;
+    private String imgurl;
     private int likenum;
     private int haslike;
 
@@ -116,7 +116,7 @@ public class Article {
     public static int[] imgWidth = {978, 652, 435};
     public static int[] imgHeight = {812, 542, 340};
 
-    public String getImageURL(Activity act) {
+    public String getImageURL(Context act) {
         Point p = UIHelper.getDisplaySize(act);
         int idx = 0;
         if (p.x < imgWidth[1]) {

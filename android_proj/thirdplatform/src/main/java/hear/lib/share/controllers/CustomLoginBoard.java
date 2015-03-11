@@ -20,7 +20,7 @@ import hear.lib.share.R;
  * Created by ZhengYi on 15/2/9.
  */
 public class CustomLoginBoard extends Dialog {
-    private static final String[] sItemNameArray = new String[]{"微信", "QQ", "新浪"};
+    private static final String[] sItemNameArray = new String[]{"微信登录", "QQ登录", "新浪登录"};
     private static final int[] sItemImageResArray = new int[]{
             R.drawable.ic_share_wx,
             R.drawable.ic_share_qq,

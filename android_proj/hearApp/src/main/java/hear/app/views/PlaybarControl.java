@@ -100,7 +100,7 @@ public class PlaybarControl {
         } else {
             mVolumeLabel.setText("VOL. " + article.pageno);
             mAuthorLabel.setText(article.showauthor);
-            ImageLoader.getInstance().displayImage(article.imgurl, mThumbImage);
+            ImageLoader.getInstance().displayImage(article.getImageURL(mContext), mThumbImage);
 
             String url = getPlayUrl(article.soundurl);
             Player player = Player.getInstance();

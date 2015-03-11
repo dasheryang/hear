@@ -7,8 +7,9 @@ import android.text.TextUtils;
 
 import java.io.File;
 
+import hear.app.helper.AppContext;
 import hear.app.helper.LogUtil;
-import hear.app.helper.ToastUtil;
+import hear.app.helper.ToastHelper;
 import hear.app.models.Article;
 
 /**
@@ -133,7 +134,7 @@ public class Player {
                         localFile.delete();
                     }
                     if (what == 1) {
-                        ToastUtil.Short("播放错误，请确定网络是否联通");
+                        ToastHelper.showNetworkError(AppContext.getContext());
                     }
                     return false;
                 }
