@@ -342,6 +342,9 @@ public class FullScreenArticleFragment extends Fragment {
                 public void onComplete(SHARE_MEDIA media, int i, SocializeEntity socializeEntity) {
                     if (i == 200) {
                         StatHelper.onArticleShare(getActivity(), article, media);
+                        if (media == SHARE_MEDIA.SMS) {
+                            ToastHelper.showCopyLinkSuccess(getActivity());
+                        }
                     }
                     mShareService = null;
                 }

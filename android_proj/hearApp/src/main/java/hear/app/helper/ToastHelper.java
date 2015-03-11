@@ -25,6 +25,10 @@ public class ToastHelper {
         createToast(context, R.string.hint_network_error, R.drawable.ic_hint_message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showCopyLinkSuccess(Context context) {
+        createToast(context, "已复制到粘贴版", R.drawable.ic_hint_success, Toast.LENGTH_SHORT).show();
+    }
+
     private static Toast createToast(Context context, int textID, int iconID, int duration) {
         return createToast(context, context.getResources().getString(textID), iconID, duration);
     }

@@ -2,6 +2,7 @@ package hear.lib.share.controllers;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
 
 import hear.lib.share.R;
+import hear.lib.share.models.ShareContent;
 
 /**
  * Created by ZhengYi on 15/2/9.
@@ -30,16 +32,18 @@ public class CustomShareBoard extends Dialog {
             R.drawable.ic_share_sina,
             R.drawable.ic_share_copy
     };
-    private static final SHARE_MEDIA[] sMediaArray = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SINA, SHARE_MEDIA.EMAIL};
+    private static final SHARE_MEDIA[] sMediaArray = new SHARE_MEDIA[]{SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SINA, SHARE_MEDIA.SMS};
 
     private Activity mContext;
     private UMSocialService mSocialService;
+    private ShareContent mShareContent;
     private SocializeListeners.SnsPostListener mPostListener;
 
-    public CustomShareBoard(Activity context, UMSocialService socialService, SocializeListeners.SnsPostListener postListener) {
+    public CustomShareBoard(Activity context, UMSocialService socialService, ShareContent shareContent, SocializeListeners.SnsPostListener postListener) {
         super(context, R.style.Share_Dialog);
         mContext = context;
         mSocialService = socialService;
+        mShareContent = shareContent;
         mPostListener = postListener;
         setContentView(R.layout.share__dialog_share);
         getWindow().setLayout(-1, -2);
@@ -96,7 +100,14 @@ public class CustomShareBoard extends Dialog {
             @Override
             public void onClick(View v) {
                 dismiss();
-                mSocialService.postShare(mContext, media, mPostListener);
+                if (media == SHARE_MEDIA.SMS) {
+                    String text = "听见 " + mShareContent.title + ": " + mShareContent.text + " " + mShareContent.targetURL;
+                    ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(text);
+                    mPostListener.onComplete(SHARE_MEDIA.SMS, 200, null);
+                } else {
+                    mSocialService.postShare(mContext, media, mPostListener);
+                }
             }
         });
 

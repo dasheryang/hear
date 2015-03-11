@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SnsAccount;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.controller.listener.SocializeListeners;
@@ -20,6 +19,7 @@ import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.utils.OauthHelper;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import hear.lib.share.controllers.CustomLoginBoard;
@@ -32,6 +32,7 @@ import hear.lib.share.models.ShareContent;
 public class SocialServiceWrapper {
     private Activity mContext;
     private UMSocialService mSocialService;
+    private ShareContent mShareContent;
 
     public SocialServiceWrapper(Activity context) {
         mContext = context;
@@ -40,12 +41,13 @@ public class SocialServiceWrapper {
     }
 
     public void setShareContent(ShareContent content) {
+        mShareContent = content;
         configSharePlatforms(mContext, content);
         setShareContentCore(content);
     }
 
     public void showShareBoard(SocializeListeners.SnsPostListener listener) {
-        CustomShareBoard shareBoard = new CustomShareBoard(mContext, mSocialService, listener);
+        CustomShareBoard shareBoard = new CustomShareBoard(mContext, mSocialService, mShareContent, listener);
         shareBoard.show();
     }
 
@@ -155,37 +157,43 @@ public class SocialServiceWrapper {
 
         // 分享到QQ好友
         QQShareContent qqShareContent = new QQShareContent(shareContent.text);
-        qqShareContent.setTitle(shareContent.title + " - QQ好友");
+        qqShareContent.setTitle(shareContent.title);
         qqShareContent.setTargetUrl(shareContent.targetURL);
         qqShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(qqShareContent);
 
         // 分享到QQ空间
         QZoneShareContent qZoneShareContent = new QZoneShareContent(shareContent.text);
-        qZoneShareContent.setTitle(shareContent.title + " - QQ空间");
+        qZoneShareContent.setTitle(shareContent.title);
         qZoneShareContent.setTargetUrl(shareContent.targetURL);
         qZoneShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(qZoneShareContent);
 
         // 分享到腾讯微博
         TencentWbShareContent tencentWbShareContent = new TencentWbShareContent(shareContent.text);
-        tencentWbShareContent.setTitle(shareContent.title + " - 腾讯微博");
+        tencentWbShareContent.setTitle(shareContent.title);
         tencentWbShareContent.setTargetUrl(shareContent.targetURL);
         tencentWbShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(tencentWbShareContent);
 
         // 分享到新浪微博
-        SinaShareContent sinaShareContent = new SinaShareContent(shareContent.text);
-        sinaShareContent.setTitle(shareContent.title + " - 新浪微博");
+        SinaShareContent sinaShareContent = new SinaShareContent(shareContent.text + "\n" + shareContent.targetURL);
+        sinaShareContent.setTitle(shareContent.title);
         sinaShareContent.setTargetUrl(shareContent.targetURL);
         sinaShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(sinaShareContent);
 
         // 分享到微信好友、微信朋友圈
-        WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text);
-        weiXinShareContent.setTitle(shareContent.title + " - 微信");
+        WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text + shareContent.targetURL);
+        weiXinShareContent.setTitle(shareContent.title);
         weiXinShareContent.setTargetUrl(shareContent.targetURL);
-//        weiXinShareContent.setShareImage(shareImage);
+        weiXinShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(weiXinShareContent);
+
+        CircleShareContent circleShareContent = new CircleShareContent(shareContent.text);
+        circleShareContent.setTitle(shareContent.text);
+        circleShareContent.setTargetUrl(shareContent.targetURL);
+        circleShareContent.setShareImage(shareImage);
+        mSocialService.setShareMedia(circleShareContent);
     }
 }

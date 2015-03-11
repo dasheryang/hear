@@ -78,7 +78,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
             @Override
             public void onStart() {
-
             }
 
             @Override

@@ -30,6 +30,6 @@
             android:textColor="@android:color/white"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            tools:text="当前网络信号差\n请稍后尝试" />
+            tools:text="已复制到粘贴版" />
     </LinearLayout>
 </FrameLayout>
