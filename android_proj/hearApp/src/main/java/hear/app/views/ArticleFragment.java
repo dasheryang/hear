@@ -222,7 +222,7 @@ public class ArticleFragment extends Fragment {
         private void performShare() {
             mShareService = new SocialServiceWrapper(getActivity());
             final Article article = mUILogic.getArticle();
-            mShareService.setShareContent(new ShareContent().init("VOL. " + article.pageno, article.txt + article.showauthor, article.getImageURL(getActivity()), "http://www.baidu.com"));
+            mShareService.setShareContent(new ShareContent().init("VOL. " + article.pageno, article.txt + article.showauthor, article.getImageURL(getActivity()), ""));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
                 public void onStart() {

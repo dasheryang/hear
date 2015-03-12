@@ -337,7 +337,7 @@ public class FullScreenArticleFragment extends Fragment {
         public void performShare() {
             final Article article = getArticle();
             mShareService = new SocialServiceWrapper(getActivity());
-            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.getImageURL(getActivity()), "http://www.baidu.com"));
+            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.getImageURL(getActivity()), ""));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
                 public void onStart() {
