@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,17 +11,26 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
+    <hear.app.widget.ProgressWheel
+        android:id="@+id/pb_duration"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        app:rimWidth="6dp"
+        app:barWidth="6dp"
+        app:barColor="#3fae2b"
+        android:layout_gravity="center" />
+
     <ImageView
         android:id="@+id/image_play"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:src="@drawable/ic_play"
         android:layout_gravity="center" />
 
     <ImageView
         android:id="@+id/img_loading"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_gravity="center"
         android:scaleType="center"
         android:src="@drawable/ic_loading"

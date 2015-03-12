@@ -1,6 +1,8 @@
 package hear.app.views;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,6 +31,7 @@ import java.util.List;
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.ArrayUtils;
+import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
 import hear.app.models.JsonRespWrapper;
@@ -65,7 +68,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     protected void onResume() {
         super.onResume();
         mUILogic.refreshRemoteArticleIfNeeded();
+        mPlaybarControl.onActivityResume();
         mPlaybarControl.update();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPlaybarControl.onActivityPause();
     }
 
     @Override
@@ -338,7 +348,20 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
 
         public void doScore() {
-            Toast.makeText(MainActivity.this, "开发中...", Toast.LENGTH_SHORT).show();
+
+            Uri uri = Uri.parse("market://details?id=" + getPackageName());
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(uri);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent chooser = Intent.createChooser(intent, getString(R.string.title_choose_market));
+            int matchCount = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size();
+            if (matchCount == 0) {
+                ToastHelper.showNoMarketFound(MainActivity.this);
+            } else if (matchCount == 1) {
+                startActivity(intent);
+            } else {
+                startActivity(chooser);
+            }
         }
 
         public boolean isLogin() {

@@ -1,6 +1,7 @@
 package hear.app.views;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,6 +21,7 @@ import hear.app.helper.SDCardUtils;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
+import hear.app.widget.ProgressWheel;
 
 /**
  * Created by ZhengYi on 15/2/20.
@@ -35,11 +37,27 @@ public class PlaybarControl {
     ImageView mPlayImage;
     @InjectView(R.id.img_loading)
     ImageView mLoadingImage;
+    @InjectView(R.id.pb_duration)
+    ProgressWheel mProgressWheel;
 
     private boolean mIsPrepared = false;
     private Animation mAnimation;
     private Article mDefaultArticle;
     private Context mContext;
+    private Handler mHandler;
+
+    private Runnable mUpdateProgressTask = new Runnable() {
+        @Override
+        public void run() {
+            Player player = Player.getInstance();
+            if (player.isPlaying() || player.isPause()) {
+                mProgressWheel.setProgress(player.getCurrentPos() * 360 / player.getMax());
+                mHandler.postDelayed(this, 1000L);
+            } else {
+                mProgressWheel.setProgress(0);
+            }
+        }
+    };
 
     private PlayListener mPlayListener = new PlayListener() {
         @Override
@@ -60,6 +78,7 @@ public class PlaybarControl {
 
     public PlaybarControl(Context context) {
         mContext = context;
+        mHandler = new Handler(context.getMainLooper());
     }
 
     public void prepare(View rootView) {
@@ -67,6 +86,15 @@ public class PlaybarControl {
             mIsPrepared = true;
             ButterKnife.inject(this, rootView.findViewById(R.id.playbar));
         }
+    }
+
+    public void onActivityResume() {
+        mHandler.removeCallbacks(mUpdateProgressTask);
+        mUpdateProgressTask.run();
+    }
+
+    public void onActivityPause() {
+        mHandler.removeCallbacks(mUpdateProgressTask);
     }
 
     public void setDefaultArticle(Article article) {
@@ -79,12 +107,17 @@ public class PlaybarControl {
         if (player.isPlaying(url)) {
             player.pause();
             update();
+            mHandler.removeCallbacks(mUpdateProgressTask);
         } else if (player.isPause(url)) {
             player.resume();
             update();
+            mHandler.removeCallbacks(mUpdateProgressTask);
+            mUpdateProgressTask.run();
         } else {
             player.play(article, url, mPlayListener);
             update();
+            mHandler.removeCallbacks(mUpdateProgressTask);
+            mUpdateProgressTask.run();
         }
     }
 

@@ -20,4 +20,5 @@
     <string name="label_login">请登录</string>
     <string name="hint_collected">已收藏</string>
     <string name="hint_network_error">当前网络信号差\n请稍后尝试</string>
+    <string name="title_choose_market">选择应用市场</string>
 </resources>

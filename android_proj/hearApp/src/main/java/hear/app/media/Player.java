@@ -68,6 +68,10 @@ public class Player {
         return !TextUtils.isEmpty(mLastPlayURL) && mLastPlayURL.equals(url);
     }
 
+    public boolean isPause() {
+        return !TextUtils.isEmpty(mLastPlayURL);
+    }
+
     public boolean play(Article article, String playURL, PlayListener listener) {
         if (!TextUtils.isEmpty(playURL)) {
             if (playURL.equals(mLastPlayURL)) {

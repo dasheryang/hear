@@ -44,6 +44,7 @@ import hear.app.media.Player;
 import hear.app.models.Article;
 import hear.app.store.CollectedArticleStore;
 import hear.app.store.SNSAccountStore;
+import hear.app.widget.ProgressWheel;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
 
@@ -62,6 +63,8 @@ public class FullScreenArticleFragment extends Fragment {
     ImageView mLoadingImage;
     @InjectView(R.id.pb_play)
     ProgressBar mProgressBar;
+    @InjectView(R.id.pb_duration)
+    ProgressWheel mProgressWheel;
     @InjectView(R.id.label_like_count)
     TextView mLikeLabel;
     @InjectView(R.id.img_like)
@@ -92,8 +95,13 @@ public class FullScreenArticleFragment extends Fragment {
     private Runnable mUpdateProgressBarTask = new Runnable() {
         @Override
         public void run() {
-            if (mLogicControl.isPlaying() || mLogicControl.isPause())
+            if (mLogicControl.isPlaying() || mLogicControl.isPause()) {
                 mProgressBar.setProgress(mLogicControl.getCurrentPosition());
+                mProgressWheel.setProgress(mLogicControl.getCurrentPosition() * 360 / mLogicControl.getDuration());
+            } else {
+                mProgressBar.setProgress(0);
+                mProgressWheel.setProgress(0);
+            }
 
             if (mLogicControl.isPlaying())
                 mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
@@ -211,7 +219,7 @@ public class FullScreenArticleFragment extends Fragment {
     private void updateLikeContainer() {
         Article article = mLogicControl.getArticle();
         mLikeLabel.setText("" + article.likeNum());
-        mLikeImage.setBackgroundResource(article.hasLiked() ? R.drawable.like_item_full : R.drawable.like_item);
+        mLikeImage.setSelected(article.hasLiked());
     }
 
     private void initContentView() {

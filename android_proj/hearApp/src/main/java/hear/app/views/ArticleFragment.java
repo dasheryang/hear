@@ -86,6 +86,12 @@ public class ArticleFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        updateLikeContainer();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
