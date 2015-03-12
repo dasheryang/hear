@@ -51,7 +51,8 @@ public class PlaybarControl {
         public void run() {
             Player player = Player.getInstance();
             if (player.isPlaying() || player.isPause()) {
-                mProgressWheel.setProgress(player.getCurrentPos() * 360 / player.getMax());
+                if (player.getMax() > 0)
+                    mProgressWheel.setProgress(player.getCurrentPos() * 360 / player.getMax());
                 mHandler.postDelayed(this, 1000L);
             } else {
                 mProgressWheel.setProgress(0);
