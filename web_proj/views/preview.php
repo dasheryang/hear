@@ -152,18 +152,18 @@ function preview_page_html( $data ){
                         <img id="play_status_icon" onclick="change_play_status();return false;" src="img/play.png" alt="play_status" />
 
                         <div class="cover_title">
-                            <font>VOL.53</font>
+                            <font>VOL.{$data["pageno"]}</font>
                             <br/>
-                            <font>2014-12-30</font>
+                            <font>{$data['date_str']}</font>
                         </div>
                     </div>
                     <div class="article_info">
                         <div>
-                        <font>一夜寒流，宣告夏天的结束；第一片落叶，预示秋天的来临；第一阵风来袭，我遇见了她，露出淡淡的笑容，一目倾心......</font>         
+                        <font>{$data["txt"]}</font>
                         </div>
                         <br/>
                         <div class="author">
-                            <font>From 冰心</font>
+                            <font>{$data["author"]}</font>
                         </div>
                     </div>
                 </div>
