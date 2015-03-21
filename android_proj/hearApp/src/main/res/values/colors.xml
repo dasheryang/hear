@@ -3,4 +3,7 @@
     <color name="slide_menu_text_color">#b9b9b9</color>
     <color name="slide_menu_line_color">#213640</color>
     <color name="slide_menu_item_press_color">#66000000</color>
+
+    <color name="seekbar_secondary_progress">#877f6f</color>
+    <color name="seekbar_primary_progress">#3fae2b</color>
 </resources>

@@ -43,10 +43,15 @@
     <SeekBar
         android:id="@+id/pb_play"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:progressDrawable="@drawable/layer_progressbar"
-        android:thumb="@drawable/ic_thumb"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:progressDrawable="@drawable/layer_seekbar"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:thumb="@drawable/ic_thumb"
+        android:thumbOffset="0dp"
+        android:maxHeight="4dp"
+        android:minHeight="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp" />
