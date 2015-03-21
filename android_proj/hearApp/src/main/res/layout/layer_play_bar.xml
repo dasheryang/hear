@@ -5,7 +5,7 @@
     android:id="@+id/playbar"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="#88000000">
+    android:background="#66000000">
 
     <ImageView
         android:id="@+id/img_thumb"
@@ -24,19 +24,24 @@
 
         <hear.app.widget.ProgressWheel
             android:id="@+id/pb_duration"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:rimWidth="4dp"
-            app:barWidth="4dp"
-            app:barColor="#3fae2b"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:rimWidth="1.5dp"
+            app:barWidth="1.5dp"
+            app:barLength="1.5dp"
+            app:barColor="#fecf40"
+            app:circleColor="#66000000"
+            app:rimColor="#ffffff"
+            app:contourColor="#ffffff"
+            app:contourSize="0dp"
             android:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/img_play"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_play"
+            android:src="@drawable/ic_playbar_play"
             android:visibility="visible"
             android:layout_gravity="center" />
 

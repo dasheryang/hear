@@ -1,7 +1,6 @@
 package hear.app.widget;
 
 
-import hear.app.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -13,6 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
+
+import hear.app.R;
 
 
 /**
@@ -61,6 +62,7 @@ public class ProgressWheel extends View {
     @SuppressWarnings("unused")
     private RectF rectBounds = new RectF();
     private RectF circleBounds = new RectF();
+    private RectF rimBounds = new RectF();
     private RectF circleOuterContour = new RectF();
     private RectF circleInnerContour = new RectF();
 
@@ -218,6 +220,7 @@ public class ProgressWheel extends View {
         int yOffset = layout_height - minValue;
 
         // Add the offset
+
         paddingTop = this.getPaddingTop() + (yOffset / 2);
         paddingBottom = this.getPaddingBottom() + (yOffset / 2);
         paddingLeft = this.getPaddingLeft() + (xOffset / 2);
@@ -235,8 +238,12 @@ public class ProgressWheel extends View {
                 paddingTop + barWidth,
                 width - paddingRight - barWidth,
                 height - paddingBottom - barWidth);
-        circleInnerContour = new RectF(circleBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.top + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.right - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.bottom - (rimWidth / 2.0f) - (contourSize / 2.0f));
-        circleOuterContour = new RectF(circleBounds.left - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.top - (rimWidth / 2.0f) - (contourSize / 2.0f), circleBounds.right + (rimWidth / 2.0f) + (contourSize / 2.0f), circleBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
+        rimBounds = new RectF(circleBounds.left - rimWidth/2,
+                circleBounds.top - rimWidth/2,
+                circleBounds.right + rimWidth/2,
+                circleBounds.bottom + rimWidth/2);
+        circleInnerContour = new RectF(rimBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f), rimBounds.top + (rimWidth / 2.0f) + (contourSize / 2.0f), rimBounds.right - (rimWidth / 2.0f) - (contourSize / 2.0f), rimBounds.bottom - (rimWidth / 2.0f) - (contourSize / 2.0f));
+        circleOuterContour = new RectF(rimBounds.left - (rimWidth / 2.0f) - (contourSize / 2.0f), rimBounds.top - (rimWidth / 2.0f) - (contourSize / 2.0f), rimBounds.right + (rimWidth / 2.0f) + (contourSize / 2.0f), rimBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
 
         fullRadius = (width - paddingRight - barWidth) / 2;
         circleRadius = (fullRadius - barWidth) + 1;
@@ -302,15 +309,15 @@ public class ProgressWheel extends View {
         //Draw the inner circle
         canvas.drawArc(circleBounds, 360, 360, false, circlePaint);
         //Draw the rim
-        canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
+        canvas.drawArc(rimBounds, 360, 360, false, rimPaint);
         canvas.drawArc(circleOuterContour, 360, 360, false, contourPaint);
         canvas.drawArc(circleInnerContour, 360, 360, false, contourPaint);
         //Draw the bar
         if (isSpinning) {
-            canvas.drawArc(circleBounds, progress - 90, barLength, false,
+            canvas.drawArc(rimBounds, progress - 90, barLength, false,
                     barPaint);
         } else {
-            canvas.drawArc(circleBounds, -90, progress, false, barPaint);
+            canvas.drawArc(rimBounds, -90, progress, false, barPaint);
         }
         //Draw the text (attempts to center it horizontally and vertically)
         float textHeight = textPaint.descent() - textPaint.ascent();
@@ -324,11 +331,11 @@ public class ProgressWheel extends View {
     }
 
     /**
-     *   Check if the wheel is currently spinning
+     * Check if the wheel is currently spinning
      */
 
     public boolean isSpinning() {
-        if(isSpinning){
+        if (isSpinning) {
             return true;
         } else {
             return false;

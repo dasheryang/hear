@@ -10,7 +10,6 @@ import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
 import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.TencentWbShareContent;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.SinaSsoHandler;
@@ -120,7 +119,7 @@ public class SocialServiceWrapper {
         UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(context,
                 appId, appKey);
         if (shareContent != null) {
-            qqSsoHandler.setTargetUrl(shareContent.targetURL);
+            qqSsoHandler.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.QQ));
         }
         qqSsoHandler.addToSocialSDK();
 
@@ -158,41 +157,41 @@ public class SocialServiceWrapper {
         // 分享到QQ好友
         QQShareContent qqShareContent = new QQShareContent(shareContent.text);
         qqShareContent.setTitle(shareContent.title);
-        qqShareContent.setTargetUrl(shareContent.targetURL);
+        qqShareContent.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.QQ));
         qqShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(qqShareContent);
 
         // 分享到QQ空间
         QZoneShareContent qZoneShareContent = new QZoneShareContent(shareContent.text);
         qZoneShareContent.setTitle(shareContent.title);
-        qZoneShareContent.setTargetUrl(shareContent.targetURL);
+        qZoneShareContent.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.QZONE));
         qZoneShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(qZoneShareContent);
 
         // 分享到腾讯微博
-        TencentWbShareContent tencentWbShareContent = new TencentWbShareContent(shareContent.text);
-        tencentWbShareContent.setTitle(shareContent.title);
-        tencentWbShareContent.setTargetUrl(shareContent.targetURL);
-        tencentWbShareContent.setShareImage(shareImage);
-        mSocialService.setShareMedia(tencentWbShareContent);
+//        TencentWbShareContent tencentWbShareContent = new TencentWbShareContent(shareContent.text);
+//        tencentWbShareContent.setTitle(shareContent.title);
+//        tencentWbShareContent.setTargetUrl(shareContent.getTargetURL());
+//        tencentWbShareContent.setShareImage(shareImage);
+//        mSocialService.setShareMedia(tencentWbShareContent);
 
         // 分享到新浪微博
-        SinaShareContent sinaShareContent = new SinaShareContent(shareContent.text + "\n" + shareContent.targetURL);
+        SinaShareContent sinaShareContent = new SinaShareContent(shareContent.text + "\n" + shareContent.getTargetURL(SHARE_MEDIA.SINA));
         sinaShareContent.setTitle(shareContent.title);
-        sinaShareContent.setTargetUrl(shareContent.targetURL);
+        sinaShareContent.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.SINA));
         sinaShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(sinaShareContent);
 
         // 分享到微信好友、微信朋友圈
-        WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text + shareContent.targetURL);
+        WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text + shareContent.getTargetURL(SHARE_MEDIA.WEIXIN));
         weiXinShareContent.setTitle(shareContent.title);
-        weiXinShareContent.setTargetUrl(shareContent.targetURL);
+        weiXinShareContent.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.SINA));
         weiXinShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(weiXinShareContent);
 
         CircleShareContent circleShareContent = new CircleShareContent(shareContent.text);
         circleShareContent.setTitle(shareContent.text);
-        circleShareContent.setTargetUrl(shareContent.targetURL);
+        circleShareContent.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.WEIXIN_CIRCLE));
         circleShareContent.setShareImage(shareImage);
         mSocialService.setShareMedia(circleShareContent);
     }

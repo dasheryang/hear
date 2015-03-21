@@ -128,7 +128,7 @@ public class PlaybarControl {
             mVolumeLabel.setText("");
             mAuthorLabel.setText("");
             mThumbImage.setImageBitmap(null);
-            mPlayImage.setImageResource(R.drawable.ic_play);
+            mPlayImage.setImageResource(R.drawable.ic_playbar_play);
             mPlayImage.setVisibility(View.VISIBLE);
             mLoadingImage.setVisibility(View.GONE);
         } else {
@@ -146,13 +146,13 @@ public class PlaybarControl {
                     mLoadingImage.startAnimation(getAnimation(mContext));
             } else if (player.isPlaying(url)) {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.ic_pause);
+                mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
             } else if (player.isPause(url)) {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.ic_play);
+                mPlayImage.setImageResource(R.drawable.ic_playbar_play);
             } else {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.ic_pause);
+                mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
             }
         }
     }

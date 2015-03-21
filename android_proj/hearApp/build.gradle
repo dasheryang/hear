@@ -3,10 +3,14 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         release {
-            keyAlias 'idreamsky'
-            keyPassword 'idreamsky2009'
-            storeFile file('idreamsky.keystore')
-            storePassword 'idreamsky2009'
+//            keyAlias 'idreamsky'
+//            keyPassword 'idreamsky2009'
+//            storeFile file('idreamsky.keystore')
+//            storePassword 'idreamsky2009'
+            keyAlias 'hearapp'
+            keyPassword 'app@hearheart'
+            storeFile file('hear.keystore')
+            storePassword 'app@hearheart'
         }
     }
     compileSdkVersion 21

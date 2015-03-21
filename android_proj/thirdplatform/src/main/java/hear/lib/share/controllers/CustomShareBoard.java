@@ -101,7 +101,7 @@ public class CustomShareBoard extends Dialog {
             public void onClick(View v) {
                 dismiss();
                 if (media == SHARE_MEDIA.SMS) {
-                    String text = "听见 " + mShareContent.title + ": " + mShareContent.text + " " + mShareContent.targetURL;
+                    String text = "听见 " + mShareContent.title + ": " + mShareContent.text + " " + mShareContent.getTargetURL(SHARE_MEDIA.SMS);
                     ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(text);
                     mPostListener.onComplete(SHARE_MEDIA.SMS, 200, null);

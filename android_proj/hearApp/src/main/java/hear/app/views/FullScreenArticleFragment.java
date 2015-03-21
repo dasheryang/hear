@@ -19,7 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -62,7 +62,7 @@ public class FullScreenArticleFragment extends Fragment {
     @InjectView(R.id.img_loading)
     ImageView mLoadingImage;
     @InjectView(R.id.pb_play)
-    ProgressBar mProgressBar;
+    SeekBar mProgressBar;
     @InjectView(R.id.pb_duration)
     ProgressWheel mProgressWheel;
     @InjectView(R.id.label_like_count)
@@ -339,7 +339,7 @@ public class FullScreenArticleFragment extends Fragment {
         public void performShare() {
             final Article article = getArticle();
             mShareService = new SocialServiceWrapper(getActivity());
-            mShareService.setShareContent(new ShareContent().init(article.name, article.txt, article.getImageURL(getActivity()), ""));
+            mShareService.setShareContent(new ShareContent().init("" + article.pageno, article.name, article.txt, article.getImageURL(getActivity())));
             mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
                 public void onStart() {

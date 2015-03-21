@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import hear.app.R;
 import hear.app.helper.AppContext;
-import hear.lib.share.UpdateUrgent;
 
 
 /**
@@ -54,12 +53,13 @@ public class SplashActivity extends BaseActivity {
             }
         };
 
-        UpdateUrgent.checkUpdate(this, false, true, new UpdateUrgent.Callback() {
-            @Override
-            public void onFinishCheckUpdate() {
-                mLaunchTask.run();
-            }
-        });
+        mHandlers.postDelayed(mLaunchTask, 500L);
+//        UpdateUrgent.checkUpdate(this, false, true, new UpdateUrgent.Callback() {
+//            @Override
+//            public void onFinishCheckUpdate() {
+//                mLaunchTask.run();
+//            }
+//        });
     }
 
 

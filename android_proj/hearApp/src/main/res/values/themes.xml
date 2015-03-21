@@ -37,11 +37,11 @@
     </style>
 
     <style name="DefaultAppActionBar" parent="Widget.AppCompat.ActionBar.Solid">
-        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="android:displayOptions">showHome|homeAsUp|showCustom</item>
         <item name="android:background">@drawable/color_actionbar_bg</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_left</item>
 
-        <item name="displayOptions">showHome|homeAsUp|showTitle</item>
+        <item name="displayOptions">showHome|homeAsUp|showCustom</item>
         <item name="background">@drawable/color_actionbar_bg</item>
         <item name="homeAsUpIndicator">@drawable/ic_arrow_left</item>
     </style>

@@ -13,6 +13,6 @@ public class SharePlatformInfo {
     /**
      * 微信 *
      */
-    public static final String WECHAT_APP_ID = "wx77f5e0a1d7ffc701";
-    public static final String WECHAT_APP_KEY = "3e3c1cc3af5b48d2cd24bed1919a6864";
+    public static final String WECHAT_APP_ID = "wx2ac8390691d12c7a";
+    public static final String WECHAT_APP_KEY = "f1673350be3ebe50ae47a5d858830d73";
 }

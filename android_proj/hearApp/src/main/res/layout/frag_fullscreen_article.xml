@@ -13,17 +13,21 @@
 
     <hear.app.widget.ProgressWheel
         android:id="@+id/pb_duration"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        app:rimWidth="6dp"
-        app:barWidth="6dp"
-        app:barColor="#3fae2b"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        app:rimWidth="2dp"
+        app:barWidth="2dp"
+        app:barColor="#fecf40"
+        app:circleColor="#66000000"
+        app:rimColor="#99aaaaaa"
+        app:contourColor="#99aaaaaa"
+        app:contourSize="0dp"
         android:layout_gravity="center" />
 
     <ImageView
         android:id="@+id/image_play"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_play"
         android:layout_gravity="center" />
 
@@ -36,12 +40,12 @@
         android:src="@drawable/ic_loading"
         android:visibility="gone" />
 
-    <ProgressBar
+    <SeekBar
         android:id="@+id/pb_play"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:progressDrawable="@drawable/layer_progressbar"
+        android:thumb="@drawable/ic_thumb"
         android:layout_gravity="bottom"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
