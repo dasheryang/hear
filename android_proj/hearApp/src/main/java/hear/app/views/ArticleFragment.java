@@ -3,6 +3,7 @@ package hear.app.views;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -177,9 +179,32 @@ public class ArticleFragment extends Fragment {
         ImageLoader.getInstance().displayImage(
                 article.getImageURL(getActivity()), mCoverImageView,
                 new ImageShowerListener());
-        mCoverImageView.setOnClickListener(new View.OnClickListener() {
+
+        mCoverImageView.setOnTouchListener(new View.OnTouchListener() {
+            private boolean mNeedToCheck = false;
+            private long mLastFingerDownTime;
+            private PointF mPoint;
+
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    mNeedToCheck = true;
+                    mLastFingerDownTime = System.currentTimeMillis();
+                    mPoint = new PointF(event.getX(), event.getY());
+                } else if (action == MotionEvent.ACTION_UP && mNeedToCheck) {
+                    mNeedToCheck = false;
+                    float deltaX = Math.abs(event.getX() - mPoint.x);
+                    float deltaY = Math.abs(event.getY() - mPoint.y);
+                    long passedTime = System.currentTimeMillis() - mLastFingerDownTime;
+                    if (passedTime <= 100 && deltaX < 8 && deltaY < 8) {
+                        playArticle();
+                    }
+                }
+                return true;
+            }
+
+            private void playArticle() {
                 if (getActivity() instanceof ArticleFragmentDelegate) {
                     ArticleFragmentDelegate delegate = (ArticleFragmentDelegate) getActivity();
                     delegate.onRequestPlayArticle(mUILogic.getArticle());

@@ -4,10 +4,17 @@
     android:layout_height="match_parent"
     tools:context="hear.app.views.AboutUsActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_main" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/abc_action_bar_default_height_material">
 
         <TextView
             android:text="@string/content_about_us"

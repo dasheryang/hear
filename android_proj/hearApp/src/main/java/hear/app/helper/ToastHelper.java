@@ -33,6 +33,10 @@ public class ToastHelper {
         createToast(context, "请先安装应用市场再来评分吧!", R.drawable.ic_hint_message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showNoUpdate(Context context) {
+        createToast(context, "当前为最新版本", R.drawable.ic_hint_message, Toast.LENGTH_SHORT).show();
+    }
+
     private static Toast createToast(Context context, int textID, int iconID, int duration) {
         return createToast(context, context.getResources().getString(textID), iconID, duration);
     }

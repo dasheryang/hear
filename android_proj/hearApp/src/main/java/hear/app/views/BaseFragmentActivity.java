@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
@@ -28,6 +29,7 @@ public class BaseFragmentActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         View titleView = getLayoutInflater().inflate(R.layout.layer_actionbar_title, null, false);
         ((TextView) titleView.findViewById(R.id.label_title)).setText(getActivityLabel());

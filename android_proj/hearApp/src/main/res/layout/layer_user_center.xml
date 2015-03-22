@@ -164,6 +164,37 @@
             android:layout_height="1px"
             android:layout_marginLeft="@dimen/slide_menu_margin_left"
             android:background="@color/slide_menu_line_color" />
+
+        <LinearLayout
+            android:id="@+id/btn_logout"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/slide_menu_item_height"
+            android:background="@drawable/selector_slidemenu_item"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/slide_menu_item_image_size"
+                android:layout_height="@dimen/slide_menu_item_image_size"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_margin_left"
+                android:src="@drawable/ic_center_about" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
+                android:text="登出"
+                android:textColor="@color/slide_menu_text_color"
+                android:textSize="@dimen/slide_menu_item_text_size" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/slide_menu_margin_left"
+            android:background="@color/slide_menu_line_color" />
     </LinearLayout>
 
 </LinearLayout>

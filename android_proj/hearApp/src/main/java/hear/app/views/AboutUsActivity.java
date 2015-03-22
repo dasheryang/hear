@@ -1,6 +1,7 @@
 package hear.app.views;
 
 import android.os.Bundle;
+import android.view.Window;
 
 import hear.app.R;
 

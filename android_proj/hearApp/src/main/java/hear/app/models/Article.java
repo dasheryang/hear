@@ -104,12 +104,21 @@ public class Article {
         }
     }
 
-    public static boolean isPlayed(String date) {
+    public static boolean isPlayedWithArticle(Article article) {
+        return AppContext.getSharedPrefernce().get(KEY_PLAYED_PREFIX + article.pageno,
+                false);
+    }
+
+    public static void setPlayedWithArticle(Article article) {
+        AppContext.getSharedPrefernce().put(KEY_PLAYED_PREFIX + article.pageno, true);
+    }
+
+    public static boolean isPlayedWithDate(String date) {
         return AppContext.getSharedPrefernce().get(KEY_PLAYED_PREFIX + date,
                 false);
     }
 
-    public static void setPlayed(String date) {
+    public static void setPlayedWithDate(String date) {
         AppContext.getSharedPrefernce().put(KEY_PLAYED_PREFIX + date, true);
     }
 

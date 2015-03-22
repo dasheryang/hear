@@ -26,12 +26,12 @@ public class UpdateUrgent {
             public void onUpdateReturned(int statusCode, final UpdateResponse updateInfo) {
                 if (statusCode == UpdateStatus.Yes && updateInfo.hasUpdate) {
                     if (UmengUpdateAgent.isIgnore(context, updateInfo) && !updateIfIgnored) {
-                        callbackRef.onFinishCheckUpdate();
+                        callbackRef.onFinishCheckUpdate(false);
                     } else {
                         new CustomUpdateDialog(appContext).setUpdateResponse(updateInfo).setListener(new CustomUpdateDialog.Listener() {
                             @Override
                             public void onConfirmButtonClick() {
-                                callbackRef.onFinishCheckUpdate();
+                                callbackRef.onFinishCheckUpdate(true);
                             }
 
                             @Override
@@ -39,12 +39,12 @@ public class UpdateUrgent {
                                 if (ignoreIfCancel) {
                                     UmengUpdateAgent.ignoreUpdate(context, updateInfo);
                                 }
-                                callbackRef.onFinishCheckUpdate();
+                                callbackRef.onFinishCheckUpdate(true);
                             }
                         }).show();
                     }
                 } else {
-                    callbackRef.onFinishCheckUpdate();
+                    callbackRef.onFinishCheckUpdate(false);
                 }
             }
         });
@@ -53,11 +53,11 @@ public class UpdateUrgent {
     }
 
     public static interface Callback {
-        void onFinishCheckUpdate();
+        void onFinishCheckUpdate(boolean hasUpdate);
 
         public static Callback NULL = new Callback() {
             @Override
-            public void onFinishCheckUpdate() {
+            public void onFinishCheckUpdate(boolean hasUpdate) {
             }
         };
     }

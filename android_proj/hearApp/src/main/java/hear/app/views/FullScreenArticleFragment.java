@@ -1,8 +1,6 @@
 package hear.app.views;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -24,8 +22,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.listener.SocializeListeners;
@@ -75,6 +71,7 @@ public class FullScreenArticleFragment extends Fragment {
     private Animation mRotateAnimation;
     private SocialServiceWrapper mShareService;
     private Handler mHandler;
+    private boolean mPlayNow = false;
 
     private PlayListener mPlayListener = new PlayListener() {
         @Override
@@ -106,14 +103,14 @@ public class FullScreenArticleFragment extends Fragment {
                 mProgressWheel.setProgress(0);
             }
 
-            if (mLogicControl.isPlaying())
-                mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
+            mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
         }
     };
 
-    public static FullScreenArticleFragment newInstance(Article article) {
+    public static FullScreenArticleFragment newInstance(Article article, boolean playNow) {
         FullScreenArticleFragment ret = new FullScreenArticleFragment();
         ret.mLogicControl.mArticle = article;
+        ret.mPlayNow = playNow;
         ret.setRetainInstance(true);
         return ret;
     }
@@ -131,6 +128,9 @@ public class FullScreenArticleFragment extends Fragment {
         ButterKnife.inject(this, view);
         initContentView();
         updateLikeContainer();
+        if (!mLogicControl.isPlaying()) {
+            onPlayImageClick();
+        }
     }
 
     @Override
@@ -227,35 +227,37 @@ public class FullScreenArticleFragment extends Fragment {
 
     private void initContentView() {
         Article article = mLogicControl.getArticle();
-        ImageLoader.getInstance().loadImage(article.getImageURL(getActivity()), new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                Activity act = getActivity();
-                if (act != null) {
-                    act.getWindow().setBackgroundDrawable(null);
-                    ViewGroup container = (ViewGroup) act.getWindow().getDecorView();
-                    ImageView imageView = new ImageView(act);
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    imageView.setImageBitmap(loadedImage);
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(-1, -1);
-                    params.width = -1;
-                    params.height = -1;
-                    container.addView(imageView, 0, params);
-                }
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-            }
-        });
+        ImageView imageView = (ImageView) getActivity().findViewById(R.id.image_bg);
+        ImageLoader.getInstance().displayImage(article.getImageURL(getActivity()), imageView);
+//        ImageLoader.getInstance().loadImage(article.getImageURL(getActivity()), new ImageLoadingListener() {
+//            @Override
+//            public void onLoadingStarted(String imageUri, View view) {
+//            }
+//
+//            @Override
+//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+//            }
+//
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                Activity act = getActivity();
+//                if (act != null) {
+//                    act.getWindow().setBackgroundDrawable(null);
+//                    ViewGroup container = (ViewGroup) act.getWindow().getDecorView();
+//                    ImageView imageView = new ImageView(act);
+//                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                    imageView.setImageBitmap(loadedImage);
+//                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(-1, -1);
+//                    params.width = -1;
+//                    params.height = -1;
+//                    container.addView(imageView, 0, params);
+//                }
+//            }
+//
+//            @Override
+//            public void onLoadingCancelled(String imageUri, View view) {
+//            }
+//        });
 
         //update actionbar
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();

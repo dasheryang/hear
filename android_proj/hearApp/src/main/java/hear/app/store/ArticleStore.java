@@ -33,6 +33,18 @@ public class ArticleStore {
         saveArticleSetToLocal(articleArray);
     }
 
+    public Article firstArticle() {
+        if (mArticleSet == null || mArticleSetExpired) {
+            mArticleSet = loadArticleSetFromLocal();
+        }
+
+        if (mArticleSet != null && !mArticleSet.isEmpty()) {
+            return mArticleSet.get(0);
+        }
+
+        return null;
+    }
+
     public List<Article> getArticleSet() {
         if (mArticleSet == null || mArticleSetExpired) {
             mArticleSet = loadArticleSetFromLocal();

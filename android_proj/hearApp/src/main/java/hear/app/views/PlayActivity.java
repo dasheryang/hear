@@ -44,7 +44,7 @@ public class PlayActivity extends BaseActivity {
             int progress = (int) ((positon / (float) duration) * 100);
             if (progress > 10) {
                 if (!TextUtils.isEmpty(mSoundDate)) {
-                    Article.setPlayed(mSoundDate);
+                    Article.setPlayedWithDate(mSoundDate);
                 }
             }
             if (progress >= 100) {

@@ -1,5 +1,6 @@
 package hear.app.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -48,14 +49,20 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     private TextView mEmptyButton;
     private ResideMenu mResideMenu;
     private View mLoginButton;
+    private View mLogoutButton;
     private SocialServiceWrapper mLoginService;
     private UILogic mUILogic = new UILogic();
     private PlaybarControl mPlaybarControl;
     private WeakReference<Fragment> mSharingFragment;
 
+    public static void show(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         mPlaybarControl = new PlaybarControl(this);
         setContentView(R.layout.act_main);
@@ -93,10 +100,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_login) {
-            if (SNSAccountStore.getInstance().isLogin()) {
-                SNSAccountStore.getInstance().logout();
-                updateAccountView();
-            } else {
+            if (!SNSAccountStore.getInstance().isLogin()) {
                 showLoginBoardIfNeeded();
             }
         } else if (id == R.id.btn_collect)
@@ -104,9 +108,21 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         else if (id == R.id.btn_score)
             mUILogic.doScore();
         else if (id == R.id.btn_update)
-            mUILogic.doCheckUpdate();
+            mUILogic.doCheckUpdate(new UpdateUrgent.Callback() {
+                @Override
+                public void onFinishCheckUpdate(boolean hasUpdate) {
+                    if (!hasUpdate)
+                        ToastHelper.showNoUpdate(MainActivity.this);
+                }
+            });
         else if (id == R.id.btn_aboutUS)
             mUILogic.goToAboutUsActivity();
+        else if (id == R.id.btn_logout) {
+            if (SNSAccountStore.getInstance().isLogin()) {
+                SNSAccountStore.getInstance().logout();
+                updateAccountView();
+            }
+        }
     }
 
     @Override
@@ -167,9 +183,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             SnsAccount account = SNSAccountStore.getInstance().getLoginAccount();
             ImageLoader.getInstance().displayImage(account.getAccountIconUrl(), loginImage);
             loginLabel.setText(account.getUserName());
+            mLogoutButton.setVisibility(View.VISIBLE);
         } else {
             loginImage.setImageResource(R.drawable.ic_center_avatar);
             loginLabel.setText(getString(R.string.label_login));
+            mLogoutButton.setVisibility(View.GONE);
         }
     }
 
@@ -218,9 +236,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mViewPager = (ViewPager) findViewById(R.id.vp_pages);
         mEmptyButton = (TextView) findViewById(R.id.btn_empty);
 
-        /** setup background drawable **/
-        ((ImageView) findViewById(R.id.img_bg)).setImageResource(R.drawable.bg_main);
-
         /** setup ViewPager **/
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -265,6 +280,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         mLoginButton = menuView.findViewById(R.id.btn_login);
         mLoginButton.setOnClickListener(this);
+        mLogoutButton = menuView.findViewById(R.id.btn_logout);
+        mLogoutButton.setOnClickListener(this);
+        menuView.findViewById(R.id.btn_logout).setOnClickListener(this);
         menuView.findViewById(R.id.btn_collect).setOnClickListener(this);
         menuView.findViewById(R.id.btn_score).setOnClickListener(this);
         menuView.findViewById(R.id.btn_update).setOnClickListener(this);
@@ -343,8 +361,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 showLoginBoardIfNeeded();
         }
 
-        public void doCheckUpdate() {
-            UpdateUrgent.checkUpdate(MainActivity.this, true, false, null);
+        public void doCheckUpdate(UpdateUrgent.Callback callback) {
+            UpdateUrgent.checkUpdate(MainActivity.this, true, false, callback);
         }
 
         public void doScore() {

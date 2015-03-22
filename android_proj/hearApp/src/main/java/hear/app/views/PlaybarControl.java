@@ -21,6 +21,7 @@ import hear.app.helper.SDCardUtils;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
+import hear.app.store.ArticleStore;
 import hear.app.widget.ProgressWheel;
 
 /**
@@ -86,6 +87,7 @@ public class PlaybarControl {
         if (!mIsPrepared) {
             mIsPrepared = true;
             ButterKnife.inject(this, rootView.findViewById(R.id.playbar));
+            update();
         }
     }
 
@@ -125,6 +127,10 @@ public class PlaybarControl {
     public void update() {
         Article article = Player.getInstance().getLastPlayArticle();
         if (article == null) {
+            article = ArticleStore.getInstance().firstArticle();
+        }
+
+        if (article == null) {
             mVolumeLabel.setText("");
             mAuthorLabel.setText("");
             mThumbImage.setImageBitmap(null);
@@ -158,7 +164,7 @@ public class PlaybarControl {
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    @OnClick(R.id.img_play)
+    @OnClick(R.id.container_play)
     void onPlayImageClick() {
         Player player = Player.getInstance();
 

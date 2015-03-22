@@ -38,24 +38,27 @@ public class InActivityHelper {
         if (ArrayUtils.isEmpty(allArticle)) {
             return false;
         }
-        final Date now = new Date(System.currentTimeMillis());
-
-        String datestr = sm.format(now);
-        LogUtil.d("datestr:" + datestr);
-        return Article.isPlayed(datestr);
+        String datestr = sm.format(new Date());
+        return Article.isPlayedWithDate(datestr);
     }
 
     SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
 
     protected void initEntranceActivity() {
-        LogUtil.d("come from splash activity");
-        //今天是否已经播放过，并且时间是十点之后
+        LogUtil.e("come from splash activity");
+        //今天是否已经播放过，并且时间是十点之后或者最新的文章没有播放过
         if (isTodayPlayed()) {
-            LogUtil.d("today is played:" + sm.format(new Date(System.currentTimeMillis())));
+            LogUtil.e("today is played:" + sm.format(new Date(System.currentTimeMillis())));
             gotoHistory();
         } else {
-            LogUtil.d("today is not played and get remote articles");
-            getRemoteActicles(1);
+            Article latestArticle = ArticleStore.getInstance().firstArticle();
+            if (latestArticle != null && !Article.isPlayedWithArticle(latestArticle)) {
+                LogUtil.e("the latest article not played");
+                startEnterActivity(latestArticle.pageno);
+            } else {
+                LogUtil.e("today is not played and get remote articles");
+                getRemoteActicles(1);
+            }
         }
     }
 
@@ -103,17 +106,18 @@ public class InActivityHelper {
                             gotoHistory();
                         }
                     } else {
+//                        Article todayArticle = ArrayUtils.findFirst(ArrayUtils.from(wrapper.data), new ArrayUtils.EqualeOP<Article>() {
+//                            @Override
+//                            public boolean test(Article src) {
+//                                return sm.format(new Date(src.showtime)).equals(sm.format(now));
+//                            }
+//                        });
 
-                        Article todayArticle = ArrayUtils.findFirst(ArrayUtils.from(wrapper.data), new ArrayUtils.EqualeOP<Article>() {
-                            @Override
-                            public boolean test(Article src) {
-                                return sm.format(new Date(src.showtime)).equals(sm.format(now));
-                            }
-                        });
+                        Article latestArticle = ArticleStore.getInstance().firstArticle();
 
-                        if (todayArticle != null) {
+                        if (latestArticle != null && !Article.isPlayedWithArticle(latestArticle)) {
                             LogUtil.d("find today's article");
-                            startEnterActivity(todayArticle.pageno);
+                            startEnterActivity(latestArticle.pageno);
                             if (isHistory) {
                                 listener.onFinish();
                             }
@@ -143,10 +147,12 @@ public class InActivityHelper {
     }
 
     private void startEnterActivity(int pageno) {
-        Intent i = new Intent(mActivity, PlayActivity.class);
-        i.putExtra(PlayActivity.KEY_FROM, "splash");
-        i.putExtra(PlayActivity.KEY_PAGE_NO, pageno);
-        mActivity.startActivity(i);
+        PlayActivityV2.show(mActivity, ArticleStore.getInstance().getArticleWithPageNo(pageno));
         mActivity.finish();
+//        Intent i = new Intent(mActivity, PlayActivity.class);
+//        i.putExtra(PlayActivity.KEY_FROM, "splash");
+//        i.putExtra(PlayActivity.KEY_PAGE_NO, pageno);
+//        mActivity.startActivity(i);
+//        mActivity.finish();
     }
 }
