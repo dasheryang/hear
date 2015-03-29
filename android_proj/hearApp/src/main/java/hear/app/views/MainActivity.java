@@ -33,7 +33,6 @@ import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
 import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
-import hear.app.helper.SharedPreferencesCache;
 import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
@@ -69,7 +68,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mPlaybarControl = new PlaybarControl(this);
         setContentView(R.layout.act_main);
         initContentView();
-        updateAccountView();
         mPlaybarControl.prepare(findViewById(R.id.playbar));
     }
 
@@ -77,6 +75,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     protected void onResume() {
         super.onResume();
         mUILogic.refreshRemoteArticleIfNeeded();
+        updateAccountView();
         mPlaybarControl.onActivityResume();
         mPlaybarControl.update();
     }

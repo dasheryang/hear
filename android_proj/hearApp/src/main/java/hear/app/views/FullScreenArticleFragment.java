@@ -24,7 +24,9 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.exception.SocializeException;
 
 import java.io.File;
 
@@ -41,7 +43,6 @@ import hear.app.media.Player;
 import hear.app.models.Article;
 import hear.app.store.CollectedArticleStore;
 import hear.app.store.SNSAccountStore;
-import hear.app.widget.ProgressWheel;
 import hear.lib.share.SocialServiceWrapper;
 import hear.lib.share.models.ShareContent;
 
@@ -60,8 +61,8 @@ public class FullScreenArticleFragment extends Fragment {
     ImageView mLoadingImage;
     @InjectView(R.id.pb_play)
     SeekBar mProgressBar;
-    @InjectView(R.id.pb_duration)
-    ProgressWheel mProgressWheel;
+    //    @InjectView(R.id.pb_duration)
+//    ProgressWheel mProgressWheel;
     @InjectView(R.id.label_like_count)
     TextView mLikeLabel;
     @InjectView(R.id.img_like)
@@ -69,7 +70,7 @@ public class FullScreenArticleFragment extends Fragment {
 
     private LogicControl mLogicControl = new LogicControl();
     private Animation mRotateAnimation;
-    private SocialServiceWrapper mShareService;
+    private SocialServiceWrapper mSocialService;
     private Handler mHandler;
     private boolean mPlayNow = false;
 
@@ -96,11 +97,11 @@ public class FullScreenArticleFragment extends Fragment {
             if (mLogicControl.isPlaying() || mLogicControl.isPause()) {
                 if (mLogicControl.getDuration() > 0) {
                     mProgressBar.setProgress(mLogicControl.getCurrentPosition());
-                    mProgressWheel.setProgress(mLogicControl.getCurrentPosition() * 360 / mLogicControl.getDuration());
+//                    mProgressWheel.setProgress(mLogicControl.getCurrentPosition() * 360 / mLogicControl.getDuration());
                 }
             } else {
                 mProgressBar.setProgress(0);
-                mProgressWheel.setProgress(0);
+//                mProgressWheel.setProgress(0);
             }
 
             mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
@@ -148,8 +149,8 @@ public class FullScreenArticleFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mShareService != null)
-            mShareService.handleOnActivityResult(requestCode, resultCode, data);
+        if (mSocialService != null)
+            mSocialService.handleOnActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -192,22 +193,75 @@ public class FullScreenArticleFragment extends Fragment {
     protected void onLikeContainerClick() {
         Article article = mLogicControl.getArticle();
         boolean isLogin = SNSAccountStore.getInstance().isLogin();
-        if (isLogin && article.hasLiked()) {
-            new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
-                @Override
-                public void onConfirmButtonClick() {
-                    mLogicControl.toggleLikeState();
-                    updateLikeContainer();
-                }
-            }).show();
-        } else if (isLogin && !article.hasLiked()) {
-            ToastHelper.showCollected(getActivity());
-            mLogicControl.toggleLikeState();
-            updateLikeContainer();
+
+        if (isLogin) {
+            if (article.hasLiked()) {
+                new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
+                    @Override
+                    public void onConfirmButtonClick() {
+                        mLogicControl.toggleLikeState();
+                        updateLikeContainer();
+                    }
+                }).show();
+            } else {
+                ToastHelper.showCollected(getActivity());
+                mLogicControl.toggleLikeState();
+                updateLikeContainer();
+            }
         } else {
-            mLogicControl.toggleLikeState();
-            updateLikeContainer();
+            if (mSocialService == null) {
+                mSocialService = new SocialServiceWrapper(getActivity());
+            }
+            mSocialService.showLoginBoard(new SocializeListeners.UMAuthListener() {
+                @Override
+                public void onStart(SHARE_MEDIA media) {
+                }
+
+                @Override
+                public void onComplete(Bundle bundle, final SHARE_MEDIA media) {
+                    mSocialService.getUserInfo(new SocializeListeners.FetchUserListener() {
+                        @Override
+                        public void onStart() {
+                        }
+
+                        @Override
+                        public void onComplete(int i, SocializeUser socializeUser) {
+                            if (!socializeUser.mAccounts.isEmpty()) {
+                                SNSAccountStore.getInstance().setLoginAccountAndType(socializeUser.mAccounts.get(0), media).synchronize();
+                            }
+                            mSocialService = null;
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(SocializeException e, SHARE_MEDIA media) {
+                    mSocialService = null;
+                }
+
+                @Override
+                public void onCancel(SHARE_MEDIA media) {
+                    mSocialService = null;
+                }
+            });
         }
+
+//        if (isLogin && article.hasLiked()) {
+//            new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
+//                @Override
+//                public void onConfirmButtonClick() {
+//                    mLogicControl.toggleLikeState();
+//                    updateLikeContainer();
+//                }
+//            }).show();
+//        } else if (isLogin && !article.hasLiked()) {
+//            ToastHelper.showCollected(getActivity());
+//            mLogicControl.toggleLikeState();
+//            updateLikeContainer();
+//        } else {
+//            mLogicControl.toggleLikeState();
+//            updateLikeContainer();
+//        }
     }
 
     private void performUpdateProgressBarTask() {
@@ -319,9 +373,9 @@ public class FullScreenArticleFragment extends Fragment {
 
         public void performShare() {
             final Article article = getArticle();
-            mShareService = new SocialServiceWrapper(getActivity());
-            mShareService.setShareContent(new ShareContent().init("" + article.pageno, article.name, article.txt, article.getImageURL(getActivity())));
-            mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
+            mSocialService = new SocialServiceWrapper(getActivity());
+            mSocialService.setShareContent(new ShareContent().init("" + article.pageno, article.name, article.txt, article.getImageURL(getActivity())));
+            mSocialService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
                 public void onStart() {
                     if (getActivity() instanceof ShareFragmentDelegate) {
@@ -337,7 +391,7 @@ public class FullScreenArticleFragment extends Fragment {
                             ToastHelper.showCopyLinkSuccess(getActivity());
                         }
                     }
-                    mShareService = null;
+                    mSocialService = null;
                 }
             });
         }

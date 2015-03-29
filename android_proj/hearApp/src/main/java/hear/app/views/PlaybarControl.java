@@ -53,8 +53,11 @@ public class PlaybarControl {
         public void run() {
             Player player = Player.getInstance();
             if (player.isPlaying() || player.isPause()) {
-                if (player.getMax() > 0)
+                if (player.getMax() > 0) {
                     mProgressWheel.setProgress(player.getCurrentPos() * 360 / player.getMax());
+                    mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
+                    mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
+                }
                 mHandler.postDelayed(this, 1000L);
             } else {
                 mProgressWheel.setProgress(0);
@@ -151,18 +154,12 @@ public class PlaybarControl {
             if (isLoading) {
                 if (mLoadingImage.getAnimation() == null)
                     mLoadingImage.startAnimation(getAnimation(mContext));
-                mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
-                mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
             } else if (player.isPlaying(url)) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
-                mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
-                mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
             } else if (player.isPause(url)) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);
-                mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
-                mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
             } else {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);

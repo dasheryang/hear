@@ -25,7 +25,9 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
+import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
+import com.umeng.socialize.exception.SocializeException;
 
 import hear.app.R;
 import hear.app.helper.StatHelper;
@@ -53,7 +55,7 @@ public class ArticleFragment extends Fragment {
     private ProgressBar pb;
 
     private UILogic mUILogic = new UILogic();
-    private SocialServiceWrapper mShareService;
+    private SocialServiceWrapper mSocialService;
 
     public static final String KEY_ARTICLE = "article";
 
@@ -118,8 +120,8 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mShareService != null) {
-            mShareService.handleOnActivityResult(requestCode, resultCode, data);
+        if (mSocialService != null) {
+            mSocialService.handleOnActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -140,9 +142,65 @@ public class ArticleFragment extends Fragment {
                 }).show();
             }
         } else {
-            mUILogic.toggleLikeState();
-            updateLikeContainer();
+            if (mSocialService == null) {
+                mSocialService = new SocialServiceWrapper(getActivity());
+            }
+            mSocialService.showLoginBoard(new SocializeListeners.UMAuthListener() {
+                @Override
+                public void onStart(SHARE_MEDIA media) {
+                }
+
+                @Override
+                public void onComplete(Bundle bundle, final SHARE_MEDIA media) {
+                    mSocialService.getUserInfo(new SocializeListeners.FetchUserListener() {
+                        @Override
+                        public void onStart() {
+                        }
+
+                        @Override
+                        public void onComplete(int i, SocializeUser socializeUser) {
+                            if (!socializeUser.mAccounts.isEmpty()) {
+                                SNSAccountStore.getInstance().setLoginAccountAndType(socializeUser.mAccounts.get(0), media).synchronize();
+                                if (getActivity() instanceof MainActivity) {
+                                    MainActivity act = (MainActivity) getActivity();
+                                    act.onLoginSuccess();
+                                }
+                            }
+                            mSocialService = null;
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(SocializeException e, SHARE_MEDIA media) {
+                    mSocialService = null;
+                }
+
+                @Override
+                public void onCancel(SHARE_MEDIA media) {
+                    mSocialService = null;
+                }
+            });
         }
+
+//        if (SNSAccountStore.getInstance().isLogin()) {
+//            if (!article.hasLiked()) {
+//                ToastHelper.showCollected(getActivity());
+//                mUILogic.toggleLikeState();
+//                updateLikeContainer();
+//            } else {
+//                new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
+//                    @Override
+//                    public void onConfirmButtonClick() {
+//                        mUILogic.toggleLikeState();
+//                        updateLikeContainer();
+//                    }
+//                }).show();
+//            }
+//        } else {
+//            mUILogic.toggleLikeState();
+//            updateLikeContainer();
+//        }
     }
 
     private void updateLikeContainer() {
@@ -245,10 +303,10 @@ public class ArticleFragment extends Fragment {
         }
 
         private void performShare() {
-            mShareService = new SocialServiceWrapper(getActivity());
+            mSocialService = new SocialServiceWrapper(getActivity());
             final Article article = mUILogic.getArticle();
-            mShareService.setShareContent(new ShareContent().init("" + article.pageno, "VOL. " + article.pageno, article.txt + article.showauthor, article.getImageURL(getActivity())));
-            mShareService.showShareBoard(new SocializeListeners.SnsPostListener() {
+            mSocialService.setShareContent(new ShareContent().init("" + article.pageno, "VOL. " + article.pageno, article.txt + article.showauthor, article.getImageURL(getActivity())));
+            mSocialService.showShareBoard(new SocializeListeners.SnsPostListener() {
                 @Override
                 public void onStart() {
                 }
@@ -262,7 +320,7 @@ public class ArticleFragment extends Fragment {
                             ToastHelper.showCopyLinkSuccess(getActivity());
                         }
                     }
-                    mShareService = null;
+                    mSocialService = null;
                 }
             });
             Activity parent = getActivity();
