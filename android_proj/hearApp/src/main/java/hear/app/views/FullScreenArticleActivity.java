@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 
 import hear.app.R;
+import hear.app.helper.AppContext;
 import hear.app.models.Article;
 import hear.app.store.ArticleStore;
 
@@ -35,12 +36,17 @@ public class FullScreenArticleActivity extends BaseFragmentActivity implements S
         setContentView(R.layout.act_fullscreen);
         getSupportFragmentManager().beginTransaction().add(R.id.container_fragment, FullScreenArticleFragment.newInstance(getArticle(), false)).commit();
 
-        findViewById(R.id.container_introduction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.container_introduction).setVisibility(View.GONE);
-            }
-        });
+        String KEY_INTRODUCTION = "fullscreen_introduction_v2";
+        if (AppContext.getSharedPrefernce().get(KEY_INTRODUCTION, true)) {
+            AppContext.getSharedPrefernce().put(KEY_INTRODUCTION, false);
+            findViewById(R.id.container_introduction).setVisibility(View.VISIBLE);
+            findViewById(R.id.container_introduction).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction).setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Override

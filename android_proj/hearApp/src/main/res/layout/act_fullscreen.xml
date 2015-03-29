@@ -20,6 +20,7 @@
         android:id="@+id/container_introduction"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:background="#33000000">
 
         <LinearLayout
@@ -40,11 +41,11 @@
                     android:background="@drawable/shape_triangle_hollow_out" />
 
                 <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginBottom="-1dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_arrow_up" />
+                    android:src="@drawable/ic_arrow_up_solid" />
 
             </LinearLayout>
 

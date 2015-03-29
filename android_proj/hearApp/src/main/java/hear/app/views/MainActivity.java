@@ -31,7 +31,9 @@ import java.util.List;
 
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
+import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
+import hear.app.helper.SharedPreferencesCache;
 import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
 import hear.app.models.Article;
@@ -232,6 +234,25 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
     private void initContentView() {
+        final String KEY_INTRODUCTION = "main_act_introduction_v2";
+        if (AppContext.getSharedPrefernce().get(KEY_INTRODUCTION, true)) {
+            AppContext.getSharedPrefernce().put(KEY_INTRODUCTION, false);
+            findViewById(R.id.container_introduction).setVisibility(View.VISIBLE);
+            findViewById(R.id.container_introduction).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction).setVisibility(View.GONE);
+                    findViewById(R.id.container_introduction2).setVisibility(View.VISIBLE);
+                }
+            });
+            findViewById(R.id.container_introduction2).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction2).setVisibility(View.GONE);
+                }
+            });
+        }
+
         /** bind views **/
         mViewPager = (ViewPager) findViewById(R.id.vp_pages);
         mEmptyButton = (TextView) findViewById(R.id.btn_empty);
