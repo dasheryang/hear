@@ -20,8 +20,7 @@
         android:id="@+id/container_introduction"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="#33000000">
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="vertical"

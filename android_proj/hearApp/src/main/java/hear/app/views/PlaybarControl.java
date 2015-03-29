@@ -1,6 +1,7 @@
 package hear.app.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -150,15 +151,23 @@ public class PlaybarControl {
             if (isLoading) {
                 if (mLoadingImage.getAnimation() == null)
                     mLoadingImage.startAnimation(getAnimation(mContext));
+                mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
             } else if (player.isPlaying(url)) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
+                mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
             } else if (player.isPause(url)) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);
+                mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
             } else {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);
+                mProgressWheel.setContourColor(Color.parseColor("#ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#ffffff"));
             }
         }
     }

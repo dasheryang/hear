@@ -8,6 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginTop="45dp"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
         <LinearLayout
@@ -165,36 +166,19 @@
             android:layout_marginLeft="@dimen/slide_menu_margin_left"
             android:background="@color/slide_menu_line_color" />
 
-        <LinearLayout
+        <Button
             android:id="@+id/btn_logout"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/slide_menu_item_height"
-            android:background="@drawable/selector_slidemenu_item"
-            android:visibility="gone"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/slide_menu_item_image_size"
-                android:layout_height="@dimen/slide_menu_item_image_size"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/slide_menu_margin_left"
-                android:src="@drawable/ic_center_about" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/slide_menu_item_text_marginleft"
-                android:text="登出"
-                android:textColor="@color/slide_menu_text_color"
-                android:textSize="@dimen/slide_menu_item_text_size" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="@dimen/slide_menu_margin_left"
-            android:background="@color/slide_menu_line_color" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="8dp"
+            android:paddingBottom="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/btn_logout"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:background="@drawable/shape_btn_logout_bg" />
     </LinearLayout>
 
 </LinearLayout>

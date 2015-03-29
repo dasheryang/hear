@@ -5,7 +5,7 @@
     android:id="@+id/playbar"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="#66000000">
+    android:background="#4c000000">
 
     <ImageView
         android:id="@+id/img_thumb"
@@ -30,10 +30,10 @@
             app:rimWidth="1.5dp"
             app:barWidth="1.5dp"
             app:barLength="1.5dp"
-            app:barColor="#fecf40"
+            app:barColor="#39b01d"
             app:circleColor="#66000000"
-            app:rimColor="#ffffff"
-            app:contourColor="#ffffff"
+            app:rimColor="#33ffffff"
+            app:contourColor="#33ffffff"
             app:contourSize="0dp"
             android:layout_gravity="center" />
 

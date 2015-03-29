@@ -229,35 +229,6 @@ public class FullScreenArticleFragment extends Fragment {
         Article article = mLogicControl.getArticle();
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.image_bg);
         ImageLoader.getInstance().displayImage(article.getImageURL(getActivity()), imageView);
-//        ImageLoader.getInstance().loadImage(article.getImageURL(getActivity()), new ImageLoadingListener() {
-//            @Override
-//            public void onLoadingStarted(String imageUri, View view) {
-//            }
-//
-//            @Override
-//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-//            }
-//
-//            @Override
-//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                Activity act = getActivity();
-//                if (act != null) {
-//                    act.getWindow().setBackgroundDrawable(null);
-//                    ViewGroup container = (ViewGroup) act.getWindow().getDecorView();
-//                    ImageView imageView = new ImageView(act);
-//                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                    imageView.setImageBitmap(loadedImage);
-//                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(-1, -1);
-//                    params.width = -1;
-//                    params.height = -1;
-//                    container.addView(imageView, 0, params);
-//                }
-//            }
-//
-//            @Override
-//            public void onLoadingCancelled(String imageUri, View view) {
-//            }
-//        });
 
         //update actionbar
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();

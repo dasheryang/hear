@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_centerHorizontal="true"
-            android:background="#aa1a1a1a"
+            android:background="#4c000000"
             android:layout_below="@id/container_main"
             android:padding="16dp">
 

@@ -45,7 +45,6 @@
         android:id="@+id/container_introduction"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#33000000"
         android:visibility="gone">
 
         <LinearLayout
@@ -98,8 +97,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:paddingTop="@dimen/abc_action_bar_default_height_material"
-        android:paddingBottom="56dp"
-        android:background="#33000000">
+        android:paddingBottom="56dp">
 
         <RelativeLayout
             android:layout_width="330dp"
