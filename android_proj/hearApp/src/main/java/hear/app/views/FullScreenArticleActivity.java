@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.view.Window;
 
 import hear.app.R;
@@ -31,8 +32,15 @@ public class FullScreenArticleActivity extends BaseFragmentActivity implements S
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_container);
+        setContentView(R.layout.act_fullscreen);
         getSupportFragmentManager().beginTransaction().add(R.id.container_fragment, FullScreenArticleFragment.newInstance(getArticle(), false)).commit();
+
+        findViewById(R.id.container_introduction).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.container_introduction).setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override

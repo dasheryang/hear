@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_main" />
+
+    <FrameLayout
+        android:id="@+id/container_fragment"
+        android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/container_introduction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="@dimen/abc_action_bar_default_height_material"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_marginTop="@dimen/actionbar_inset_value"
+                    android:layout_width="@dimen/actionbar_height_inset"
+                    android:layout_height="@dimen/actionbar_height_inset"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/shape_triangle_hollow_out" />
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginBottom="-1dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_arrow_up" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:layout_marginLeft="2dp"
+                android:text="点击退出大图"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:background="@drawable/shape_hint_bg" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</FrameLayout>
