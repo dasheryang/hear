@@ -128,7 +128,7 @@ public class FullScreenArticleFragment extends Fragment {
         ButterKnife.inject(this, view);
         initContentView();
         updateLikeContainer();
-        if (!mLogicControl.isPlaying()) {
+        if (mPlayNow && !mLogicControl.isPlaying()) {
             onPlayImageClick();
         }
     }

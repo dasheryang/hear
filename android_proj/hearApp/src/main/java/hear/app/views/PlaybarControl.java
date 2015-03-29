@@ -158,7 +158,7 @@ public class PlaybarControl {
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);
             } else {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
+                mPlayImage.setImageResource(R.drawable.ic_playbar_play);
             }
         }
     }

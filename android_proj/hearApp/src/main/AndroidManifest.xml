@@ -38,7 +38,7 @@
         <activity
             android:name=".views.PlayActivityV2"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme_Start_Promote" />
+            android:theme="@style/FullScreenArticleActivityTheme" />
         <activity
             android:name=".views.GuideActivity"
             android:screenOrientation="portrait"
