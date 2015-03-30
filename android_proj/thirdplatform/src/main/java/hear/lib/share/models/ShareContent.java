@@ -28,6 +28,6 @@ public class ShareContent {
     }
 
     public String getTargetURL(@NonNull SHARE_MEDIA media) {
-        return "http://www.hearheart.com:8080/share.php?aid=" + articleID + "&plantform=" + media.name();
+        return "http://101.66.255.114:8080/share.php?aid=" + articleID + "&plantform=" + media.name();
     }
 }

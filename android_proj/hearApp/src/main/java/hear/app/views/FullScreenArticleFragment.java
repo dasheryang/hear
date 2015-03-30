@@ -95,16 +95,14 @@ public class FullScreenArticleFragment extends Fragment {
         @Override
         public void run() {
             if (mLogicControl.isPlaying() || mLogicControl.isPause()) {
-                if (mLogicControl.getDuration() > 0) {
+                if (mLogicControl.getDuration() > 0 && mLogicControl.getDuration() >= mLogicControl.getCurrentPosition() + 500) {
                     mProgressBar.setProgress(mLogicControl.getCurrentPosition());
-//                    mProgressWheel.setProgress(mLogicControl.getCurrentPosition() * 360 / mLogicControl.getDuration());
+                    mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
                 }
             } else {
                 mProgressBar.setProgress(0);
-//                mProgressWheel.setProgress(0);
             }
 
-            mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
         }
     };
 

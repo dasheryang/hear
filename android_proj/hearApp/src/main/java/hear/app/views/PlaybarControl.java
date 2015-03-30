@@ -3,6 +3,7 @@ package hear.app.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -53,13 +54,19 @@ public class PlaybarControl {
         public void run() {
             Player player = Player.getInstance();
             if (player.isPlaying() || player.isPause()) {
-                if (player.getMax() > 0) {
+                if (player.getMax() > 0 && player.getMax() >= player.getCurrentPos() + 500) {
                     mProgressWheel.setProgress(player.getCurrentPos() * 360 / player.getMax());
                     mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
                     mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
+                    mHandler.postDelayed(this, 1000L);
+                } else {
+                    mProgressWheel.setContourColor(Color.parseColor("#ffffff"));
+                    mProgressWheel.setRimColor(Color.parseColor("#ffffff"));
+                    mProgressWheel.setProgress(0);
                 }
-                mHandler.postDelayed(this, 1000L);
             } else {
+                mProgressWheel.setContourColor(Color.parseColor("#ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#ffffff"));
                 mProgressWheel.setProgress(0);
             }
         }
