@@ -85,6 +85,7 @@
 
 
             <View
+                android:id="@+id/layer_playbar"
                 android:layout_width="match_parent"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
@@ -146,6 +147,7 @@
                 android:layout_height="wrap_content">
 
                 <View
+                    android:id="@+id/layer_image"
                     android:layout_width="330dp"
                     android:layout_height="330dp"
                     android:background="@drawable/shape_triangle_hollow_out" />

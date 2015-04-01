@@ -246,9 +246,24 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     findViewById(R.id.container_introduction2).setVisibility(View.VISIBLE);
                 }
             });
+            findViewById(R.id.layer_playbar).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction).setVisibility(View.GONE);
+                    findViewById(R.id.container_introduction2).setVisibility(View.VISIBLE);
+                    mPlaybarControl.onPlaybarClick();
+                }
+            });
             findViewById(R.id.container_introduction2).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    findViewById(R.id.container_introduction2).setVisibility(View.GONE);
+                }
+            });
+            findViewById(R.id.layer_image).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRequestPlayArticle(mUILogic.getCacheArticles().get(0));
                     findViewById(R.id.container_introduction2).setVisibility(View.GONE);
                 }
             });
