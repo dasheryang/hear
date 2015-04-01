@@ -243,23 +243,6 @@ public class FullScreenArticleFragment extends Fragment {
                 }
             });
         }
-
-//        if (isLogin && article.hasLiked()) {
-//            new UncollectDialog(getActivity()).setDelegate(new UncollectDialog.Delegate() {
-//                @Override
-//                public void onConfirmButtonClick() {
-//                    mLogicControl.toggleLikeState();
-//                    updateLikeContainer();
-//                }
-//            }).show();
-//        } else if (isLogin && !article.hasLiked()) {
-//            ToastHelper.showCollected(getActivity());
-//            mLogicControl.toggleLikeState();
-//            updateLikeContainer();
-//        } else {
-//            mLogicControl.toggleLikeState();
-//            updateLikeContainer();
-//        }
     }
 
     private void performUpdateProgressBarTask() {

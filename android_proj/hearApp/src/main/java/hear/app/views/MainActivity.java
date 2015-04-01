@@ -209,12 +209,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                         @Override
                         public void onComplete(int i, SocializeUser socializeUser) {
-                            if (socializeUser.mAccounts.isEmpty()) {
-                                onLoginFail();
-                            } else {
-                                mUILogic.updateAccount(socializeUser.mAccounts.get(0), media);
-                                onLoginSuccess();
+                            for (SnsAccount account : socializeUser.mAccounts) {
+                                if (account.getPlatform().equalsIgnoreCase(media.name())) {
+                                    SNSAccountStore.getInstance().setLoginAccountAndType(account, media);
+                                    onLoginSuccess();
+                                    return;
+                                }
                             }
+                            onLoginFail();
                         }
                     });
                 }

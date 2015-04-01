@@ -3,7 +3,6 @@ package hear.app.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,7 +22,6 @@ import hear.app.helper.SDCardUtils;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
-import hear.app.store.ArticleStore;
 import hear.app.widget.ProgressWheel;
 
 /**
@@ -113,6 +111,7 @@ public class PlaybarControl {
 
     public void setDefaultArticle(Article article) {
         mDefaultArticle = article;
+            update();
     }
 
     public void playArticle(Article article) {
@@ -136,9 +135,12 @@ public class PlaybarControl {
     }
 
     public void update() {
+        if (!mIsPrepared)
+            return;
+
         Article article = Player.getInstance().getLastPlayArticle();
         if (article == null) {
-            article = ArticleStore.getInstance().firstArticle();
+            article = mDefaultArticle;
         }
 
         if (article == null) {
