@@ -13,7 +13,7 @@ function preview_page_html( $data ){
         <style>
             html, body
             {
-                background-image: url(img/article_bg.jpg);
+                background-image: url(img/article_bg.png);
                 background-size: 100% 100%;
                 margin: 0;
                 color: #ffffff;
