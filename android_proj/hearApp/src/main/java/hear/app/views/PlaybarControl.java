@@ -111,7 +111,7 @@ public class PlaybarControl {
 
     public void setDefaultArticle(Article article) {
         mDefaultArticle = article;
-            update();
+        update();
     }
 
     public void playArticle(Article article) {
@@ -163,10 +163,10 @@ public class PlaybarControl {
             if (isLoading) {
                 if (mLoadingImage.getAnimation() == null)
                     mLoadingImage.startAnimation(getAnimation(mContext));
-            } else if (player.isPlaying(url)) {
+            } else if (player.isPlaying()) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
-            } else if (player.isPause(url)) {
+            } else if (player.isPause()) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);
             } else {

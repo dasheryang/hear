@@ -183,7 +183,7 @@ public class SocialServiceWrapper {
         mSocialService.setShareMedia(sinaShareContent);
 
         // 分享到微信好友、微信朋友圈
-        WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text + shareContent.getTargetURL(SHARE_MEDIA.WEIXIN));
+        WeiXinShareContent weiXinShareContent = new WeiXinShareContent(shareContent.text);
         weiXinShareContent.setTitle(shareContent.title);
         weiXinShareContent.setTargetUrl(shareContent.getTargetURL(SHARE_MEDIA.SINA));
         weiXinShareContent.setShareImage(shareImage);

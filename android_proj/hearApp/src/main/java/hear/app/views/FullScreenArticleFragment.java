@@ -20,6 +20,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -77,17 +78,41 @@ public class FullScreenArticleFragment extends Fragment {
     private PlayListener mPlayListener = new PlayListener() {
         @Override
         public void onOtherStart() {
-            updatePlayImage(STATE_PAUSE);
+            if (mLogicControl.isLoading()) {
+                updatePlayImage(STATE_LOADING);
+            } else if (mLogicControl.isPlaying()){
+                updatePlayImage(STATE_PLAYING);
+            } else if(mLogicControl.isPause()) {
+                updatePlayImage(STATE_PAUSE);
+            } else {
+                updatePlayImage(STATE_PAUSE);
+            }
         }
 
         @Override
         public void onComplete() {
-            updatePlayImage(STATE_PAUSE);
+            if (mLogicControl.isLoading()) {
+                updatePlayImage(STATE_LOADING);
+            } else if (mLogicControl.isPlaying()){
+                updatePlayImage(STATE_PLAYING);
+            } else if(mLogicControl.isPause()) {
+                updatePlayImage(STATE_PAUSE);
+            } else {
+                updatePlayImage(STATE_PAUSE);
+            }
         }
 
         @Override
         public void onLoadingEnd() {
-            updatePlayImage(STATE_PLAYING);
+            if (mLogicControl.isLoading()) {
+                updatePlayImage(STATE_LOADING);
+            } else if (mLogicControl.isPlaying()){
+                updatePlayImage(STATE_PLAYING);
+            } else if(mLogicControl.isPause()) {
+                updatePlayImage(STATE_PAUSE);
+            } else {
+                updatePlayImage(STATE_PAUSE);
+            }
         }
     };
 
@@ -97,12 +122,12 @@ public class FullScreenArticleFragment extends Fragment {
             if (mLogicControl.isPlaying() || mLogicControl.isPause()) {
                 if (mLogicControl.getDuration() > 0 && mLogicControl.getDuration() >= mLogicControl.getCurrentPosition() + 500) {
                     mProgressBar.setProgress(mLogicControl.getCurrentPosition());
-                    mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
+                    mProgressBar.setMax(mLogicControl.getDuration());
                 }
             } else {
                 mProgressBar.setProgress(0);
             }
-
+            mHandler.postDelayed(this, UPDATE_PROGRESSBAR_INTERVAL);
         }
     };
 
@@ -181,7 +206,9 @@ public class FullScreenArticleFragment extends Fragment {
             performUpdateProgressBarTask();
         } else {
             updatePlayImage(STATE_LOADING);
-            mLogicControl.play();
+            if (!mLogicControl.isLoading()) {
+                mLogicControl.play();
+            }
             performUpdateProgressBarTask();
         }
     }
@@ -276,7 +303,15 @@ public class FullScreenArticleFragment extends Fragment {
             }
         });
 
-        updatePlayImage(mLogicControl.isPlaying() ? STATE_PLAYING : STATE_PAUSE);
+        if (mLogicControl.isLoading()) {
+            updatePlayImage(STATE_LOADING);
+        } else if (mLogicControl.isPlaying()){
+            updatePlayImage(STATE_PLAYING);
+        } else if(mLogicControl.isPause()) {
+            updatePlayImage(STATE_PAUSE);
+        } else {
+            updatePlayImage(STATE_PAUSE);
+        }
     }
 
     private void updatePlayImage(int state) {
@@ -310,6 +345,10 @@ public class FullScreenArticleFragment extends Fragment {
 
         public Article getArticle() {
             return mArticle;
+        }
+
+        public boolean isLoading() {
+            return Player.getInstance().isLoading(getPlayUrl());
         }
 
         public boolean isPlaying() {
