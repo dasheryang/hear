@@ -123,6 +123,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerHorizontal="true"
+                android:background="#4c000000"
                 android:layout_below="@id/container_main"
                 android:padding="16dp">
 
@@ -131,13 +132,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lines="4"
+                    android:lineSpacingExtra="4dp"
+                    android:ellipsize="end"
+                    android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/label_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:layout_marginTop="8dp"
+                    android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </LinearLayout>
 

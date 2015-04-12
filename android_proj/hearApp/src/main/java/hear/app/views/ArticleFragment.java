@@ -24,6 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SnsAccount;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
@@ -159,11 +160,22 @@ public class ArticleFragment extends Fragment {
 
                         @Override
                         public void onComplete(int i, SocializeUser socializeUser) {
-                            if (!socializeUser.mAccounts.isEmpty()) {
-                                SNSAccountStore.getInstance().setLoginAccountAndType(socializeUser.mAccounts.get(0), media).synchronize();
-                                if (getActivity() instanceof MainActivity) {
-                                    MainActivity act = (MainActivity) getActivity();
-                                    act.onLoginSuccess();
+                            String platform = media.name();
+                            if (media == SHARE_MEDIA.SINA) {
+                                platform = "sina";
+                            } else if (media == SHARE_MEDIA.WEIXIN) {
+                                platform = "wxsession";
+                            } else if (media == SHARE_MEDIA.QQ) {
+                                platform = "qq";
+                            }
+                            for (SnsAccount account : socializeUser.mAccounts) {
+                                if (account.getPlatform().equalsIgnoreCase(platform)) {
+                                    SNSAccountStore.getInstance().setLoginAccountAndType(socializeUser.mAccounts.get(0), media).synchronize();
+                                    if (getActivity() instanceof MainActivity) {
+                                        MainActivity act = (MainActivity) getActivity();
+                                        act.onLoginSuccess();
+                                    }
+                                    return;
                                 }
                             }
                             mSocialService = null;

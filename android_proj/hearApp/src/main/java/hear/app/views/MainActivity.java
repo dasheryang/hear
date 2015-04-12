@@ -209,9 +209,17 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                         @Override
                         public void onComplete(int i, SocializeUser socializeUser) {
+                            String platform = media.name();
+                            if (media == SHARE_MEDIA.SINA) {
+                                platform = "sina";
+                            } else if (media == SHARE_MEDIA.WEIXIN) {
+                                platform = "wxsession";
+                            } else if (media == SHARE_MEDIA.QQ) {
+                                platform = "qq";
+                            }
                             for (SnsAccount account : socializeUser.mAccounts) {
-                                if (account.getPlatform().equalsIgnoreCase(media.name())) {
-                                    SNSAccountStore.getInstance().setLoginAccountAndType(account, media);
+                                if (account.getPlatform().equalsIgnoreCase(platform)) {
+                                    SNSAccountStore.getInstance().setLoginAccountAndType(account, media).synchronize();
                                     onLoginSuccess();
                                     return;
                                 }
@@ -380,10 +388,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             }
                         });
             }
-        }
-
-        public void updateAccount(SnsAccount account, SHARE_MEDIA platform) {
-            SNSAccountStore.getInstance().setLoginAccountAndType(account, platform).synchronize();
         }
 
         public void goToAboutUsActivity() {

@@ -20,10 +20,10 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.SnsAccount;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.bean.SocializeUser;
 import com.umeng.socialize.controller.listener.SocializeListeners;
@@ -80,9 +80,9 @@ public class FullScreenArticleFragment extends Fragment {
         public void onOtherStart() {
             if (mLogicControl.isLoading()) {
                 updatePlayImage(STATE_LOADING);
-            } else if (mLogicControl.isPlaying()){
+            } else if (mLogicControl.isPlaying()) {
                 updatePlayImage(STATE_PLAYING);
-            } else if(mLogicControl.isPause()) {
+            } else if (mLogicControl.isPause()) {
                 updatePlayImage(STATE_PAUSE);
             } else {
                 updatePlayImage(STATE_PAUSE);
@@ -93,9 +93,9 @@ public class FullScreenArticleFragment extends Fragment {
         public void onComplete() {
             if (mLogicControl.isLoading()) {
                 updatePlayImage(STATE_LOADING);
-            } else if (mLogicControl.isPlaying()){
+            } else if (mLogicControl.isPlaying()) {
                 updatePlayImage(STATE_PLAYING);
-            } else if(mLogicControl.isPause()) {
+            } else if (mLogicControl.isPause()) {
                 updatePlayImage(STATE_PAUSE);
             } else {
                 updatePlayImage(STATE_PAUSE);
@@ -106,9 +106,9 @@ public class FullScreenArticleFragment extends Fragment {
         public void onLoadingEnd() {
             if (mLogicControl.isLoading()) {
                 updatePlayImage(STATE_LOADING);
-            } else if (mLogicControl.isPlaying()){
+            } else if (mLogicControl.isPlaying()) {
                 updatePlayImage(STATE_PLAYING);
-            } else if(mLogicControl.isPause()) {
+            } else if (mLogicControl.isPause()) {
                 updatePlayImage(STATE_PAUSE);
             } else {
                 updatePlayImage(STATE_PAUSE);
@@ -251,8 +251,19 @@ public class FullScreenArticleFragment extends Fragment {
 
                         @Override
                         public void onComplete(int i, SocializeUser socializeUser) {
-                            if (!socializeUser.mAccounts.isEmpty()) {
-                                SNSAccountStore.getInstance().setLoginAccountAndType(socializeUser.mAccounts.get(0), media).synchronize();
+                            String platform = media.name();
+                            if (media == SHARE_MEDIA.SINA) {
+                                platform = "sina";
+                            } else if (media == SHARE_MEDIA.WEIXIN) {
+                                platform = "wxsession";
+                            } else if (media == SHARE_MEDIA.QQ) {
+                                platform = "qq";
+                            }
+                            for (SnsAccount account : socializeUser.mAccounts) {
+                                if (account.getPlatform().equalsIgnoreCase(platform)) {
+                                    SNSAccountStore.getInstance().setLoginAccountAndType(socializeUser.mAccounts.get(0), media).synchronize();
+                                    return;
+                                }
                             }
                             mSocialService = null;
                         }
@@ -305,9 +316,9 @@ public class FullScreenArticleFragment extends Fragment {
 
         if (mLogicControl.isLoading()) {
             updatePlayImage(STATE_LOADING);
-        } else if (mLogicControl.isPlaying()){
+        } else if (mLogicControl.isPlaying()) {
             updatePlayImage(STATE_PLAYING);
-        } else if(mLogicControl.isPause()) {
+        } else if (mLogicControl.isPause()) {
             updatePlayImage(STATE_PAUSE);
         } else {
             updatePlayImage(STATE_PAUSE);
