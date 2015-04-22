@@ -80,10 +80,10 @@ function preview_page_html( $data ){
             }
             .article_info
             {
-                padding-top: 13px;
-                padding-left: 13px;
-                padding-right: 13px;
-                padding-bottom: 13px;
+                padding-top: 3%;
+                padding-left: 3%;
+                padding-right: 3%;
+                padding-bottom: 3%;
                 background-color: #140E0B;
                 opacity: 0.70;
             }
