@@ -238,10 +238,10 @@ public class ProgressWheel extends View {
                 paddingTop + barWidth,
                 width - paddingRight - barWidth,
                 height - paddingBottom - barWidth);
-        rimBounds = new RectF(circleBounds.left - rimWidth/2,
-                circleBounds.top - rimWidth/2,
-                circleBounds.right + rimWidth/2,
-                circleBounds.bottom + rimWidth/2);
+        rimBounds = new RectF(circleBounds.left - rimWidth / 2,
+                circleBounds.top - rimWidth / 2,
+                circleBounds.right + rimWidth / 2,
+                circleBounds.bottom + rimWidth / 2);
         circleInnerContour = new RectF(rimBounds.left + (rimWidth / 2.0f) + (contourSize / 2.0f), rimBounds.top + (rimWidth / 2.0f) + (contourSize / 2.0f), rimBounds.right - (rimWidth / 2.0f) - (contourSize / 2.0f), rimBounds.bottom - (rimWidth / 2.0f) - (contourSize / 2.0f));
         circleOuterContour = new RectF(rimBounds.left - (rimWidth / 2.0f) - (contourSize / 2.0f), rimBounds.top - (rimWidth / 2.0f) - (contourSize / 2.0f), rimBounds.right + (rimWidth / 2.0f) + (contourSize / 2.0f), rimBounds.bottom + (rimWidth / 2.0f) + (contourSize / 2.0f));
 
@@ -391,6 +391,10 @@ public class ProgressWheel extends View {
         spinHandler.sendEmptyMessage(0);
     }
 
+    public int getProgress() {
+        return progress;
+    }
+
     //----------------------------------
     //Getters + setters
     //----------------------------------
@@ -476,6 +480,7 @@ public class ProgressWheel extends View {
 
     public void setBarColor(int barColor) {
         this.barColor = barColor;
+        this.barPaint.setColor(barColor);
     }
 
     public int getCircleColor() {
@@ -490,8 +495,14 @@ public class ProgressWheel extends View {
         return rimColor;
     }
 
+    public void setContourColor(int contourColor) {
+        this.contourColor = contourColor;
+        this.contourPaint.setColor(contourColor);
+    }
+
     public void setRimColor(int rimColor) {
         this.rimColor = rimColor;
+        rimPaint.setColor(rimColor);
     }
 
 

@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_centerHorizontal="true"
-            android:background="#aa1a1a1a"
+            android:background="#4c000000"
             android:layout_below="@id/container_main"
             android:padding="16dp">
 
@@ -100,6 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="4"
+                android:lineSpacingExtra="4dp"
                 android:ellipsize="end"
                 tools:text="满足是什么，狗舔冰激凌，鱼在陆地奔跑，大象在炎炎夏日开心地跳橡皮筋，而我也终于牵到了你的手"
                 android:textColor="@android:color/white"

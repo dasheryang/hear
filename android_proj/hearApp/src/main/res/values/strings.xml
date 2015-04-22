@@ -6,12 +6,12 @@
     <string name="title_about_us">关于我们</string>
     <string name="title_collection">收藏</string>
 
-    <string name="content_about_us">时间会带来惊喜\n只要我们\n肯认真的 有希望的\n走过每一天\n而每一天\n都有我们陪着你</string>
+    <string name="content_about_us">时间会带来惊喜\n只要我们\n认真地 有希望地\n走过每一天\n而每一天\n都有我们陪着你</string>
 
     <string name="item_back">返回</string>
     <string name="content_contact_us">联系我们</string>
-    <string name="content_qq">官方QQ: 9827849438</string>
-    <string name="content_email">官方邮箱: tingjian@qq.com</string>
+    <string name="content_qq">官方QQ: 2304888410</string>
+    <string name="content_email">官方邮箱: tingjianapp@qq.com</string>
     <string name="content_collect_hint">再听听看\n有没有打动您的声音</string>
     <string name="content_collect_hint2">收藏夹空空如也</string>
     <string name="btn_delete">确定删除</string>
@@ -21,4 +21,5 @@
     <string name="hint_collected">已收藏</string>
     <string name="hint_network_error">当前网络信号差\n请稍后尝试</string>
     <string name="title_choose_market">选择应用市场</string>
+    <string name="btn_logout">退出登录</string>
 </resources>

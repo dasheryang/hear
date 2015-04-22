@@ -31,6 +31,7 @@ import java.util.List;
 
 import hear.app.R;
 import hear.app.engine.BaseHttpAsyncTask;
+import hear.app.helper.AppContext;
 import hear.app.helper.ArrayUtils;
 import hear.app.helper.ToastHelper;
 import hear.app.helper.ToastUtil;
@@ -67,7 +68,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mPlaybarControl = new PlaybarControl(this);
         setContentView(R.layout.act_main);
         initContentView();
-        updateAccountView();
         mPlaybarControl.prepare(findViewById(R.id.playbar));
     }
 
@@ -75,6 +75,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     protected void onResume() {
         super.onResume();
         mUILogic.refreshRemoteArticleIfNeeded();
+        updateAccountView();
         mPlaybarControl.onActivityResume();
         mPlaybarControl.update();
     }
@@ -208,12 +209,22 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                         @Override
                         public void onComplete(int i, SocializeUser socializeUser) {
-                            if (socializeUser.mAccounts.isEmpty()) {
-                                onLoginFail();
-                            } else {
-                                mUILogic.updateAccount(socializeUser.mAccounts.get(0), media);
-                                onLoginSuccess();
+                            String platform = media.name();
+                            if (media == SHARE_MEDIA.SINA) {
+                                platform = "sina";
+                            } else if (media == SHARE_MEDIA.WEIXIN) {
+                                platform = "wxsession";
+                            } else if (media == SHARE_MEDIA.QQ) {
+                                platform = "qq";
                             }
+                            for (SnsAccount account : socializeUser.mAccounts) {
+                                if (account.getPlatform().equalsIgnoreCase(platform)) {
+                                    SNSAccountStore.getInstance().setLoginAccountAndType(account, media).synchronize();
+                                    onLoginSuccess();
+                                    return;
+                                }
+                            }
+                            onLoginFail();
                         }
                     });
                 }
@@ -232,6 +243,40 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
     private void initContentView() {
+        final String KEY_INTRODUCTION = "main_act_introduction_v2";
+        if (AppContext.getSharedPrefernce().get(KEY_INTRODUCTION, true)) {
+            AppContext.getSharedPrefernce().put(KEY_INTRODUCTION, false);
+            findViewById(R.id.container_introduction).setVisibility(View.VISIBLE);
+            findViewById(R.id.container_introduction).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction).setVisibility(View.GONE);
+                    findViewById(R.id.container_introduction2).setVisibility(View.VISIBLE);
+                }
+            });
+            findViewById(R.id.layer_playbar).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction).setVisibility(View.GONE);
+                    findViewById(R.id.container_introduction2).setVisibility(View.VISIBLE);
+                    mPlaybarControl.onPlaybarClick();
+                }
+            });
+            findViewById(R.id.container_introduction2).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction2).setVisibility(View.GONE);
+                }
+            });
+            findViewById(R.id.layer_image).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRequestPlayArticle(mUILogic.getCacheArticles().get(0));
+                    findViewById(R.id.container_introduction2).setVisibility(View.GONE);
+                }
+            });
+        }
+
         /** bind views **/
         mViewPager = (ViewPager) findViewById(R.id.vp_pages);
         mEmptyButton = (TextView) findViewById(R.id.btn_empty);
@@ -343,10 +388,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             }
                         });
             }
-        }
-
-        public void updateAccount(SnsAccount account, SHARE_MEDIA platform) {
-            SNSAccountStore.getInstance().setLoginAccountAndType(account, platform).synchronize();
         }
 
         public void goToAboutUsActivity() {

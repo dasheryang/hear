@@ -4,6 +4,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 
@@ -65,7 +66,7 @@ public class Player {
     }
 
     public boolean isPause(String url) {
-        return !TextUtils.isEmpty(mLastPlayURL) && mLastPlayURL.equals(url);
+        return !TextUtils.isEmpty(mLastPlayURL) && mLastPlayURL.equals(url) && !mIsLoading;
     }
 
     public boolean isPause() {
@@ -102,6 +103,7 @@ public class Player {
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         final String url = playURL;
+        Log.e("A7", "媒体地址:" + url);
         try {
             mMediaPlayer.setDataSource(url);
             mMediaPlayer.prepareAsync(); // might take long! (for buffering, etc)
@@ -192,7 +194,7 @@ public class Player {
         if (mMediaPlayer != null) {
             return mMediaPlayer.getDuration();
         }
-        return 0;
+        return 1;
     }
 
     public int getCurrentPos() {

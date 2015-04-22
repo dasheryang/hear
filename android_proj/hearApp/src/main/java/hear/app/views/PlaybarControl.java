@@ -1,6 +1,7 @@
 package hear.app.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -21,7 +22,6 @@ import hear.app.helper.SDCardUtils;
 import hear.app.media.PlayListener;
 import hear.app.media.Player;
 import hear.app.models.Article;
-import hear.app.store.ArticleStore;
 import hear.app.widget.ProgressWheel;
 
 /**
@@ -52,10 +52,19 @@ public class PlaybarControl {
         public void run() {
             Player player = Player.getInstance();
             if (player.isPlaying() || player.isPause()) {
-                if (player.getMax() > 0)
+                if (player.getMax() > 0 && player.getMax() >= player.getCurrentPos() + 500) {
                     mProgressWheel.setProgress(player.getCurrentPos() * 360 / player.getMax());
-                mHandler.postDelayed(this, 1000L);
+                    mProgressWheel.setContourColor(Color.parseColor("#33ffffff"));
+                    mProgressWheel.setRimColor(Color.parseColor("#33ffffff"));
+                    mHandler.postDelayed(this, 1000L);
+                } else {
+                    mProgressWheel.setContourColor(Color.parseColor("#ffffff"));
+                    mProgressWheel.setRimColor(Color.parseColor("#ffffff"));
+                    mProgressWheel.setProgress(0);
+                }
             } else {
+                mProgressWheel.setContourColor(Color.parseColor("#ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#ffffff"));
                 mProgressWheel.setProgress(0);
             }
         }
@@ -102,6 +111,7 @@ public class PlaybarControl {
 
     public void setDefaultArticle(Article article) {
         mDefaultArticle = article;
+        update();
     }
 
     public void playArticle(Article article) {
@@ -125,9 +135,12 @@ public class PlaybarControl {
     }
 
     public void update() {
+        if (!mIsPrepared)
+            return;
+
         Article article = Player.getInstance().getLastPlayArticle();
         if (article == null) {
-            article = ArticleStore.getInstance().firstArticle();
+            article = mDefaultArticle;
         }
 
         if (article == null) {
@@ -150,15 +163,17 @@ public class PlaybarControl {
             if (isLoading) {
                 if (mLoadingImage.getAnimation() == null)
                     mLoadingImage.startAnimation(getAnimation(mContext));
-            } else if (player.isPlaying(url)) {
+            } else if (player.isPlaying()) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
-            } else if (player.isPause(url)) {
+            } else if (player.isPause()) {
                 mLoadingImage.clearAnimation();
                 mPlayImage.setImageResource(R.drawable.ic_playbar_play);
             } else {
                 mLoadingImage.clearAnimation();
-                mPlayImage.setImageResource(R.drawable.ic_playbar_pause);
+                mPlayImage.setImageResource(R.drawable.ic_playbar_play);
+                mProgressWheel.setContourColor(Color.parseColor("#ffffff"));
+                mProgressWheel.setRimColor(Color.parseColor("#ffffff"));
             }
         }
     }

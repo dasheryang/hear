@@ -28,6 +28,7 @@ public class CollectionFragment extends Fragment {
     RecyclerView mRecyclerView;
 
     private UIControl mUIControl;
+    private int mLastDataSetCount = -1;
 
     public static CollectionFragment newInstance() {
         CollectionFragment ret = new CollectionFragment();
@@ -45,18 +46,27 @@ public class CollectionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, view);
         mUIControl = new UIControl();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initContentView();
     }
 
     private void initContentView() {
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        if (mLastDataSetCount == -1 || mLastDataSetCount != mUIControl.getArticles().size()) {
+            mLastDataSetCount = mUIControl.getArticles().size();
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        if (mUIControl.getArticles().isEmpty()) {
-            mNoDataContainer.setVisibility(View.VISIBLE);
-        } else {
-            mNoDataContainer.setVisibility(View.GONE);
-            mRecyclerView.setAdapter(new CollectionAdapter(getActivity(), mUIControl.getArticles()));
+            if (mUIControl.getArticles().isEmpty()) {
+                mNoDataContainer.setVisibility(View.VISIBLE);
+            } else {
+                mNoDataContainer.setVisibility(View.GONE);
+
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.setAdapter(new CollectionAdapter(getActivity(), mUIControl.getArticles()));
+            }
         }
     }
 

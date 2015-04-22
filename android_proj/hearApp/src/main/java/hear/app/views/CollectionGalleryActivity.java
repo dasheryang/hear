@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class CollectionGalleryActivity extends BaseFragmentActivity implements S
     private UILogic mUILogic = new UILogic();
     private PlaybarControl mPlaybarControl;
     private WeakReference<Fragment> mSharingFragment;
+    private int mLastArticleCount = -1;
 
     public static void show(Context context, Article defaultArticle) {
         Intent intent = new Intent(context, CollectionGalleryActivity.class);
@@ -97,7 +99,7 @@ public class CollectionGalleryActivity extends BaseFragmentActivity implements S
 
         public List<Article> getCacheArticles() {
             if (mArticle == null) {
-                mArticle = CollectedArticleStore.getInstance().getArticles();
+                mArticle = new ArrayList<>(CollectedArticleStore.getInstance().getArticles());
             }
 
             return mArticle;

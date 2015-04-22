@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import hear.app.R;
+import hear.app.helper.AppContext;
 import hear.app.models.Article;
 import hear.app.store.ArticleStore;
 
@@ -33,8 +35,20 @@ public class PlayActivityV2 extends BaseFragmentActivity implements ShareFragmen
     protected void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_container);
+        setContentView(R.layout.act_fullscreen);
         getSupportFragmentManager().beginTransaction().add(R.id.container_fragment, FullScreenArticleFragment.newInstance(getArticle(), true)).commit();
+
+        String KEY_INTRODUCTION = "fullscreen_introduction_v2";
+        if (AppContext.getSharedPrefernce().get(KEY_INTRODUCTION, true)) {
+            AppContext.getSharedPrefernce().put(KEY_INTRODUCTION, false);
+            findViewById(R.id.container_introduction).setVisibility(View.VISIBLE);
+            findViewById(R.id.container_introduction).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    findViewById(R.id.container_introduction).setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Override
