@@ -175,7 +175,7 @@ function preview_page_html( $data ){
                     
                     <div class="footage_text">
                         <span class="download" href="#">下载</span>
-                        <b>听见</b><br>宁静时刻，安静聆听
+                        <font stype="font-size:110%">听见</font><br>宁静时刻，安静聆听
                        
                     </div>
                 </div>
