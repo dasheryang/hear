@@ -120,7 +120,7 @@ function preview_page_html( $data ){
             
             .footage_text
             {	
-                padding-left: 15%;
+                padding-left: 17%;
             }
             .footage_content .download
             {
