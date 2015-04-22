@@ -72,9 +72,10 @@ function preview_page_html( $data ){
             }
             .cover_title
             {
-                margin-left: -70%;
+                margin-left: 5%;
                 margin-top: 30%;
                 margin-bottom: 5%;
+		text-align: left;
                 
             }
             .article_info
@@ -84,7 +85,7 @@ function preview_page_html( $data ){
                 padding-right: 13px;
                 padding-bottom: 13px;
                 background-color: #140E0B;
-                opacity: 0.65;
+                opacity: 0.70;
             }
             img{
                 -webkit-tap-highlight-color:rgba(0,0,0,0);
@@ -108,7 +109,7 @@ function preview_page_html( $data ){
                 position: relative;
                 margin-top: auto;
                 margin-bottom: auto;
-                margin-left: 4%;
+                margin-left: 6%;
                 padding-top: 15px;
             }
             .footage_content img
@@ -118,7 +119,7 @@ function preview_page_html( $data ){
             }
             
             .footage_text
-            {
+            {	
                 padding-left: 15%;
             }
             .footage_content .download
@@ -152,10 +153,9 @@ function preview_page_html( $data ){
                         <img id="play_status_icon" onclick="change_play_status();return false;" src="img/play.png" alt="play_status" />
 
                         <div class="cover_title">
-                            <font>VOL.{$data["pageno"]}</font>
-                            <br/>
-                            <font>{$data['date_str']}</font>
-                        </div>
+                            <font style="color:#FFFFFF;font-size:115%">VOL.{$data["pageno"]}</font><br/>
+                            <font style="color:#A09E90">{$data['date_str']}</font>
+			</div>
                     </div>
                     <div class="article_info">
                         <div>
