@@ -174,7 +174,7 @@ function preview_page_html( $data ){
                     <img style="float:left;" src="img/ic_launcher.png" alt="hear" />
                     
                     <div class="footage_text">
-                        <span class="download" href="#">下载</span>
+                        <span class="download" href="http://a.app.qq.com/o/simple.jsp?pkgname=hear.app">下载</span>
                         <font stype="font-size:110%">听见</font><br>宁静时刻，安静聆听
                        
                     </div>
